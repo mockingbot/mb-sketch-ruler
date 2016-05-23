@@ -15,8 +15,19 @@ class Board extends React.Component {
   handleClick(){
     this.props.handleClick();
   }
+  touchStart(e){
+    console.log(e)
+  }
+  touchEnd(e){
+    console.log(e)
+  }
   render() {
 
+    var bgStyle = {
+      width: 800,
+      height: 800,
+      backgroundColor: 'rgba(255,0,0,0.1)'
+    }
     var panelStyle = {
       top: - this.props.position.y,
       left:  - this.props.position.x
@@ -31,7 +42,11 @@ class Board extends React.Component {
     
   	// this.drawRuler();
     return (
-       <div className="background">
+       <div className="background"
+            style={bgStyle}
+            onTouchStart={this.touchStart.bind(this)}
+            onTouchEnd={this.touchEnd.bind(this)}
+            onWheel={this.props.handleMove}>
         <div className="panel" style={panelStyle}>
           <div className="test" style={iphoneStyle} onClick={this.handleClick.bind(this)}></div>
         </div>

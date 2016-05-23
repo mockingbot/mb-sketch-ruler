@@ -1,7 +1,8 @@
 /* Base Application Styles */
 body {
   color: #fff;
-  background-color:#EEEEEE;
+  width:100%;
+  background-color: rgba(0,255,0,0.1);
 }
 .container{
   position:relative;
@@ -20,11 +21,8 @@ body {
   
   top:0;
   left:30px;
-  width:800px;
+  width:100%;
   height:30px;
-  background-color:#F5F5F5;
-  border-left:2px solid #CCC;
-  border-bottom:2px solid #CCC;
 }
 #verRuler{
   position:absolute;
@@ -32,15 +30,13 @@ body {
   top:30px;
   left:0;
   width:30px;
-  height:800px;
-  background-color:#F5F5F5;
-  border-right:2px solid #CCC;
-  border-top:2px solid #CCC;
+  height:100%;
+  
 }
 .background{
   position:relative;
-  top:32px;
-  left:32px;
+  top:30px;
+  left:30px;
   
   background-color:#EEEEEE;
 }
