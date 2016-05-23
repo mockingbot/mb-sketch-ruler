@@ -37,20 +37,30 @@ body {
   border-right:2px solid #CCC;
   border-top:2px solid #CCC;
 }
-.panel{
+.background{
   position:relative;
   top:32px;
   left:32px;
-  width:800px;
-  height:800px;
-  border:2px solid red;
+  
   background-color:#EEEEEE;
 }
+.panel{
+  position:absolute;
+  /* top:100px;
+  left:240px; */
+  /* width:800px;
+  height:800px; */
+  /* border:2px solid red; */
+  
+}
 .test{
-  margin-top:100px;
-  margin-left:200px;
-  width:200px;
-  height:350px;
-  border:2px solid red;
+  position:absolute;
+
+  /* top:100px; */
+  /* left:200px; */
+  /* width:200px; */
+  /* height:350px; */
+  background-color:rgba(0,0,0,0.1);
+  border:2px solid #888;
 }
 
