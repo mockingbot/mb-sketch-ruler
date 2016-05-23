@@ -11,12 +11,35 @@ import VerRuler from './VerRuler';
  * 这里是组件的主区域
  */
 class Panel extends React.Component {
+  
+  constructor(){
+  	super();
+  	this.state = {
+  		position : {
+  			x: 200,
+  			y: 100
+  		},
+  		rect : {
+  			width: 200,
+  			height: 300
+  		}
+  	}
+  }
+
+  componentDidMount(){
+  	console.log(this.refs.panel)
+  }
+
   render() {
+  	var x = this.state.position.x;
+  	var y = this.state.position.y;
     return (
       <div className="container">
-      	<HorRuler></HorRuler>
+      	<HorRuler position={{x: x, y: y}}></HorRuler>
        	<VerRuler></VerRuler>
-        <canvas className="panel"></canvas>
+        <div className="panel">
+        	<div className="test"></div>
+        </div>
       </div>
     );
   }

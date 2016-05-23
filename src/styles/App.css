@@ -15,7 +15,7 @@ body {
   height:30px;
   background-color:#F5F5F5;
 } */
-.horRuler{
+#horRuler{
   position:absolute;
   
   top:0;
@@ -26,7 +26,7 @@ body {
   border-left:2px solid #CCC;
   border-bottom:2px solid #CCC;
 }
-.verRuler{
+#verRuler{
   position:absolute;
   
   top:30px;
@@ -38,11 +38,19 @@ body {
   border-top:2px solid #CCC;
 }
 .panel{
-  position:absolute;
+  position:relative;
   top:32px;
   left:32px;
   width:800px;
   height:800px;
+  border:2px solid red;
   background-color:#EEEEEE;
+}
+.test{
+  margin-top:100px;
+  margin-left:200px;
+  width:200px;
+  height:350px;
+  border:2px solid red;
 }
 
