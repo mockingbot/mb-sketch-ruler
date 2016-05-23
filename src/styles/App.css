@@ -1,0 +1,48 @@
+/* Base Application Styles */
+body {
+  color: #fff;
+  background-color:#EEEEEE;
+}
+.container{
+  position:relative;
+}
+/* .container:before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  width:30px;
+  height:30px;
+  background-color:#F5F5F5;
+} */
+.horRuler{
+  position:absolute;
+  
+  top:0;
+  left:30px;
+  width:800px;
+  height:30px;
+  background-color:#F5F5F5;
+  border-left:2px solid #CCC;
+  border-bottom:2px solid #CCC;
+}
+.verRuler{
+  position:absolute;
+  
+  top:30px;
+  left:0;
+  width:30px;
+  height:800px;
+  background-color:#F5F5F5;
+  border-right:2px solid #CCC;
+  border-top:2px solid #CCC;
+}
+.panel{
+  position:absolute;
+  top:32px;
+  left:32px;
+  width:800px;
+  height:800px;
+  background-color:#EEEEEE;
+}
+
