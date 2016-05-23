@@ -72,24 +72,24 @@ class Panel extends React.Component {
   handleMove(e){
   	// console.log(e.deltaX)
   	e.preventDefault();
-  	if(flag){
-  		// flag = false;
+  	
+  	
   		var deltaX = e.deltaX;
   		var deltaY = e.deltaY;
   		if(Math.abs(deltaX) > Math.abs(deltaY) + 2){
-  			if(deltaX > 0){
-  				// console.log("画板向左",deltaX)
-  				// var boardPos = this.state.boardPos;
-  				// this.setState(Object.assign({}, this.state, {
-  				// 	boardPos:{
-  				// 		x : boardPos.x + deltaX,
-  				// 		y: boardPos.y
-  				// 	}
-  				// }))
+  		// 	if(deltaX > 0){
+  		// 		// console.log("画板向左",deltaX)
+  		// 		// var boardPos = this.state.boardPos;
+  		// 		// this.setState(Object.assign({}, this.state, {
+  		// 		// 	boardPos:{
+  		// 		// 		x : boardPos.x + deltaX,
+  		// 		// 		y: boardPos.y
+  		// 		// 	}
+  		// 		// }))
   				
-  			}else{
-				// console.log("画板向右",deltaX)
-  			}
+  		// 	}else{
+				// // console.log("画板向右",deltaX)
+  		// 	}
   			var boardPos = this.state.boardPos;
 			this.setState(Object.assign({}, this.state, {
 				boardPos:{
@@ -104,17 +104,15 @@ class Panel extends React.Component {
   			}else{
   				// console.log("画板向下",deltaY)
   			}
+  			var boardPos = this.state.boardPos;
+			this.setState(Object.assign({}, this.state, {
+				boardPos:{
+					x : boardPos.x,
+					y : boardPos.y + deltaY
+				}
+			}))
   		}
   		
-  		
-  	}
-  	// console.log(e)
-  	// console.log(e.deltaX, e.deltaY)
-  	
-
-  }
-  componentDidMount(){
-  	
   }
 
   render() {
