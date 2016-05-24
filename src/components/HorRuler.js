@@ -133,7 +133,6 @@ class HorRuler extends React.Component {
             this.drawRuler(nStart, nPosX, nWidth);   
         }
 
-
         //只有属性发生变化时才重绘,两点好处
         // 1.提升效率
         // 2.可以避免改变一个方向,另一个方向也会略微位移的bug

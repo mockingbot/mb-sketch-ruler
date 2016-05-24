@@ -6,7 +6,7 @@ import React from 'react';
 /*
  * 2016.5.23 
  * iny
- * 水平标尺
+ * 画板
  */
 class Board extends React.Component {
   
