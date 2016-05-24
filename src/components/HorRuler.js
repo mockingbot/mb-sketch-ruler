@@ -13,8 +13,8 @@ class HorRuler extends React.Component {
     componentDidMount() {
         var canvas = this.refs.ruler;
         var rect = canvas.getBoundingClientRect();
-        this.width = rect.width;
-        this.height = rect.height;
+        this.width = rect.width * 2;
+        this.height = rect.height * 2;
         canvas.width = this.width;
         canvas.height = this.height;
 
@@ -24,7 +24,7 @@ class HorRuler extends React.Component {
     }
 
     drawRuler() {
-        console.log("水平重绘")
+        // console.log("水平重绘")
         //标尺起始x坐标
         var start = this.props.start;
         //手机的x坐标
@@ -40,25 +40,26 @@ class HorRuler extends React.Component {
         ctx.fillRect(0, 0, this.width, this.height);
 
         //设置底部刻度的样式
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.strokeStyle = '#999'
         
         //绘制底部刻度,之前因为没决定用canvas,用dom的border画的,又慢又要计算定位,太挫了,还是用canvas画统一一点
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(0, this.height); //border-left
+        // ctx.moveTo(0, 0);
+        // ctx.lineTo(0, this.height); //border-left
         ctx.moveTo(0, this.height); //border-bottom
         ctx.lineTo(this.width, this.height);
         ctx.closePath();
         ctx.stroke();
 
         //移动画布原点,方便绘制
-        ctx.translate(-start, 0);
+        ctx.translate(- start * 2, 0);
         // ctx.save();
 
         //先根据iphone宽度绘制阴影
         ctx.fillStyle = '#CCC'
-        ctx.fillRect(posX, 0, width, this.height);
+        ctx.font = '30px Microsoft Yahei'
+        ctx.fillRect(posX * 2, 0, width * 2, this.height);
 
         //再画刻度和文字
         ctx.beginPath(); //一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制
@@ -68,18 +69,26 @@ class HorRuler extends React.Component {
 
         //正确的方法是:偏移到10的倍数,再开始绘制
         // console.log(start % 10)
-        for (let i = start - start % 10; i < start + this.width; i += 10) {
+        var perWidth = 20;
+        var startX = start - start % perWidth
+
+        // console.log(startX)
+        // console.log(this.width / 2)
+        // console.log(start)
+        // console.log(startX + this.width / 2)
+        
+        for (let i = startX; i < startX + this.width / 2 - start; i += 10) {
             // var startX = start % 10
-            ctx.moveTo(i, 30);
-            // console.log(i % 100)
-            if (i % 100 === 0) {
+            ctx.moveTo(i * 2, this.height);
+            
+            if (i % (10 * 10) === 0) {
                 // console.log(i,"长的")
                 ctx.fillStyle = '#000'
-                ctx.fillText(i, i + 2, 15);
-                ctx.lineTo(i, 0);
+                ctx.fillText(i, i * 2 + 4, this.height / 2);
+                ctx.lineTo(i * 2, 0);
             } else {
                 // console.log(i,"短的")
-                ctx.lineTo(i, 20);
+                ctx.lineTo(i * 2, this.height - perWidth);
             }
             ctx.stroke();
         }
@@ -88,7 +97,7 @@ class HorRuler extends React.Component {
 
         //translate方法是相对移动,而不是绝对,也就是说translate(0,0)没意义,
         //要是太乱弄不清楚 最好还是用save/restore的方法还原
-        ctx.translate(start, 0);
+        ctx.translate(start * 2, 0);
         // ctx.restore();
     }
 

@@ -45,11 +45,12 @@ class Board extends React.Component {
         var deltaX = e.clientX - this.state.startX
         var deltaY = e.clientY - this.state.startY
         this.props.move(deltaX, deltaY)
+        this.setState(Object.assign({}, this.state, {
+          startX : e.clientX,
+          startY : e.clientY
+        }))
       }
-      this.setState(Object.assign({}, this.state, {
-        startX : e.clientX,
-        startY : e.clientY
-      }))
+      
     })
 
     document.addEventListener('mouseup', (e) => {
@@ -60,7 +61,6 @@ class Board extends React.Component {
   }
   
   render() {
-    console.log("render")
 
     var bgStyle = {
       width: 800,
