@@ -13,8 +13,8 @@ class VerRuler extends React.Component {
     componentDidMount() {
         var canvas = this.refs.ruler;
         var rect = canvas.getBoundingClientRect();
-        this.width = rect.width;
-        this.height = rect.height;
+        this.width = rect.width * 2;
+        this.height = rect.height * 2;
         canvas.width = this.width;
         canvas.height = this.height;
 
@@ -40,33 +40,39 @@ class VerRuler extends React.Component {
         ctx.fillRect(0, 0, this.width, this.height);
 
         //设置底部刻度的样式
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.strokeStyle = '#999'
         
         //绘制底部刻度
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(this.width, 0);	//border-top
+        // ctx.moveTo(0, 0);
+        // ctx.lineTo(this.width, 0);	//border-top对不齐,改用黑科技实现
         ctx.moveTo(this.width, 0);	//border-right
         ctx.lineTo(this.width, this.height);
         ctx.closePath();
         ctx.stroke();
 
         //移动画布原点,方便绘制
-        ctx.translate(0, -start);
+        ctx.translate(0, - start * 2);
         
         //根据iphone高度绘制阴影
         ctx.fillStyle = '#CCC'
-        ctx.fillRect(0, posY, this.width, height);
+        ctx.font = '30px Microsoft Yahei'
+        ctx.fillRect(0, posY * 2, this.width, height * 2);
 
+        var perHeight = 10 * 2;
+        var startY = start - start % perHeight
+		
 		//再画刻度和文字
-        for (let i = start - start % 10; i < start + this.height; i += 10) {
-            ctx.moveTo(30, i);
+        for (let i = startY; i < startY + this.height / 2; i += 10) {
+            
+            ctx.moveTo(this.width, i * 2);
+            
             if (i % 100 === 0) {
                 //这里先保存一下状态
                 ctx.save();
                 //将原点转移到当前画笔所在点
-                ctx.translate(15, i - 2)
+                ctx.translate(this.width / 2, (i - 2) * 2)
                 //旋转 -90 度
                 ctx.rotate(-Math.PI / 2)
                 ctx.fillStyle = '#000'
@@ -74,13 +80,14 @@ class VerRuler extends React.Component {
                 ctx.fillText(i, 0, 0)
                 //回复刚刚保存的状态
                 ctx.restore();
-                ctx.lineTo(0, i)
+                ctx.lineTo(0, i * 2)
             } else {
-                ctx.lineTo(20, i)
+                ctx.lineTo(this.width / 3 * 2, i * 2)
             }
             ctx.stroke();
         }
-        ctx.translate(0, start);
+        ctx.closePath();
+        ctx.translate(0, start * 2);
     }
 
     componentWillReceiveProps(nextProps) {

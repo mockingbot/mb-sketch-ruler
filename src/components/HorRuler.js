@@ -24,14 +24,14 @@ class HorRuler extends React.Component {
     }
 
     drawRuler() {
-        // console.log("水平重绘")
+        console.log("水平重绘")
         //标尺起始x坐标
         var start = this.props.start;
         //手机的x坐标
         var posX = this.props.posX;
         //手机的宽度
         var width = this.props.width;
-        // console.log(start, posX, width)
+        console.log(start, posX, width)
 
         var ctx = this.ctx;
 
@@ -46,7 +46,7 @@ class HorRuler extends React.Component {
         //绘制底部刻度,之前因为没决定用canvas,用dom的border画的,又慢又要计算定位,太挫了,还是用canvas画统一一点
         ctx.beginPath();
         // ctx.moveTo(0, 0);
-        // ctx.lineTo(0, this.height); //border-left
+        // ctx.lineTo(0, this.height); //border-left对不齐,改用黑科技实现
         ctx.moveTo(0, this.height); //border-bottom
         ctx.lineTo(this.width, this.height);
         ctx.closePath();
@@ -66,25 +66,21 @@ class HorRuler extends React.Component {
 
         //这样绘制当起点不为10的倍数时,长标和文字都不会出现
         // for(let i = start ; i < start+this.width ; i += 10){
-
         //正确的方法是:偏移到10的倍数,再开始绘制
         // console.log(start % 10)
-        var perWidth = 20;
+        var perWidth = 10 * 2;
         var startX = start - start % perWidth
 
-        // console.log(startX)
-        // console.log(this.width / 2)
-        // console.log(start)
-        // console.log(startX + this.width / 2)
+        ctx.fillStyle = '#000'
         
-        for (let i = startX; i < startX + this.width / 2 - start; i += 10) {
-            // var startX = start % 10
+        for (let i = startX; i < startX + this.width / 2; i += 10) {
+            
             ctx.moveTo(i * 2, this.height);
             
-            if (i % (10 * 10) === 0) {
+            if (i % 100 === 0) {
                 // console.log(i,"长的")
-                ctx.fillStyle = '#000'
-                ctx.fillText(i, i * 2 + 4, this.height / 2);
+                console.log(i)
+                ctx.fillText(i, (i + 2) * 2, this.height / 2);
                 ctx.lineTo(i * 2, 0);
             } else {
                 // console.log(i,"短的")
