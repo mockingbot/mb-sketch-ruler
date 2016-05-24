@@ -24,6 +24,7 @@ class VerRuler extends React.Component {
     }
 
     drawRuler() {
+    	console.log("垂直重绘")
         //标尺起始y坐标
         var start = this.props.start;
         //手机的y坐标
@@ -82,8 +83,15 @@ class VerRuler extends React.Component {
         ctx.translate(0, start);
     }
 
-    componentWillReceiveProps() {
-        this.drawRuler();
+    componentWillReceiveProps(nextProps) {
+
+        if(nextProps.start !== this.props.start
+        	|| nextProps.posY !== this.props.posY
+        	|| nextProps.height !== this.props.height)
+        {
+        	        this.drawRuler();
+        }
+
     }
 
     render() {

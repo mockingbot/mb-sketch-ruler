@@ -7,15 +7,15 @@ body {
 .container{
   position:relative;
 }
-/* .container:before{
+.container::before{
   content:'';
   position:absolute;
-  top:0;
-  left:0;
   width:30px;
   height:30px;
-  background-color:#F5F5F5;
-} */
+  box-sizing:border-box;
+  border:1px solid #999;
+  
+}
 #horRuler{
   position:absolute;
   
@@ -37,9 +37,10 @@ body {
   position:relative;
   top:30px;
   left:30px;
-  
+  overflow:hidden;
   background-color:#EEEEEE;
 }
+
 .panel{
   position:absolute;
   /* top:100px;
@@ -47,16 +48,24 @@ body {
   /* width:800px;
   height:800px; */
   /* border:2px solid red; */
-  
 }
-.test{
+.header{
   position:absolute;
-
+  bottom:100%;
+  width:100%;
+  height:30px;
+  line-height:30px;
+  cursor:move;
+  outline:1px solid red;
+}
+.iphone{
+  position:absolute;
   /* top:100px; */
   /* left:200px; */
   /* width:200px; */
   /* height:350px; */
   background-color:rgba(0,0,0,0.1);
-  border:2px solid #888;
+  outline:1px solid red;
+  /* box-shadow:; */
 }
 

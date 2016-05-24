@@ -42,12 +42,10 @@ class Panel extends React.Component {
   			x: -240,
   			y: -100
   		},
-  		//iphone的位置
   		iphonePos : {
   			x: 0,
   			y: 0,
   		},
-  		//iphone的大小
   		size : {
   			width: this.state.size.width + 1,
   			height: 568
@@ -55,20 +53,7 @@ class Panel extends React.Component {
   	})
   }
 
-  // 	boardPos : {
-  				// 		x: -240,
-  				// 		y: -100
-  				// 	},
-  				// 	//iphone的位置
-  				// 	iphonePos : {
-  				// 		x: 0,
-  				// 		y: 0,
-  				// 	},
-  				// 	//iphone的大小
-  				// 	size : {
-  				// 		width: this.state.size.width + 1,
-  				// 		height: 568
-  				// 	}
+  
   handleMove(e){
   	// console.log(e.deltaX)
   	e.preventDefault();
@@ -76,43 +61,57 @@ class Panel extends React.Component {
   	
   		var deltaX = e.deltaX;
   		var deltaY = e.deltaY;
-  		if(Math.abs(deltaX) > Math.abs(deltaY) + 2){
+  		if(Math.abs(deltaX) > Math.abs(deltaY) + 1){
   		// 	if(deltaX > 0){
-  		// 		// console.log("画板向左",deltaX)
-  		// 		// var boardPos = this.state.boardPos;
-  		// 		// this.setState(Object.assign({}, this.state, {
-  		// 		// 	boardPos:{
-  		// 		// 		x : boardPos.x + deltaX,
-  		// 		// 		y: boardPos.y
-  		// 		// 	}
-  		// 		// }))
-  				
+  		// 		console.log("画板向左",deltaX)
   		// 	}else{
-				// // console.log("画板向右",deltaX)
+		//		console.log("画板向右",deltaX)
   		// 	}
   			var boardPos = this.state.boardPos;
+  			var newX = boardPos.x + deltaX;
+
+  			if(newX < -9999 || newX + this.state.size.width > 9999){
+
+  				//很明显手机的宽度不是所需宽度(应该是窗口宽度,考虑把窗口也作为state,传入尺子
+  				//,用于在外部控制尺子的宽高的同时,也方便在窗口resize时通过改变state的方式自动控制重绘
+  				return
+  			}
 			this.setState(Object.assign({}, this.state, {
 				boardPos:{
-					x : boardPos.x + deltaX,
+					x : newX,
 					y : boardPos.y
 				}
 			}))
   			
-  		}else if(Math.abs(deltaY) > Math.abs(deltaX) + 2){
-  			if(deltaY > 0){
-  				// console.log("画板向上",deltaY)
-  			}else{
-  				// console.log("画板向下",deltaY)
-  			}
+  		}else if(Math.abs(deltaY) > Math.abs(deltaX) + 1){
+  			// if(deltaY > 0){
+  			//		console.log("画板向上",deltaY)
+  			// }else{
+  			//		console.log("画板向下",deltaY)
+  			// }
   			var boardPos = this.state.boardPos;
+  			var newY = boardPos.y + deltaY;
+  			if(newY < -9999 || newY + this.state.size.height > 9999){
+  				return
+  			}
 			this.setState(Object.assign({}, this.state, {
 				boardPos:{
 					x : boardPos.x,
-					y : boardPos.y + deltaY
+					y : newY
 				}
 			}))
   		}
-  		
+  }
+
+  moveIphone(deltaX, deltaY){
+  	console.log(deltaX, deltaY)
+  	// console.log(pos.x - 30 + this.state.boardPos.x,pos.y + this.state.boardPos.y)
+  	this.setState(Object.assign({}, this.state, {
+  		iphonePos:{
+  			x : this.state.iphonePos.x + deltaX,
+  			y : this.state.iphonePos.y + deltaY
+  		}
+  	}))
   }
 
   render() {
@@ -128,7 +127,9 @@ class Panel extends React.Component {
         	iphonePos={this.state.iphonePos} 
         	size={this.state.size}
         	handleClick={this.handleClick.bind(this)}
-        	handleMove={this.handleMove.bind(this)}/>
+        	handleMove={this.handleMove.bind(this)}
+        	move={this.moveIphone.bind(this)}
+        	/>
       </div>
     );
   }

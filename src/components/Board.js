@@ -10,10 +10,15 @@ import React from 'react';
  */
 class Board extends React.Component {
   
-  // <Board position={this.state.boardPos} iphonePos={this.state.iphonePos} size={this.state.size}/>
-
+  constructor(){
+    super();
+    this.state = {
+      //横、纵标尺的起始坐标值
+      flag : false
+    }
+  }
   handleClick(){
-    this.props.handleClick();
+    // this.props.handleClick();
   }
   touchStart(e){
     console.log(e)
@@ -21,7 +26,41 @@ class Board extends React.Component {
   touchEnd(e){
     console.log(e)
   }
+  dragStart(e){
+    e.preventDefault();
+    
+    this.setState(Object.assign({}, this.state, {
+      flag : true,
+      startX : e.clientX,
+      startY : e.clientY
+    }))
+    
+    console.log(e.clientX, e.clientY)
+  }
+
+  componentDidMount(){
+
+    document.addEventListener('mousemove', (e) => {
+      if(this.state.flag){
+        var deltaX = e.clientX - this.state.startX
+        var deltaY = e.clientY - this.state.startY
+        this.props.move(deltaX, deltaY)
+      }
+      this.setState(Object.assign({}, this.state, {
+        startX : e.clientX,
+        startY : e.clientY
+      }))
+    })
+
+    document.addEventListener('mouseup', (e) => {
+      this.setState(Object.assign({}, this.state, {
+        flag : false
+      }))
+    })
+  }
+  
   render() {
+    console.log("render")
 
     var bgStyle = {
       width: 800,
@@ -37,7 +76,6 @@ class Board extends React.Component {
       left: this.props.iphonePos.x,
       width: this.props.size.width,
       height: this.props.size.height
-
     }
     
   	// this.drawRuler();
@@ -46,9 +84,15 @@ class Board extends React.Component {
             style={bgStyle}
             onTouchStart={this.touchStart.bind(this)}
             onTouchEnd={this.touchEnd.bind(this)}
-            onWheel={this.props.handleMove}>
+            onWheel={this.props.handleMove}
+            onChange={this.props.handleMove}>
         <div className="panel" style={panelStyle}>
-          <div className="test" style={iphoneStyle} onClick={this.handleClick.bind(this)}></div>
+          <div className="iphone" 
+            style={iphoneStyle} 
+            onClick={this.handleClick.bind(this)}>
+            <div className="header"
+              onMouseDown={this.dragStart.bind(this)}>iPhone5s</div>
+          </div>
         </div>
        </div>
     );

@@ -24,6 +24,7 @@ class HorRuler extends React.Component {
     }
 
     drawRuler() {
+        console.log("水平重绘")
         //标尺起始x坐标
         var start = this.props.start;
         //手机的x坐标
@@ -91,8 +92,21 @@ class HorRuler extends React.Component {
         // ctx.restore();
     }
 
-    componentWillReceiveProps() {
-        this.drawRuler();
+    componentWillReceiveProps(nextProps) {
+        var nStart = nextProps.start;
+        var nPosX = nextProps.posX;
+        var nWidth = nextProps.width;
+
+        //只有属性发生变化时才重绘,两点好处
+        // 1.提升效率
+        // 2.可以避免改变一个方向,另一个方向也会略微位移的bug
+        if(nextProps.start !== this.props.start
+            || nextProps.posX !== this.props.posX
+            || nextProps.width !== this.props.width)
+        {
+                    this.drawRuler();
+        }
+
     }
 
     handleClick() {
