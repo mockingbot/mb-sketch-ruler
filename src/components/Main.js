@@ -14,12 +14,46 @@ import Panel from './Panel'
 // √ 1.由容器组件维护当前水平、垂直标尺以及画板的state ？
 //   2.将两个标尺以参数的形式传给画板，由画板自身来管理 ？
 class AppComponent extends React.Component {
-  render() {
-    return (
-      <div className="main">
-        <Panel />
-      </div>
-    );
+	
+	constructor(props){
+		super(props)
+		this.state = {
+			width : document.body.clientWidth - 30,
+			height : document.body.clientHeight - 30
+		}
+	}
+	componentDidMount() {
+
+		var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+		
+		window.addEventListener(resizeEvt, () => {
+			console.log(document.body.clientWidth)
+			this.setState({
+				width : document.body.clientWidth - 30,
+				height : document.body.clientHeight - 30
+			})
+		});
+		// (function(){
+		// 	var docEl = document.documentElement;
+		// 	
+		// 	var recalc = function() {
+		// 		console.log("msg")
+		// 	    var clientWidth = docEl.clientWidth;
+		// 	    docEl.style.fontSize = 20 * ( clientWidth/ 320) + 'px';
+		// 	    document.body.style.height = clientWidth * (900 / 1440) + 'px';
+		// 	}
+		// 	window.addEventListener(resizeEvt, recalc, false);
+		// 	document.addEventListener('DOMContentLoaded', recalc, false);
+		// })();
+	}
+	
+	render() {
+		console.log("state: "+this.state.width)
+	    return (
+	      	<div className="main">
+	        	<Panel width={this.state.width} height={this.state.height}/>
+      		</div>
+      	);
   }
 }
 

@@ -70,7 +70,7 @@ class Panel extends React.Component {
   			var boardPos = this.state.boardPos;
   			var newX = boardPos.x + deltaX;
 
-  			if(newX < -9999 || newX + this.state.size.width > 9999){
+  			if(newX < -9999 || newX + this.props.width > 9999){
 
   				//很明显手机的宽度不是所需宽度(应该是窗口宽度,考虑把窗口也作为state,传入尺子
   				//,用于在外部控制尺子的宽高的同时,也方便在窗口resize时通过改变state的方式自动控制重绘
@@ -118,10 +118,14 @@ class Panel extends React.Component {
   	// var x = this.state.position.x;
   	// var y = this.state.position.y;
   	
-  	flag = true;
+  	console.log('get: '+this.props.width)
     return (
       <div className="container">
-      	<HorRuler start={this.state.boardPos.x} posX={this.state.iphonePos.x} width={this.state.size.width} />
+      	<HorRuler start={this.state.boardPos.x}
+      		posX={this.state.iphonePos.x} 
+      		width={this.state.size.width} 
+      		domWidth={this.props.width}
+      		domHeight={30}/>
        	<VerRuler start={this.state.boardPos.y} posY={this.state.iphonePos.y} height={this.state.size.height} />
         <Board position={this.state.boardPos} 
         	iphonePos={this.state.iphonePos} 

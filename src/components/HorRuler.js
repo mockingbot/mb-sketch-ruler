@@ -10,11 +10,32 @@ import React from 'react';
  */
 class HorRuler extends React.Component {
 
+    reSize(width, height){
+        var canvas = this.refs.ruler;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        this.width = width * 2;
+        this.height = height * 2;
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+    }
+
     componentDidMount() {
         var canvas = this.refs.ruler;
-        var rect = canvas.getBoundingClientRect();
-        this.width = rect.width * 2;
-        this.height = rect.height * 2;
+        var domWidth = this.props.domWidth
+        var domHeight = this.props.domHeight
+        canvas.style.width = domWidth + 'px';
+        canvas.style.height = domHeight + 'px';
+
+        // var canvasRect = canvas.getBoundingClientRect();
+        // var rect = {
+        //     width : this.props.domWidth || canvasRect.width,
+        //     height : this.props.domHeight || canvasRect.height
+        // }
+        //2倍宽高,以解决canvas的1px问题
+        this.width = domWidth * 2;
+        this.height = domHeight * 2;
         canvas.width = this.width;
         canvas.height = this.height;
 
@@ -23,16 +44,17 @@ class HorRuler extends React.Component {
         this.drawRuler();
     }
 
-    drawRuler() {
+    /* @ params
+     * start : 标尺起始x坐标
+     * posX : 手机的x坐标
+     * width : 手机的宽度
+     */
+    drawRuler(start = this.props.start,
+                posX = this.props.posX,
+                width = this.props.width) {
+        
         console.log("水平重绘")
-        //标尺起始x坐标
-        var start = this.props.start;
-        //手机的x坐标
-        var posX = this.props.posX;
-        //手机的宽度
-        var width = this.props.width;
-        console.log(start, posX, width)
-
+        
         var ctx = this.ctx;
 
         //绘制刻度尺的背景
@@ -79,7 +101,7 @@ class HorRuler extends React.Component {
             
             if (i % 100 === 0) {
                 // console.log(i,"长的")
-                console.log(i)
+                
                 ctx.fillText(i, (i + 2) * 2, this.height / 2);
                 ctx.lineTo(i * 2, 0);
             } else {
@@ -98,18 +120,29 @@ class HorRuler extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        //下一个props中与绘制函数相关的参数
         var nStart = nextProps.start;
         var nPosX = nextProps.posX;
         var nWidth = nextProps.width;
+        
+        //如果是窗口大小发生了变化
+        if(nextProps.domWidth !== this.props.domWidth
+            || nextProps.domHeight !== this.props.domHeight){
+            console.log("reSize")
+            this.reSize(nextProps.domWidth, nextProps.domHeight);
+            this.drawRuler(nStart, nPosX, nWidth);   
+        }
+
 
         //只有属性发生变化时才重绘,两点好处
         // 1.提升效率
         // 2.可以避免改变一个方向,另一个方向也会略微位移的bug
-        if(nextProps.start !== this.props.start
-            || nextProps.posX !== this.props.posX
-            || nextProps.width !== this.props.width)
+        if(nStart !== this.props.start
+            || nPosX !== this.props.posX
+            || nWidth !== this.props.width)
         {
-                    this.drawRuler();
+            //找到问题了!!这里绘制的一切都是根据旧props计算的,所以不准!!
+            this.drawRuler(nStart, nPosX, nWidth);
         }
 
     }

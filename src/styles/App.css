@@ -1,7 +1,10 @@
 /* Base Application Styles */
+html,body,#app,.main,.container{
+  width:100%;
+  height:100%;
+}
 body {
   color: #fff;
-  width:100%;
   background-color: rgba(0,255,0,0.1);
 }
 .container{
