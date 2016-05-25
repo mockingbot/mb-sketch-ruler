@@ -10,6 +10,7 @@ import React from 'react';
  */
 class HorRuler extends React.Component {
 
+    //当窗口发生改变时,根据新的窗口大小重置canvas
     reSize(width, height){
         var canvas = this.refs.ruler;
         canvas.style.width = width + 'px';
@@ -18,21 +19,16 @@ class HorRuler extends React.Component {
         this.height = height * 2;
         canvas.width = this.width;
         canvas.height = this.height;
-
     }
 
+    //组件绑定后首次绘制
     componentDidMount() {
         var canvas = this.refs.ruler;
-        var domWidth = this.props.domWidth
-        var domHeight = this.props.domHeight
+        var domWidth = this.props.domWidth;
+        var domHeight = this.props.domHeight;
         canvas.style.width = domWidth + 'px';
         canvas.style.height = domHeight + 'px';
 
-        // var canvasRect = canvas.getBoundingClientRect();
-        // var rect = {
-        //     width : this.props.domWidth || canvasRect.width,
-        //     height : this.props.domHeight || canvasRect.height
-        // }
         //2倍宽高,以解决canvas的1px问题
         this.width = domWidth * 2;
         this.height = domHeight * 2;
@@ -40,11 +36,11 @@ class HorRuler extends React.Component {
         canvas.height = this.height;
 
         this.ctx = canvas.getContext('2d');
-
         this.drawRuler();
     }
 
-    /* @ params
+    /* 核心方法,根据属性重新绘制canvas
+     * @ params
      * start : 标尺起始x坐标
      * posX : 手机的x坐标
      * width : 手机的宽度
@@ -67,16 +63,16 @@ class HorRuler extends React.Component {
         
         //绘制底部刻度,之前因为没决定用canvas,用dom的border画的,又慢又要计算定位,太挫了,还是用canvas画统一一点
         ctx.beginPath();
-        // ctx.moveTo(0, 0);
-        // ctx.lineTo(0, this.height); //border-left对不齐,改用黑科技实现
-        ctx.moveTo(0, this.height); //border-bottom
+        
+        //border-bottom(border-left对不齐,改用css实现)
+        ctx.moveTo(0, this.height); 
         ctx.lineTo(this.width, this.height);
+        
         ctx.closePath();
         ctx.stroke();
 
         //移动画布原点,方便绘制
         ctx.translate(- start * 2, 0);
-        // ctx.save();
 
         //先根据iphone宽度绘制阴影
         ctx.fillStyle = '#CCC'
@@ -85,38 +81,33 @@ class HorRuler extends React.Component {
 
         //再画刻度和文字
         ctx.beginPath(); //一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制
+        ctx.fillStyle = '#000'
+
+        var perWidth = 10 * 2;
+        var startX = start - start % perWidth
 
         //这样绘制当起点不为10的倍数时,长标和文字都不会出现
         // for(let i = start ; i < start+this.width ; i += 10){
         //正确的方法是:偏移到10的倍数,再开始绘制
-        // console.log(start % 10)
-        var perWidth = 10 * 2;
-        var startX = start - start % perWidth
-
-        ctx.fillStyle = '#000'
-        
         for (let i = startX; i < startX + this.width / 2; i += 10) {
             
             ctx.moveTo(i * 2, this.height);
             
+            //绘制长刻度
             if (i % 100 === 0) {
-                // console.log(i,"长的")
-                
                 ctx.fillText(i, (i + 2) * 2, this.height / 2);
                 ctx.lineTo(i * 2, 0);
-            } else {
-                // console.log(i,"短的")
+            } else { //绘制短刻度
                 ctx.lineTo(i * 2, this.height - perWidth);
             }
             ctx.stroke();
         }
         ctx.closePath();
 
-
+        ctx.translate(start * 2, 0);
         //translate方法是相对移动,而不是绝对,也就是说translate(0,0)没意义,
         //要是太乱弄不清楚 最好还是用save/restore的方法还原
-        ctx.translate(start * 2, 0);
-        // ctx.restore();
+        
     }
 
     componentWillReceiveProps(nextProps) {
@@ -128,7 +119,7 @@ class HorRuler extends React.Component {
         //如果是窗口大小发生了变化
         if(nextProps.domWidth !== this.props.domWidth
             || nextProps.domHeight !== this.props.domHeight){
-            console.log("reSize")
+            
             this.reSize(nextProps.domWidth, nextProps.domHeight);
             this.drawRuler(nStart, nPosX, nWidth);   
         }

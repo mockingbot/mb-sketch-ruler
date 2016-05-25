@@ -58,7 +58,6 @@ class Panel extends React.Component {
   	// console.log(e.deltaX)
   	e.preventDefault();
   	
-  	
   		var deltaX = e.deltaX;
   		var deltaY = e.deltaY;
   		if(Math.abs(deltaX) > Math.abs(deltaY) + 1){
@@ -126,7 +125,11 @@ class Panel extends React.Component {
       		width={this.state.size.width} 
       		domWidth={this.props.width}
       		domHeight={30}/>
-       	<VerRuler start={this.state.boardPos.y} posY={this.state.iphonePos.y} height={this.state.size.height} />
+       	<VerRuler start={this.state.boardPos.y} 
+       		posY={this.state.iphonePos.y} 
+       		height={this.state.size.height} 
+       		domWidth={30}
+       		domHeight={this.props.height}/>
         <Board position={this.state.boardPos} 
         	iphonePos={this.state.iphonePos} 
         	size={this.state.size}

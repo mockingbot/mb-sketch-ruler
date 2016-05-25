@@ -33,18 +33,7 @@ class AppComponent extends React.Component {
 				height : document.body.clientHeight - 30
 			})
 		});
-		// (function(){
-		// 	var docEl = document.documentElement;
-		// 	
-		// 	var recalc = function() {
-		// 		console.log("msg")
-		// 	    var clientWidth = docEl.clientWidth;
-		// 	    docEl.style.fontSize = 20 * ( clientWidth/ 320) + 'px';
-		// 	    document.body.style.height = clientWidth * (900 / 1440) + 'px';
-		// 	}
-		// 	window.addEventListener(resizeEvt, recalc, false);
-		// 	document.addEventListener('DOMContentLoaded', recalc, false);
-		// })();
+
 	}
 	
 	render() {
