@@ -45,13 +45,13 @@ body {
   background-color:#EEEEEE;
 }
 
-.panel{
+.origin{
   position:absolute;
   /* top:100px;
   left:240px; */
   /* width:800px;
   height:800px; */
-  /* border:2px solid red; */
+  border:4px solid black;
 }
 .header{
   position:absolute;
@@ -61,6 +61,8 @@ body {
   line-height:30px;
   cursor:move;
   outline:1px solid red;
+  color:#000;
+
 }
 .iphone{
   position:absolute;
