@@ -48,7 +48,7 @@ class VerRuler extends React.Component {
                 posY = this.props.posY,
                 height = this.props.height) {
     	
-    	console.log("垂直重绘")
+    	// console.log("垂直重绘")
 
         var ctx = this.ctx;
 

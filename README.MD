@@ -30,7 +30,8 @@
  	** 在receiveProps处控制 ×
  	** 在事件分发处控制 √ 早处理可以避免不必要的通信代价//
  	** 控制边界条件时,很明显手机的宽度不是所需宽度(应该是窗口宽度,考虑把窗口大小也作为state,传入尺子,用于在外部控制尺子的宽高的同时,也方便在窗口resize时通过改变state的方式自动控制重绘
- * iphone拖拽时用到的参数不应该用state,因为导致了不必要的重绘
+ * ~~iphone拖拽时用到的参数不应该用state,因为导致了不必要的重绘~~
+
 
 ###bug (已经解决的划掉)
 ---
@@ -51,6 +52,9 @@
     <br />
   * 6. 到达正向边界9999时,若果扩大窗口宽度,则会绘制出超过边界的数字
   * 7. 打包看效果发现React有半秒左右的加载时间,在这之前显示的是dom节点,很丑陋,下个版本处理掉
+  * 8. ~~mac上单向箭头光标和windows上不一样,查阅资料后得知其实可选项远超过百度第一个w3school ~~
+    * [css光标](http://www.w3chtml.com/css3/properties/user-interface/cursor.html)
+  * 9. 拖动边框改变大小的时候出现了预期的问题:因为定位点在左上,所以只有右/下/右下方向可以正常改变大小,修改方法:左上等点需要改宽高的同时也改定位点,这也是符合操作逻辑的
 
 ###Note
 ---
@@ -68,7 +72,7 @@
      * 监听需要拖拽区域的鼠标按下事件,以及document的鼠标移动和鼠标松开事件,因为如果鼠标移动过快,离开了拖拽区域才释放,就会出现各种奇怪的问题
    * 思路
      *  ~~iphone div仅负责宽高,定位由它的父元素完成,这样可以省去不少计算的麻烦~~ (如果多个物体,这样就不行了,所以还得为iphone定位,事实上拖拽时已经改变了iphone的定位,却没有改变父元素,父元素panel实际上是原点)
-     * 鼠标按下时需要绑定事件,为了在事件中引用this,需要bind(this),鼠标释放或组件unmount时需要取消监听,所以需要传具名函数,这时发现两次都使用this.moveEvent.bind(this)是无法取消监听的,思索了一下,用闭包解决思路如下
+     * 鼠标按下时需要绑定事件,为了在事件中引用this,需要bind(this),鼠标释放或组件unmount时需要取消监听,所以需要传具名函数,这时发现两次都使用this.moveEvent.bind(this)是无法取消监听的,思索了一下,解决方案简化如下
      <br />
      ``
      	mouseDownEvent() {
@@ -76,4 +80,11 @@
      		document.addEventListener('mousemove', this.fn)
      	    document.removeEventListener('mousemove', this.fn)
      	}
+     ``
+   * CSS
+     * 当没有双击手机的header部分时,文字应当不可选
+     ``-webkit-user-select:none;
+       -moz-user-select:none;
+       -o-user-select:none;
+       user-select:none;
      ``

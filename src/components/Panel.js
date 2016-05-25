@@ -102,9 +102,9 @@ class Panel extends React.Component {
   		}
   }
 
-  moveIphone(deltaX, deltaY){
-  	console.log(deltaX, deltaY)
-  	// console.log(pos.x - 30 + this.state.boardPos.x,pos.y + this.state.boardPos.y)
+  moveIPhone(deltaX, deltaY){
+  	// console.log(deltaX, deltaY)
+  	
   	this.setState(Object.assign({}, this.state, {
   		iphonePos:{
   			x : this.state.iphonePos.x + deltaX,
@@ -113,11 +113,18 @@ class Panel extends React.Component {
   	}))
   }
 
+  resizeIPhone(deltaWidth, deltaHeight){
+  	var size = this.state.size;
+  	this.setState(Object.assign({}, this.state, {
+  		size : {
+  			width : size.width + deltaWidth,
+  			height : size.height + deltaHeight
+  		}
+  	}))
+  }
+
   render() {
-  	// var x = this.state.position.x;
-  	// var y = this.state.position.y;
   	
-  	console.log('get: '+this.props.width)
     return (
       <div className="container">
       	<HorRuler start={this.state.boardPos.x}
@@ -135,7 +142,8 @@ class Panel extends React.Component {
         	size={this.state.size}
         	handleClick={this.handleClick.bind(this)}
         	handleMove={this.handleMove.bind(this)}
-        	move={this.moveIphone.bind(this)}
+        	moveIPhone={this.moveIPhone.bind(this)}
+        	resizeIPhone={this.resizeIPhone.bind(this)}
         	/>
       </div>
     );

@@ -24,7 +24,7 @@ class Board extends React.Component {
   componentDidMount(){
 
   }
-  
+
   render() {
 
     var bgStyle = {
@@ -45,7 +45,8 @@ class Board extends React.Component {
             onWheel={this.props.handleMove}
             onChange={this.props.handleMove}>
         <div className="origin" style={panelStyle}>
-          <IPhone onMove={this.props.move}
+          <IPhone onMove={this.props.moveIPhone}
+            onResize={this.props.resizeIPhone}
             top={this.props.iphonePos.y}
             left={this.props.iphonePos.x}
             width={this.props.size.width}

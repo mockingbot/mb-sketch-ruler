@@ -49,7 +49,7 @@ class HorRuler extends React.Component {
                 posX = this.props.posX,
                 width = this.props.width) {
         
-        console.log("水平重绘")
+        // console.log("水平重绘")
         
         var ctx = this.ctx;
 
@@ -140,7 +140,7 @@ class HorRuler extends React.Component {
     handleClick() {
         console.log('点击了')
             //被clearRect坑了,该函数相当于只是用底色画了个矩形,上一次未close的路径并不会清除
-        this.ctx.clearRect(0, 0, this.width, this.height);
+        // this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
     render() {
