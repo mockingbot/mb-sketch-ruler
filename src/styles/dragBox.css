@@ -21,7 +21,11 @@
 	align-items:flex-end;
 }
 .dragBox span{
-	border:4px solid black;
+	background-color:#EEE;
+	border:1px solid #888;
+	width:5px;
+	height:5px;
+	
 }
 .top span:first-child{
 	cursor: nwse-resize;
@@ -46,9 +50,17 @@
 }
 .bottom span:last-child{
 	cursor: nwse-resize;
-	 
 }
-/* 不用定位了,太丑
+
+/*<div className="topLeft"></div>
+	<div className="top"></div>
+	<div className="topRight"></div>
+	<div className="left"></div>
+	<div className="right"></div>
+	<div className="bottomLeft"></div>
+	<div className="bottom"></div>
+	<div className="bottomRight"></div>*/
+	/* 不用定位了,太丑
 .dragBox .topLeft{
 	top:0;
 	left:0;

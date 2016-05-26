@@ -6,10 +6,12 @@ html,body,#app,.main,.container{
 body {
   color: #fff;
   background-color: rgba(0,255,0,0.1);
+  font-family:'Microsoft Yahei';
 }
 .container{
   position:relative;
 }
+/* 改用canvas实现
 .container::before{
   content:'';
   position:absolute;
@@ -19,7 +21,7 @@ body {
   border-right:1px solid #999;
   border-bottom:1px solid #999;
   
-}
+} */
 #horRuler{
   position:absolute;
   
@@ -49,31 +51,60 @@ body {
   position:absolute;
   /* top:100px;
   left:240px; */
-  /* width:800px;
-  height:800px; */
-  border:5px solid #888;
-  border-radius:50%;
+  width:10px;
+  height:10px;
+  background-color:#990;
+}
+.origin:hover{
+
+}
+.tooltip{
+  position:absolute;
+  /* opacity:0; */
+  top:-200%;
+  bottom:-100%;
+  left:-1000%;
+  right:220%;
+  
+  line-height:2em;
+  font-size:14px;
+  padding:.5em 1em;
+  background-color:#666;
+  border-radius:10px;
+  -webkit-transition: all 1s linear;
+  -moz-transition: all 1s linear;
+  transition:all 1s linear;
+}
+.tooltip:before{
+  position:absolute;
+  content:'';
+  width:0;
+  height:0;
+  bottom:30%;
+  left:99%;
+  color:#333;
+  border:8px solid transparent;
+  border-left:8px solid #666;
 }
 .header{
   position:absolute;
   bottom:100%;
-  width:100%;
+  padding:0 5px;
+  /* width:50%; */
   height:30px;
   line-height:30px;
   cursor:move;
-  outline:1px solid red;
-  color:#000;
+
+  color:#999;
   -webkit-user-select:none;-moz-user-select:none;-o-user-select:none;user-select:none;
 
 }
 .iphone{
   position:absolute;
-  /* top:100px; */
-  /* left:200px; */
-  /* width:200px; */
-  /* height:350px; */
-  background-color:rgba(0,0,0,0.1);
-  outline:1px solid red;
-  /* box-shadow:; */
+  box-shadow:-2px 2px 4px 1px #CCC,2px 0px 4px 1px #CCC;
+  background-color:#FBFBFB;
+}
+.iphone:hover{
+  outline:4px solid #97C4F0;
 }
 

@@ -113,9 +113,14 @@ class Panel extends React.Component {
   	}))
   }
 
-  resizeIPhone(deltaWidth, deltaHeight){
+  resizeIPhone(deltaWidth, deltaHeight, deltaLeft = 0, deltaTop = 0){
+  	var pos = this.state.iphonePos;
   	var size = this.state.size;
   	this.setState(Object.assign({}, this.state, {
+  		iphonePos : {
+  			x : pos.x + deltaLeft,
+  			y : pos.y + deltaTop
+  		},
   		size : {
   			width : size.width + deltaWidth,
   			height : size.height + deltaHeight
@@ -123,10 +128,32 @@ class Panel extends React.Component {
   	}))
   }
 
+  componentDidMount(){
+  	var corner = this.refs.corner;
+  	corner.style.position = 'absolute';
+  	corner.style.width = '30px';
+  	corner.style.height = '30px';
+  	corner.width = 60;
+  	corner.height = 60;
+  	var ctx = corner.getContext('2d');
+
+  	ctx.fillStyle = '#F5F5F5'
+  	ctx.fillRect(0, 0, 60, 60);
+
+  	ctx.lineWidth = 2;
+    ctx.strokeStyle = '#999'
+  	ctx.moveTo(60, 0);
+  	ctx.lineTo(60, 60);
+  	ctx.moveTo(60, 60);
+  	ctx.lineTo(0, 60);
+  	ctx.stroke();
+  }
+
   render() {
   	
     return (
       <div className="container">
+      	<canvas ref="corner"/>
       	<HorRuler start={this.state.boardPos.x}
       		posX={this.state.iphonePos.x} 
       		width={this.state.size.width} 

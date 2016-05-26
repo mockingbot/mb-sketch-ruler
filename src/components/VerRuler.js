@@ -56,6 +56,13 @@ class VerRuler extends React.Component {
         ctx.fillStyle = '#F5F5F5'
         ctx.fillRect(0, 0, this.width, this.height);
 
+        //先根据iphone高度绘制阴影
+        ctx.fillStyle = '#CCC'
+        ctx.font = '30px Microsoft Yahei'
+        ctx.fillRect(0, (posY - start) * 2, this.width, height * 2);
+
+		//再画刻度和文字(因为刻度遮住了阴影)
+        
         //设置底部刻度的样式
         ctx.lineWidth = 2;
         ctx.strokeStyle = '#999'
@@ -73,12 +80,7 @@ class VerRuler extends React.Component {
         //移动画布原点,方便绘制
         ctx.translate(0, - start * 2);
         
-        //根据iphone高度绘制阴影
-        ctx.fillStyle = '#CCC'
-        ctx.font = '30px Microsoft Yahei'
-        ctx.fillRect(0, posY * 2, this.width, height * 2);
-
-        //再画刻度和文字
+        
         ctx.beginPath();
         ctx.fillStyle = '#000'
         

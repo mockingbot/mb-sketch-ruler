@@ -57,10 +57,16 @@ class HorRuler extends React.Component {
         ctx.fillStyle = '#F5F5F5'
         ctx.fillRect(0, 0, this.width, this.height);
 
+        //先根据iphone宽度绘制阴影
+        ctx.fillStyle = '#CCC'
+        ctx.font = '30px Microsoft Yahei'
+        ctx.fillRect((posX - start) * 2, 0, width * 2, this.height);
+
+        //再画刻度和文字(因为刻度遮住了阴影)
+        
         //设置底部刻度的样式
         ctx.lineWidth = 2;
         ctx.strokeStyle = '#999'
-        
         //绘制底部刻度,之前因为没决定用canvas,用dom的border画的,又慢又要计算定位,太挫了,还是用canvas画统一一点
         ctx.beginPath();
         
@@ -73,13 +79,7 @@ class HorRuler extends React.Component {
 
         //移动画布原点,方便绘制
         ctx.translate(- start * 2, 0);
-
-        //先根据iphone宽度绘制阴影
-        ctx.fillStyle = '#CCC'
-        ctx.font = '30px Microsoft Yahei'
-        ctx.fillRect(posX * 2, 0, width * 2, this.height);
-
-        //再画刻度和文字
+        
         ctx.beginPath(); //一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制
         ctx.fillStyle = '#000'
 

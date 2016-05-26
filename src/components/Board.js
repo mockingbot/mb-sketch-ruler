@@ -2,7 +2,7 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
-import IPhone from './IPHone'
+import IPhone from './IPhone'
 /*
  * 2016.5.23 
  * iny
@@ -28,9 +28,9 @@ class Board extends React.Component {
   render() {
 
     var bgStyle = {
-      width: 800,
-      height: 800,
-      backgroundColor: 'rgba(255,0,0,0.1)'
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#E7E7E7'
     }
     var panelStyle = {
       top: - this.props.position.y,
@@ -45,6 +45,9 @@ class Board extends React.Component {
             onWheel={this.props.handleMove}
             onChange={this.props.handleMove}>
         <div className="origin" style={panelStyle}>
+          {this.props.iphonePos.x == 0 && this.props.iphonePos.y == 0 ?
+            <span className="tooltip">位于原点</span> : null  
+          }
           <IPhone onMove={this.props.moveIPhone}
             onResize={this.props.resizeIPhone}
             top={this.props.iphonePos.y}
