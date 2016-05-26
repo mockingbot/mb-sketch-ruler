@@ -269,6 +269,8 @@ class IPhone extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
+		//这里的逻辑要重新整理 首先判断state,state不一样直接render,
+		//state相同再比props, 
 		if(nextProps.top !== this.props.top
 			|| nextProps.left !== this.props.left
 			|| nextProps.width !== this.props.width
@@ -285,8 +287,20 @@ class IPhone extends React.Component {
 		this.setState(Object.assign({}, this.state, {
 			resizable : true
 		}))
-
-		// 这里once一个失焦事件
+		/* 这里once一个失焦事件,为什么在根组件监听点击空白处事件,触发以后通知所有组件
+		进入不可选状态呢? 参看Note - 思路 3 */
+		var func = (e) => {
+			//这里用了refs而不是className判断 主要是怕以后改样式名时出问题,也可以防止dom节点被篡改时失效(不过节点都被改了就可以下班了)
+			// if(e.target.className !== 'dragBox'){}
+			if(this.refs.dragBox !== e.target){
+				this.setState(Object.assign({}, this.state, {
+					resizable : false
+				}))
+				document.removeEventListener('click', func)
+			}
+		}
+		document.addEventListener('click', func);
+		
 	}
 
 	render() {
@@ -312,7 +326,7 @@ class IPhone extends React.Component {
 	      	    onBlur={this.forbidEdit.bind(this)}
 	      	    contentEditable={this.state.editable}>iPhone 5/5S/5C</div>
 	      	   {this.state.resizable ? 
-	      	   <div className="dragBox">
+	      	   <div ref="dragBox" className="dragBox">
 	      	   	<div className="top">
 	      	   		<span onMouseDown={this.rezieXYTopLeft.bind(this)}></span>
 	      	   		<span onMouseDown={this.resizeYTop.bind(this)}></span>
