@@ -13,7 +13,8 @@ class IPhone extends React.Component {
 	constructor(props){
 		super(props)
 		this.state ={
-		  	editable : false
+		  	editable : false,
+		  	resizable : false
 		}
 	}
 
@@ -53,6 +54,7 @@ class IPhone extends React.Component {
 
 	//设置位置
 	setPosition(e){
+		e.preventDefault()
 		var deltaX = e.clientX - this.startX
 		var deltaY = e.clientY - this.startY
 		// console.log(deltaX, deltaY)
@@ -79,7 +81,7 @@ class IPhone extends React.Component {
 	// 其实设置宽高可以强行合成一个函数,为鼠标按下事件绑定一个参数,后续判断即可,
 	//不过那样就不清晰了,而且判断类型的代码不见得就少多少,事件的分发还会影响效率
 	setWidth(e){
-		
+		e.preventDefault()
 		var deltaWidth = e.clientX - this.startX
 		console.log(deltaWidth)
 		this.props.onResize(deltaWidth, 0)
@@ -101,7 +103,7 @@ class IPhone extends React.Component {
 	}
 
 	setWidthAndLeft(e){
-		
+		e.preventDefault()
 		var deltaWidth = e.clientX - this.startX
 		console.log(deltaWidth)
 		this.props.onResize(-deltaWidth, 0, deltaWidth, 0)
@@ -124,6 +126,8 @@ class IPhone extends React.Component {
 
 	//调整高度
 	setHeight(e){
+		e.preventDefault()
+		console.log('取消了')
 		var deltaHeight = e.clientY - this.startY
 		console.log(deltaHeight)
 		this.props.onResize(0, deltaHeight)
@@ -144,6 +148,7 @@ class IPhone extends React.Component {
 	}
 
 	setHeightAndTop(e){
+		e.preventDefault()
 		var deltaHeight = e.clientY - this.startY
 		console.log(deltaHeight)
 		//注意这里,宽高要加负号(例如右边的边右移是变宽,而左边的边左移是变窄)
@@ -169,6 +174,7 @@ class IPhone extends React.Component {
 
 	//调整宽高
 	setWAndH(e){
+		e.preventDefault()
 		var deltaWidth = e.clientX - this.startX
 		var deltaHeight = e.clientY - this.startY
 		console.log(deltaWidth, deltaHeight)
@@ -179,6 +185,7 @@ class IPhone extends React.Component {
 
 	//右上
 	resizeXYTop(e){
+		e.preventDefault();
 		this.startX = e.clientX;
 		this.startY = e.clientY;
 
@@ -192,6 +199,7 @@ class IPhone extends React.Component {
 		document.addEventListener('mouseup', func)
 	}
 	setWHTop(e){
+		e.preventDefault()
 		var deltaWidth = e.clientX - this.startX
 		var deltaHeight = e.clientY - this.startY
 		console.log(deltaWidth, deltaHeight)
@@ -215,6 +223,7 @@ class IPhone extends React.Component {
 		document.addEventListener('mouseup', func)
 	}
 	setWHLeft(e){
+		e.preventDefault()
 		var deltaWidth = e.clientX - this.startX
 		var deltaHeight = e.clientY - this.startY
 		console.log(deltaWidth, deltaHeight)
@@ -238,6 +247,7 @@ class IPhone extends React.Component {
 		document.addEventListener('mouseup', func)
 	}
 	setWHTopLeft(e){
+		e.preventDefault()
 		var deltaWidth = e.clientX - this.startX
 		var deltaHeight = e.clientY - this.startY
 		console.log(deltaWidth, deltaHeight)
@@ -263,13 +273,25 @@ class IPhone extends React.Component {
 			|| nextProps.left !== this.props.left
 			|| nextProps.width !== this.props.width
 			|| nextProps.height !== this.props.height
-			|| nextState.editable !== this.state.editable){
+			|| nextState.editable !== this.state.editable
+			|| nextState.resizable !== this.state.resizable){
 			return true;
 		}
 		return false;
 	}
 
+	setActive(){
+		console.log("msg")
+		this.setState(Object.assign({}, this.state, {
+			resizable : true
+		}))
+
+		// 这里once一个失焦事件
+	}
+
 	render() {
+
+
 		
 		var iphoneStyle = {
 		  top: this.props.top,
@@ -277,16 +299,19 @@ class IPhone extends React.Component {
 		  width: this.props.width,
 		  height: this.props.height
 		}
+		var className = this.state.resizable ? "iphone active" : "iphone";
 		// console.log(iphoneStyle)
-
+		console.log("render")
 	    return (
-	      	<div className="iphone" 
-	      	  style={iphoneStyle}>
+	      	<div className={className}
+	      	  style={iphoneStyle}
+	      	  onClick={this.setActive.bind(this)}>
 	      	  <div className="header"
 	      	    onMouseDown={this.moveIPhone.bind(this)}
 	      	    onDoubleClick={this.allowEdit.bind(this)}
 	      	    onBlur={this.forbidEdit.bind(this)}
-	      	    contentEditable={this.state.editable}>iPhone 5/5s/5c</div>
+	      	    contentEditable={this.state.editable}>iPhone 5/5S/5C</div>
+	      	   {this.state.resizable ? 
 	      	   <div className="dragBox">
 	      	   	<div className="top">
 	      	   		<span onMouseDown={this.rezieXYTopLeft.bind(this)}></span>
@@ -302,7 +327,7 @@ class IPhone extends React.Component {
 	      	   		<span onMouseDown={this.resizeY.bind(this)}></span>
 	      	   		<span onMouseDown={this.resizeXY.bind(this)}></span>
 	      	   	</div>
-	      	   </div>
+	      	   </div> : null}
 	      	</div>
       	);
   }

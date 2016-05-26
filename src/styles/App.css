@@ -90,12 +90,11 @@ body {
   position:absolute;
   bottom:100%;
   padding:0 5px;
-  /* width:50%; */
+  /* font-family:'serial'; */
   height:30px;
   line-height:30px;
   cursor:move;
-
-  color:#999;
+  color:#AAA;
   -webkit-user-select:none;-moz-user-select:none;-o-user-select:none;user-select:none;
 
 }
@@ -104,7 +103,9 @@ body {
   box-shadow:-2px 2px 4px 1px #CCC,2px 0px 4px 1px #CCC;
   background-color:#FBFBFB;
 }
+.iphone.active:hover{
+  outline:none;
+}
 .iphone:hover{
   outline:4px solid #97C4F0;
 }
-
