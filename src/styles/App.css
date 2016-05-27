@@ -90,6 +90,7 @@ body {
   position:absolute;
   bottom:100%;
   padding:0 5px;
+  white-space:nowrap;
   /* font-family:'serial'; */
   height:30px;
   line-height:30px;
