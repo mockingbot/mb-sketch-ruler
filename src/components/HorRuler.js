@@ -47,7 +47,8 @@ class HorRuler extends React.Component {
      */
     drawRuler(start = this.props.start,
                 posX = this.props.posX,
-                width = this.props.width) {
+                width = this.props.width,
+                needShadow = this.props.showShadow) {
         
         // console.log("水平重绘")
         
@@ -58,11 +59,13 @@ class HorRuler extends React.Component {
         ctx.fillRect(0, 0, this.width, this.height);
 
         //先根据iphone宽度绘制阴影
-        ctx.fillStyle = '#CCC'
-        ctx.font = '30px Microsoft Yahei'
-        ctx.fillRect((posX - start) * 2, 0, width * 2, this.height);
+        if(needShadow){
+            ctx.fillStyle = '#CCC'
+            ctx.fillRect((posX - start) * 2, 0, width * 2, this.height);
+        }
 
         //再画刻度和文字(因为刻度遮住了阴影)
+        ctx.font = '30px Microsoft Yahei'
         
         //设置底部刻度的样式
         ctx.lineWidth = 2;
@@ -115,6 +118,7 @@ class HorRuler extends React.Component {
         var nStart = nextProps.start;
         var nPosX = nextProps.posX;
         var nWidth = nextProps.width;
+        var nShadow = nextProps.showShadow;
         
         //如果是窗口大小发生了变化
         if(nextProps.domWidth !== this.props.domWidth
@@ -129,10 +133,11 @@ class HorRuler extends React.Component {
         // 2.可以避免改变一个方向,另一个方向也会略微位移的bug
         if(nStart !== this.props.start
             || nPosX !== this.props.posX
-            || nWidth !== this.props.width)
+            || nWidth !== this.props.width
+            || nShadow !== this.props.showShadow)
         {
             //找到问题了!!这里绘制的一切都是根据旧props计算的,所以不准!!
-            this.drawRuler(nStart, nPosX, nWidth);
+            this.drawRuler(nStart, nPosX, nWidth, nShadow);
         }
 
     }

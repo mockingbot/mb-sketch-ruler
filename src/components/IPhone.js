@@ -43,7 +43,6 @@ class IPhone extends React.Component {
 		this.startY = e.clientY;
 
 		document.addEventListener('mousemove', this.setPosition)
-		console.log("msg")
 		var func = () => {
 			document.removeEventListener('mousemove', this.setPosition)
 			document.removeEventListener('mouseup', func)
@@ -287,26 +286,33 @@ class IPhone extends React.Component {
 		this.setState(Object.assign({}, this.state, {
 			resizable : true
 		}))
+		this.props.onActive()
 		/* 这里once一个失焦事件,为什么在根组件监听点击空白处事件,触发以后通知所有组件
 		进入不可选状态呢? 参看Note - 思路 3 */
 		var func = (e) => {
 			//这里用了refs而不是className判断 主要是怕以后改样式名时出问题,也可以防止dom节点被篡改时失效(不过节点都被改了就可以下班了)
 			// if(e.target.className !== 'dragBox'){}
-			if(this.refs.dragBox !== e.target){
+			//找出事件冒泡的路径
+			var path = e.path;
+			
+			//判断iphone是否在路径上(即判断鼠标释放时的位置是否在iphone里)
+			if(path.indexOf(this.refs.iphone) === -1){
+				//如果不在,将状态置为不可拖放				
 				this.setState(Object.assign({}, this.state, {
 					resizable : false
 				}))
-				document.removeEventListener('click', func)
+				//向上层通知失焦,从而去除阴影
+				this.props.onBlur()
+				document.removeEventListener('mouseup', func)
+				console.log("cancle Event")
 			}
 		}
-		document.addEventListener('click', func);
+		document.addEventListener('mouseup', func);
 		
 	}
 
 	render() {
 
-
-		
 		var iphoneStyle = {
 		  top: this.props.top,
 		  left: this.props.left,
@@ -314,19 +320,20 @@ class IPhone extends React.Component {
 		  height: this.props.height
 		}
 		var className = this.state.resizable ? "iphone active" : "iphone";
-		// console.log(iphoneStyle)
-		console.log("render")
+		
 	    return (
 	      	<div className={className}
 	      	  style={iphoneStyle}
-	      	  onClick={this.setActive.bind(this)}>
+	      	  onMouseDown={this.setActive.bind(this)}
+	      	  ref="iphone">
 	      	  <div className="header"
+	      	   	ref="header"
 	      	    onMouseDown={this.moveIPhone.bind(this)}
 	      	    onDoubleClick={this.allowEdit.bind(this)}
 	      	    onBlur={this.forbidEdit.bind(this)}
 	      	    contentEditable={this.state.editable}>iPhone 5/5S/5C</div>
 	      	   {this.state.resizable ? 
-	      	   <div ref="dragBox" className="dragBox">
+	      	   <div className="dragBox" ref="dragBox">
 	      	   	<div className="top">
 	      	   		<span onMouseDown={this.rezieXYTopLeft.bind(this)}></span>
 	      	   		<span onMouseDown={this.resizeYTop.bind(this)}></span>

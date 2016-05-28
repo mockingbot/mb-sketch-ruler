@@ -46,7 +46,8 @@ class VerRuler extends React.Component {
      */
     drawRuler(start = this.props.start,
                 posY = this.props.posY,
-                height = this.props.height) {
+                height = this.props.height,
+                needShadow = this.props.showShadow) {
     	
     	// console.log("垂直重绘")
 
@@ -57,11 +58,13 @@ class VerRuler extends React.Component {
         ctx.fillRect(0, 0, this.width, this.height);
 
         //先根据iphone高度绘制阴影
-        ctx.fillStyle = '#CCC'
-        ctx.font = '30px Microsoft Yahei'
-        ctx.fillRect(0, (posY - start) * 2, this.width, height * 2);
-
+        if(needShadow){
+	        ctx.fillStyle = '#CCC'
+	        ctx.fillRect(0, (posY - start) * 2, this.width, height * 2);
+	    }
+		
 		//再画刻度和文字(因为刻度遮住了阴影)
+        ctx.font = '30px Microsoft Yahei'
         
         //设置底部刻度的样式
         ctx.lineWidth = 2;
@@ -119,6 +122,7 @@ class VerRuler extends React.Component {
     	var nStart = nextProps.start;
     	var nPosY = nextProps.posY;
     	var nHeight = nextProps.height;
+    	var nShadow = nextProps.showShadow;
 
     	//如果是窗口大小发生了变化
     	if(nextProps.domWidth !== this.props.domWidth
@@ -130,9 +134,10 @@ class VerRuler extends React.Component {
 
         if(nextProps.start !== this.props.start
         	|| nextProps.posY !== this.props.posY
-        	|| nextProps.height !== this.props.height)
+        	|| nextProps.height !== this.props.height
+        	|| nShadow !== this.props.showShadow)
         {
-        	this.drawRuler(nStart, nPosY, nHeight);
+        	this.drawRuler(nStart, nPosY, nHeight, nShadow);
         }
 
     }

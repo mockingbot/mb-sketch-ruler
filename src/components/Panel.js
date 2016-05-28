@@ -32,7 +32,9 @@ class Panel extends React.Component {
   		size : {
   			width: 320,
   			height: 568
-  		}
+  		},
+  		showShadow: false
+
   	}
   }
 
@@ -51,6 +53,19 @@ class Panel extends React.Component {
   			height: 568
   		}
   	})
+  }
+
+  showShadow(){
+  	console.log("showShadow")
+    this.setState(Object.assign({}, this.state, {
+    	showShadow: true
+    }))
+  }
+
+  hideShadow(){
+  	this.setState(Object.assign({}, this.state, {
+  		showShadow: false
+  	}))	
   }
 
   
@@ -158,12 +173,14 @@ class Panel extends React.Component {
       		posX={this.state.iphonePos.x} 
       		width={this.state.size.width} 
       		domWidth={this.props.width}
-      		domHeight={30}/>
+      		domHeight={30}
+      		showShadow={this.state.showShadow}/>
        	<VerRuler start={this.state.boardPos.y} 
        		posY={this.state.iphonePos.y} 
        		height={this.state.size.height} 
        		domWidth={30}
-       		domHeight={this.props.height}/>
+       		domHeight={this.props.height}
+       		showShadow={this.state.showShadow}/>
         <Board position={this.state.boardPos} 
         	iphonePos={this.state.iphonePos} 
         	size={this.state.size}
@@ -171,6 +188,8 @@ class Panel extends React.Component {
         	handleMove={this.handleMove.bind(this)}
         	moveIPhone={this.moveIPhone.bind(this)}
         	resizeIPhone={this.resizeIPhone.bind(this)}
+        	showShadow={this.showShadow.bind(this)}
+        	hideShadow={this.hideShadow.bind(this)}
         	/>
       </div>
     );

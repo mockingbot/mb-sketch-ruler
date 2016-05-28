@@ -21,6 +21,8 @@ class Board extends React.Component {
     console.log(e)
   }
 
+
+
   componentDidMount(){
 
   }
@@ -50,6 +52,8 @@ class Board extends React.Component {
           }
           <IPhone onMove={this.props.moveIPhone}
             onResize={this.props.resizeIPhone}
+            onActive={this.props.showShadow}
+            onBlur={this.props.hideShadow}
             top={this.props.iphonePos.y}
             left={this.props.iphonePos.x}
             width={this.props.size.width}
