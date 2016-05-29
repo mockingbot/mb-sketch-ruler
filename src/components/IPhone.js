@@ -304,7 +304,7 @@ class IPhone extends React.Component {
 				//向上层通知失焦,从而去除阴影
 				this.props.onBlur()
 				document.removeEventListener('mouseup', func)
-				console.log("cancle Event")
+				console.log("cancel Event")
 			}
 		}
 		document.addEventListener('mouseup', func);

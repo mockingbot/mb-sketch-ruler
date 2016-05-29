@@ -143,25 +143,33 @@ class Panel extends React.Component {
   	}))
   }
 
+  drawCorner(){
+  		var corner = this.refs.corner;
+  		corner.style.position = 'absolute';
+  		corner.style.width = '30px';
+  		corner.style.height = '30px';
+  		corner.width = 60;
+  		corner.height = 60;
+  		var ctx = corner.getContext('2d');
+
+  		ctx.fillStyle = '#F5F5F5'
+  		ctx.fillRect(0, 0, 60, 60);
+
+  		ctx.lineWidth = 2;
+  	  	ctx.strokeStyle = '#999'
+  		ctx.moveTo(60, 0);
+  		ctx.lineTo(60, 60);
+  		ctx.moveTo(60, 60);
+  		ctx.lineTo(0, 60);
+  		ctx.stroke();
+  }
+
+  moveBoard(x, y){
+  	console.log(x, y)
+  }
+
   componentDidMount(){
-  	var corner = this.refs.corner;
-  	corner.style.position = 'absolute';
-  	corner.style.width = '30px';
-  	corner.style.height = '30px';
-  	corner.width = 60;
-  	corner.height = 60;
-  	var ctx = corner.getContext('2d');
-
-  	ctx.fillStyle = '#F5F5F5'
-  	ctx.fillRect(0, 0, 60, 60);
-
-  	ctx.lineWidth = 2;
-    ctx.strokeStyle = '#999'
-  	ctx.moveTo(60, 0);
-  	ctx.lineTo(60, 60);
-  	ctx.moveTo(60, 60);
-  	ctx.lineTo(0, 60);
-  	ctx.stroke();
+  	this.drawCorner();
   }
 
   render() {
@@ -190,6 +198,7 @@ class Panel extends React.Component {
         	resizeIPhone={this.resizeIPhone.bind(this)}
         	showShadow={this.showShadow.bind(this)}
         	hideShadow={this.hideShadow.bind(this)}
+        	moveOrigin={this.moveBoard.bind(this)}
         	/>
       </div>
     );

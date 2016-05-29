@@ -12,28 +12,49 @@ class Board extends React.Component {
   
   constructor(){
     super();
+    this.bgStyle = {
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#E7E7E7'
+    }
+  }
+
+  componentDidMount(){
+    this.setPosition = this.setPosition.bind(this)
   }
   
-  touchStart(e){
-    console.log(e)
+  //拖动背景部分时,移动画布
+  dragStart(e){
+    this.startX = e.clientX;
+    this.startY = e.clientY;
+
+    document.addEventListener('mousemove', this.setPosition)
+    var func = () => {
+      document.removeEventListener('mousemove', this.setPosition)
+      document.removeEventListener('mouseup', func)
+    }
+
+    document.addEventListener('mouseup', func)
   }
+
+  setPosition(e){
+    e.preventDefault()
+    var deltaX = e.clientX - this.startX
+    var deltaY = e.clientY - this.startY
+
+    this.props.moveOrigin(deltaX, deltaY);
+  }
+  
   touchEnd(e){
     console.log(e)
   }
 
 
 
-  componentDidMount(){
 
-  }
 
   render() {
 
-    var bgStyle = {
-      width: '100%',
-      height: '100%',
-      backgroundColor: '#E7E7E7'
-    }
     var panelStyle = {
       top: - this.props.position.y,
       left:  - this.props.position.x
@@ -41,9 +62,9 @@ class Board extends React.Component {
     
     return (
        <div className="background"
-            style={bgStyle}
-            onTouchStart={this.touchStart.bind(this)}
-            onTouchEnd={this.touchEnd.bind(this)}
+            style={this.bgStyle}
+            onMouseDown={this.dragStart.bind(this)}
+            onMouseUp={this.touchEnd.bind(this)}
             onWheel={this.props.handleMove}
             onChange={this.props.handleMove}>
         <div className="origin" style={panelStyle}>
