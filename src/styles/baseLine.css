@@ -1,0 +1,15 @@
+.horLine{
+	position: absolute;
+}
+.horLine:hover{
+	cursor:ns-resize;
+}
+.horNum{
+	/* 普通浏览器不做复杂的定位处理 */
+	transform:translate(35px, 5px) rotate(-90deg);
+	/* 能使用GPU渲染的浏览器 */
+	transform:translate3d(35px, -40px, 0) rotate(-90deg);
+}
+.verLine{
+	position: absolute;
+}

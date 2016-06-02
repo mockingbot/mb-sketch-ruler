@@ -25,6 +25,11 @@ class Board extends React.Component {
   
   //拖动背景部分时,移动画布
   dragStart(e){
+
+    
+    if(this.props.showShadow)
+      return
+
     this.startX = e.clientX;
     this.startY = e.clientY;
 
@@ -42,16 +47,15 @@ class Board extends React.Component {
     var deltaX = e.clientX - this.startX
     var deltaY = e.clientY - this.startY
 
+    this.startX = e.clientX;
+    this.startY = e.clientY
+
     this.props.moveOrigin(deltaX, deltaY);
   }
   
   touchEnd(e){
     console.log(e)
   }
-
-
-
-
 
   render() {
 
@@ -79,6 +83,15 @@ class Board extends React.Component {
             left={this.props.iphonePos.x}
             width={this.props.size.width}
             height={this.props.size.height}/>
+
+            <IPhone onMove={this.props.moveIPhone}
+            onResize={this.props.resizeIPhone}
+            onActive={this.props.showShadow}
+            onBlur={this.props.hideShadow}
+            top={this.props.iphonePos.y + 200}
+            left={this.props.iphonePos.x + 200}
+            width={this.props.size.width - 50}
+            height={this.props.size.height - 50}/>
         </div>
        </div>
     );

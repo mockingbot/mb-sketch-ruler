@@ -10,6 +10,7 @@ body {
 }
 .container{
   position:relative;
+  overflow:hidden;
 }
 /* 改用canvas实现
 .container::before{

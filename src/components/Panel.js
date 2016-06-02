@@ -5,6 +5,8 @@ import React from 'react';
 import HorRuler from './HorRuler';
 import VerRuler from './VerRuler';
 import Board from './Board'
+import HorLine from './HorLine'
+import VerLine from './VerLine'
 
 /*
  * 2016.5.23 
@@ -166,6 +168,13 @@ class Panel extends React.Component {
 
   moveBoard(x, y){
   	console.log(x, y)
+    this.setState(Object.assign({}, this.state, {
+      boardPos : {
+        x: this.state.boardPos.x - x / 2,
+        y: this.state.boardPos.y - y / 2
+      }
+    }))
+    
   }
 
   componentDidMount(){
@@ -200,6 +209,9 @@ class Panel extends React.Component {
         	hideShadow={this.hideShadow.bind(this)}
         	moveOrigin={this.moveBoard.bind(this)}
         	/>
+        <HorLine top={this.state.boardPos.y}/>
+        <VerLine left={this.state.boardPos.x}/>
+
       </div>
     );
   }

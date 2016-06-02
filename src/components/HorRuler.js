@@ -23,19 +23,27 @@ class HorRuler extends React.Component {
 
     //组件绑定后首次绘制
     componentDidMount() {
-        var canvas = this.refs.ruler;
+        var container = this.refs.wrap;
         var domWidth = this.props.domWidth;
         var domHeight = this.props.domHeight;
-        canvas.style.width = domWidth + 'px';
-        canvas.style.height = domHeight + 'px';
+        
+        container.style.width = domWidth + 'px';
+        container.style.height = domHeight + 'px';
+
+        var bg = this.refs.ruler;
+        var fg = this.refs.text;
 
         //2倍宽高,以解决canvas的1px问题
         this.width = domWidth * 2;
         this.height = domHeight * 2;
-        canvas.width = this.width;
-        canvas.height = this.height;
 
-        this.ctx = canvas.getContext('2d');
+        bg.width = this.width;
+        bg.height = this.height;
+        fg.width = this.width;
+        fg.height = this.height;
+
+        this.ctx = bg.getContext('2d');
+        this.fgCtx = fg.getContext('2d');
         this.drawRuler();
     }
 
@@ -142,17 +150,41 @@ class HorRuler extends React.Component {
 
     }
 
-    handleClick() {
-        console.log('点击了')
-            //被clearRect坑了,该函数相当于只是用底色画了个矩形,上一次未close的路径并不会清除
-        // this.ctx.clearRect(0, 0, this.width, this.height);
+    handleClick(e) {
+        console.log(e.clientX)
+        console.log(e.pageX)
+        console.log('起始',this.props.start)
+        var offsetX = e.clientX - e.target.offsetLeft
+        console.log('偏移量',offsetX)
+        var value = this.props.start + offsetX;
+        console.log('点击了',value)
+        this.fgCtx.font = '20px Microsoft Yahei'
+        this.fgCtx.fillStyle = '#900';
+        this.fgCtx.clearRect(0, 0, this.width, this.height);
+        this.fgCtx.fillText(value, (offsetX + 2) * 2, this.height / 2);
+        //被clearRect坑了,该函数相当于只是用底色画了个矩形,上一次未close的路径并不会清除
+        
     }
 
     render() {
 
-        return <canvas ref="ruler" 
-                    id="horRuler"
-                    onClick={this.handleClick.bind(this)} />;
+        var rulerStyle = {
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            top: 0,
+            left: 0,
+        }
+
+        return <section ref="wrap" id="horRuler">
+            <canvas ref="ruler" 
+                style={rulerStyle}
+                onClick={this.handleClick.bind(this)} />;
+            <canvas ref="text"
+                style={rulerStyle}
+                onClick={this.handleClick.bind(this)} />;
+        </section>
+        
     }
 }
 
