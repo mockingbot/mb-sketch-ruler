@@ -15,15 +15,17 @@ class VerLine extends React.Component {
     this.setPosition = this.setPosition.bind(this)
   }
   
-  //拖动背景部分时,移动画布
-  dragStart(e){
+  componentWillReceiveProps(nextProps){
+    if(nextProps.offsetX !== this.props.offsetX
+      || nextProps.left !== this.props.left){
+      return true;
+    }
+    return false;
+  }
 
-    
-    if(this.props.showShadow)
-      return
-
+  move(e){
+    // e.preventDefault();
     this.startX = e.clientX;
-    this.startY = e.clientY;
 
     document.addEventListener('mousemove', this.setPosition)
     var func = () => {
@@ -34,27 +36,14 @@ class VerLine extends React.Component {
     document.addEventListener('mouseup', func)
   }
 
+  //设置位置
   setPosition(e){
     e.preventDefault()
     var deltaX = e.clientX - this.startX
-    var deltaY = e.clientY - this.startY
+    // console.log(deltaX, deltaY)
+    this.props.setOffset(deltaX, 0)
 
     this.startX = e.clientX;
-    this.startY = e.clientY
-
-    this.props.moveOrigin(deltaX, deltaY);
-  }
-  
-  touchEnd(e){
-    console.log(e)
-  }
-
-  componentWillReceiveProps(nextProps){
-    if(nextProps.offsetX !== this.props.offsetX
-      || nextProps.left !== this.props.left){
-      return true;
-    }
-    return false;
   }
 
   render() {
@@ -78,7 +67,9 @@ class VerLine extends React.Component {
     return (
        <div className="verLine"
         style={style}
-       ><span className="verNum">{this.props.offsetX}</span></div>
+        onMouseDown={this.move.bind(this)}>
+        <span className="verNum">{this.props.offsetX}</span>
+       </div>
     );
   }
 }

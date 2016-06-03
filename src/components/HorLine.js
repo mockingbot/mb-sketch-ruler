@@ -12,17 +12,38 @@ class HorLine extends React.Component {
   }
 
   componentDidMount(){
+    this.setPosition = this.setPosition.bind(this)
   }
   
-  touchEnd(e){
-  }
-
   componentWillReceiveProps(nextProps){
     if(nextProps.offsetY !== this.props.offsetY
       || nextProps.top !== this.props.top){
       return true;
     }
     return false;
+  }
+
+  move(e){
+    // e.preventDefault();
+    this.startY = e.clientY;
+
+    document.addEventListener('mousemove', this.setPosition)
+    var func = () => {
+      document.removeEventListener('mousemove', this.setPosition)
+      document.removeEventListener('mouseup', func)
+    }
+
+    document.addEventListener('mouseup', func)
+  }
+
+  //设置位置
+  setPosition(e){
+    e.preventDefault()
+    var deltaY = e.clientY - this.startY
+    console.log(deltaY)
+    this.props.setOffset(0, deltaY)
+
+    this.startY = e.clientY;
   }
 
   render() {
@@ -46,7 +67,9 @@ class HorLine extends React.Component {
     return (
         <div className="horLine"
           style={style}
-        ><span className="horNum">{this.props.offsetY}</span></div>
+          onMouseDown={this.move.bind(this)}>
+          <span className="horNum">{this.props.offsetY}</span>
+        </div>
     );
   }
 }

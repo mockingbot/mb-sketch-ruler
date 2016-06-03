@@ -189,6 +189,13 @@ class Panel extends React.Component {
     }))
   }
 
+  setOffset(deltaX, deltaY){
+    this.setState(Object.assign({}, this.state, {
+      offsetX : this.state.offsetX + deltaX,
+      offsetY : this.state.offsetY + deltaY
+    }))
+  }
+
   componentDidMount(){
   	this.drawCorner();
   }
@@ -225,9 +232,11 @@ class Panel extends React.Component {
         	/>
         
         <HorLine top={this.state.boardPos.y}
-          offsetY={this.state.offsetY}/>
+          offsetY={this.state.offsetY}
+          setOffset={this.setOffset.bind(this)}/>
         <VerLine left={this.state.boardPos.x}
-          offsetX={this.state.offsetX}/>
+          offsetX={this.state.offsetX}
+          setOffset={this.setOffset.bind(this)}/>
 
       </div>
     );
