@@ -50,17 +50,22 @@ class HorLine extends React.Component {
 
     var top = this.props.offsetY - this.props.top;
 
-    if(!(top > 0 && top < document.body.clientHeight))
+    var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; 
+
+    if(!(top > 0 && top < height))
       return null;
 
-    console.log(top)
     var style = {
       position: 'absolute',
-      height: '2px',
       width: '100%',
-      backgroundColor: 'red',
+      // height: '2px',
+      // backgroundColor: 'red',
+      //1px有时渲染不出,改用border实现
+      border: '1px solid red',
+      //如果是虚线的话,可能要加上下面的
+      // borderTop: 'none',
+      // botderBotom: 'none',
       left: 0,
-      //还要减去高度的一半
       top: 30 + top - 1 + 'px',
     }
     

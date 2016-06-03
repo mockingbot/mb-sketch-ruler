@@ -72,26 +72,23 @@ class Board extends React.Component {
             onWheel={this.props.handleMove}
             onChange={this.props.handleMove}>
         <div className="origin" style={panelStyle}>
-          {this.props.iphonePos.x == 0 && this.props.iphonePos.y == 0 ?
+          {/*this.props.iphonePos.x == 0 && this.props.iphonePos.y == 0 ?
             <span className="tooltip">位于原点</span> : null  
-          }
-          <IPhone onMove={this.props.moveIPhone}
-            onResize={this.props.resizeIPhone}
-            onActive={this.props.showShadow}
-            onBlur={this.props.hideShadow}
-            top={this.props.iphonePos.y}
-            left={this.props.iphonePos.x}
-            width={this.props.size.width}
-            height={this.props.size.height}/>
-
-            <IPhone onMove={this.props.moveIPhone}
-            onResize={this.props.resizeIPhone}
-            onActive={this.props.showShadow}
-            onBlur={this.props.hideShadow}
-            top={this.props.iphonePos.y + 200}
-            left={this.props.iphonePos.x + 200}
-            width={this.props.size.width - 50}
-            height={this.props.size.height - 50}/>
+          */}
+          
+          {this.props.iphones.map((iphone, index) => {
+            return <IPhone key={index}
+              index={index}
+              onMove={this.props.moveIPhone}
+              onResize={this.props.resizeIPhone}
+              onActive={this.props.showShadow}
+              onBlur={this.props.hideShadow}
+              detail={iphone}
+              left={iphone.x}
+              top={iphone.y}
+              width={iphone.width}
+              height={iphone.height}/>
+          })}
         </div>
        </div>
     );

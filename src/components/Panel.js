@@ -25,18 +25,24 @@ class Panel extends React.Component {
   			x: -240,
   			y: -100
   		},
-  		//iphone的位置
-  		iphonePos : {
-  			x: 0,
-  			y: 0,
-  		},
-  		//iphone的大小
-  		size : {
-  			width: 320,
-  			height: 568
-  		},
+      iphones : [
+        {
+          title : 'iPhone 5/5S/5C',
+          x : 200,
+          y : 200,
+          width : 200,
+          height : 300
+        },
+        {
+          title : 'box',
+          x : 400,
+          y : 0,
+          width : 100,
+          height : 100
+        }
+      ],
+      activeIndex : 0,
   		showShadow: false
-
   	}
   }
 
@@ -119,14 +125,14 @@ class Panel extends React.Component {
   		}
   }
 
-  moveIPhone(deltaX, deltaY){
-  	// console.log(deltaX, deltaY)
-  	
+  moveIPhone(deltaX, deltaY, index = 0){
+    console.log(arguments)
+  	console.log(deltaX, deltaY, index)
+  	var iphones = this.state.iphones;
+    iphones[index].x = iphones[index].x + deltaX;
+    iphones[index].y = iphones[index].y + deltaY;
   	this.setState(Object.assign({}, this.state, {
-  		iphonePos:{
-  			x : this.state.iphonePos.x + deltaX,
-  			y : this.state.iphonePos.y + deltaY
-  		}
+      iphones : iphones
   	}))
   }
 
@@ -201,26 +207,30 @@ class Panel extends React.Component {
   }
 
   render() {
-  	
+  	var activeItem = this.state.iphones[this.state.activeIndex]
+
     return (
       <div className="container">
       	<canvas ref="corner"/>
       	<HorRuler start={this.state.boardPos.x}
-      		posX={this.state.iphonePos.x} 
-      		width={this.state.size.width} 
       		domWidth={this.props.width}
       		domHeight={30}
+          
+          posX={activeItem.x} 
+          width={activeItem.width} 
       		showShadow={this.state.showShadow}
           handleClick={this.drawVerLine.bind(this)}/>
        	<VerRuler start={this.state.boardPos.y} 
-       		posY={this.state.iphonePos.y} 
-       		height={this.state.size.height} 
        		domWidth={30}
        		domHeight={this.props.height}
+          
+          posY={activeItem.y} 
+          height={activeItem.height} 
        		showShadow={this.state.showShadow}
-          handleClick={this.drawHorLine.bind(this)}/>/>
+          handleClick={this.drawHorLine.bind(this)}/>
         <Board position={this.state.boardPos} 
         	iphonePos={this.state.iphonePos} 
+          iphones={this.state.iphones}
         	size={this.state.size}
         	handleClick={this.handleClick.bind(this)}
         	handleMove={this.handleMove.bind(this)}

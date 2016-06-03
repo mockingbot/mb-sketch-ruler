@@ -49,20 +49,30 @@ class VerLine extends React.Component {
   render() {
 
     var left = this.props.offsetX - this.props.left;
-    // console.log(left)
+
     // 这里应该控制 超出左右边界都不绘制,提升效率
-    if(!(left > 0 && left < document.body.clientWidth))
+    // 宁可用outerWidth也不能用innerWidth,因为放大时
+    var width = document.documentElement.clientWidth  
+        || document.body.clientWidth 
+        || window.screen.availWidth 
+        || window.outerWidth;  
+    
+    if(!(left > 0 && left < width))
       return null;
 
     var style = {
       position: 'absolute',
-      width: '2px',
       height: '100%',
-      backgroundColor: 'red',
+      // width: '2px',
+      // backgroundColor: 'red',
+      //1px有时渲染不出,改用border实现
+      border: '1px solid red',
+      //如果是虚线的话,可能要加上下面的
+      // borderLeft: 'none',
+      // botderRight: 'none',
       top: 0,
       left:  30 + left  - 1 + 'px',
     }
-    console.log("msg")
     
     return (
        <div className="verLine"

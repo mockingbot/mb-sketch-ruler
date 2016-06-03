@@ -57,7 +57,8 @@ class IPhone extends React.Component {
 		var deltaX = e.clientX - this.startX
 		var deltaY = e.clientY - this.startY
 		// console.log(deltaX, deltaY)
-		this.props.onMove(deltaX, deltaY)
+		
+		this.props.onMove(deltaX, deltaY, this.props.index)
 
 		this.startX = e.clientX;
 		this.startY = e.clientY;
@@ -312,18 +313,19 @@ class IPhone extends React.Component {
 	}
 
 	render() {
+		var detail = this.props.detail;
 
-		var iphoneStyle = {
-		  top: this.props.top,
-		  left: this.props.left,
-		  width: this.props.width,
-		  height: this.props.height
+		var style = {
+		  left: detail.x,
+		  top:  detail.y,
+		  width: detail.width,
+		  height: detail.height
 		}
 		var className = this.state.resizable ? "iphone active" : "iphone";
 		
 	    return (
 	      	<div className={className}
-	      	  style={iphoneStyle}
+	      	  style={style}
 	      	  onMouseDown={this.setActive.bind(this)}
 	      	  ref="iphone">
 	      	  <div className="header"
@@ -331,7 +333,7 @@ class IPhone extends React.Component {
 	      	    onMouseDown={this.moveIPhone.bind(this)}
 	      	    onDoubleClick={this.allowEdit.bind(this)}
 	      	    onBlur={this.forbidEdit.bind(this)}
-	      	    contentEditable={this.state.editable}>iPhone 5/5S/5C</div>
+	      	    contentEditable={this.state.editable}>{this.props.detail.title}</div>
 	      	   {this.state.resizable ? 
 	      	   <div className="dragBox" ref="dragBox">
 	      	   	<div className="top">

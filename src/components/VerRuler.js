@@ -1,6 +1,3 @@
-require('normalize.css/normalize.css');
-require('styles/App.css');
-
 import React from 'react';
 
 /*
@@ -145,7 +142,7 @@ class VerRuler extends React.Component {
     handleClick(e){
         var offsetY = e.clientY - e.target.offsetTop
         var value = this.props.start + offsetY;
-        console.log(value)
+        console.log("点击了竖直尺子的 ",value)
         this.props.handleClick(value)
     }
 

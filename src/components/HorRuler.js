@@ -1,6 +1,3 @@
-require('normalize.css/normalize.css');
-require('styles/App.css');
-
 import React from 'react';
 
 /*
@@ -23,12 +20,12 @@ class HorRuler extends React.Component {
 
     //组件绑定后首次绘制
     componentDidMount() {
-        var container = this.refs.wrap;
+        var canvas = this.refs.ruler;
         var domWidth = this.props.domWidth;
         var domHeight = this.props.domHeight;
         
-        container.style.width = domWidth + 'px';
-        container.style.height = domHeight + 'px';
+        canvas.style.width = domWidth + 'px';
+        canvas.style.height = domHeight + 'px';
 
         var bg = this.refs.ruler;
         var fg = this.refs.text;
@@ -37,13 +34,10 @@ class HorRuler extends React.Component {
         this.width = domWidth * 2;
         this.height = domHeight * 2;
 
-        bg.width = this.width;
-        bg.height = this.height;
-        fg.width = this.width;
-        fg.height = this.height;
+        canvas.width = this.width;
+        canvas.height = this.height;
 
         this.ctx = bg.getContext('2d');
-        this.fgCtx = fg.getContext('2d');
         this.drawRuler();
     }
 
@@ -152,34 +146,20 @@ class HorRuler extends React.Component {
 
     handleClick(e) {
         var offsetX = e.clientX - e.target.offsetLeft
-        var value = this.props.start + offsetX - 30;
-        this.fgCtx.font = '20px Microsoft Yahei'
-        this.fgCtx.fillStyle = '#900';
-        this.fgCtx.clearRect(0, 0, this.width, this.height);
-        this.fgCtx.fillText(value, (offsetX + 2) * 2, this.height / 2);
+        var value = this.props.start + offsetX;
+        console.log("点击了水平尺子的 ",value)
+        // this.fgCtx.font = '20px Microsoft Yahei'
+        // this.fgCtx.fillStyle = '#900';
+        // this.fgCtx.clearRect(0, 0, this.width, this.height);
+        // this.fgCtx.fillText(value, (offsetX + 2) * 2, this.height / 2);
         //被clearRect坑了,该函数相当于只是用底色画了个矩形,上一次未close的路径并不会清除
         this.props.handleClick(value)
     }
 
     render() {
-
-        var rulerStyle = {
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            top: 0,
-            left: 0,
-        }
-
-        return <section ref="wrap" id="horRuler">
-            <canvas ref="ruler" 
-                style={rulerStyle}
-                onClick={this.handleClick.bind(this)} />;
-            <canvas ref="text"
-                style={rulerStyle}
-                onClick={this.handleClick.bind(this)} />;
-        </section>
-        
+        return <canvas ref="ruler" 
+                id="horRuler"
+                onClick={this.handleClick.bind(this)} />
     }
 }
 
