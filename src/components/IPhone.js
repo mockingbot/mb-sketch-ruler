@@ -271,23 +271,16 @@ class IPhone extends React.Component {
 	shouldComponentUpdate(nextProps, nextState){
 		//这里的逻辑要重新整理 首先判断state,state不一样直接render,
 		//state相同再比props, 
-		if(nextProps.top !== this.props.top
-			|| nextProps.left !== this.props.left
-			|| nextProps.width !== this.props.width
-			|| nextProps.height !== this.props.height
-			|| nextState.editable !== this.state.editable
-			|| nextState.resizable !== this.state.resizable){
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	setActive(){
-		console.log("msg")
+		
 		this.setState(Object.assign({}, this.state, {
 			resizable : true
 		}))
-		this.props.onActive()
+
+		this.props.onActive(this.props.index)
 		/* 这里once一个失焦事件,为什么在根组件监听点击空白处事件,触发以后通知所有组件
 		进入不可选状态呢? 参看Note - 思路 3 */
 		var func = (e) => {
@@ -303,7 +296,7 @@ class IPhone extends React.Component {
 					resizable : false
 				}))
 				//向上层通知失焦,从而去除阴影
-				this.props.onBlur()
+				// this.props.onBlur()
 				document.removeEventListener('mouseup', func)
 				console.log("cancel Event")
 			}

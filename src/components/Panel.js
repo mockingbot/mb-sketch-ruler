@@ -41,38 +41,22 @@ class Panel extends React.Component {
           height : 100
         }
       ],
-      activeIndex : 0,
+      activeIndex : 1,
   		showShadow: false
   	}
   }
 
-  handleClick(){
-  	this.setState({
-  		boardPos : {
-  			x: -240,
-  			y: -100
-  		},
-  		iphonePos : {
-  			x: 0,
-  			y: 0,
-  		},
-  		size : {
-  			width: this.state.size.width + 1,
-  			height: 568
-  		}
-  	})
-  }
-
-  showShadow(){
-  	console.log("showShadow")
+  showShadow(index){
+    
     this.setState(Object.assign({}, this.state, {
-    	showShadow: true
+    	activeIndex: index
     }))
   }
 
   hideShadow(){
+
   	this.setState(Object.assign({}, this.state, {
-  		showShadow: false
+  		activeIndex: -1
   	}))	
   }
 
@@ -113,7 +97,7 @@ class Panel extends React.Component {
   			// }
   			var boardPos = this.state.boardPos;
   			var newY = boardPos.y + deltaY;
-  			if(newY < -9999 || newY + this.state.size.height > 9999){
+  			if(newY < -9999 || newY + this.props.height > 9999){
   				return
   			}
 			this.setState(Object.assign({}, this.state, {
@@ -207,7 +191,7 @@ class Panel extends React.Component {
   }
 
   render() {
-  	var activeItem = this.state.iphones[this.state.activeIndex]
+  	var activeItem = this.state.iphones[this.state.activeIndex] || {};
 
     return (
       <div className="container">
@@ -218,7 +202,7 @@ class Panel extends React.Component {
           
           posX={activeItem.x} 
           width={activeItem.width} 
-      		showShadow={this.state.showShadow}
+      		showShadow={this.state.activeIndex !== -1}
           handleClick={this.drawVerLine.bind(this)}/>
        	<VerRuler start={this.state.boardPos.y} 
        		domWidth={30}
@@ -226,17 +210,17 @@ class Panel extends React.Component {
           
           posY={activeItem.y} 
           height={activeItem.height} 
-       		showShadow={this.state.showShadow}
+       		showShadow={this.state.activeIndex !== -1}
           handleClick={this.drawHorLine.bind(this)}/>
         <Board position={this.state.boardPos} 
         	iphonePos={this.state.iphonePos} 
           iphones={this.state.iphones}
         	size={this.state.size}
-        	handleClick={this.handleClick.bind(this)}
         	handleMove={this.handleMove.bind(this)}
         	moveIPhone={this.moveIPhone.bind(this)}
         	resizeIPhone={this.resizeIPhone.bind(this)}
         	showShadow={this.showShadow.bind(this)}
+
         	hideShadow={this.hideShadow.bind(this)}
         	moveOrigin={this.moveBoard.bind(this)}
         	/>

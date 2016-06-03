@@ -53,8 +53,15 @@ class Board extends React.Component {
     this.props.moveOrigin(deltaX, deltaY);
   }
   
-  touchEnd(e){
-    console.log(e)
+  hideShadow(e){
+    var iphones = this.props.iphones
+    //判断事件源,若不是来自背景面板(如来自手机)
+    if(e.target !== this.refs.background)
+      //则不处理
+      return
+    //若是来自背景面板,通知上层取消阴影
+    this.props.hideShadow();
+    
   }
 
   render() {
@@ -65,10 +72,11 @@ class Board extends React.Component {
     }
     
     return (
-       <div className="background"
+       <div ref="background"
+            className="background"
             style={this.bgStyle}
+            onClick={this.hideShadow.bind(this)}
             onMouseDown={this.dragStart.bind(this)}
-            onMouseUp={this.touchEnd.bind(this)}
             onWheel={this.props.handleMove}
             onChange={this.props.handleMove}>
         <div className="origin" style={panelStyle}>
@@ -84,10 +92,7 @@ class Board extends React.Component {
               onActive={this.props.showShadow}
               onBlur={this.props.hideShadow}
               detail={iphone}
-              left={iphone.x}
-              top={iphone.y}
-              width={iphone.width}
-              height={iphone.height}/>
+              />
           })}
         </div>
        </div>
