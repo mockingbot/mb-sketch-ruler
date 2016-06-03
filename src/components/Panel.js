@@ -120,18 +120,15 @@ class Panel extends React.Component {
   	}))
   }
 
-  resizeIPhone(deltaWidth, deltaHeight, deltaLeft = 0, deltaTop = 0){
-  	var pos = this.state.iphonePos;
-  	var size = this.state.size;
+  resizeIPhone(index, deltaX, deltaY, deltaWidth = 0, deltaHeight = 0){
+  	var iphones = this.state.iphones;
+  	iphones[index].x = iphones[index].x + deltaX;
+    iphones[index].y = iphones[index].y + deltaY;
+    iphones[index].width = iphones[index].width + deltaWidth;
+    iphones[index].height = iphones[index].height + deltaHeight;
+
   	this.setState(Object.assign({}, this.state, {
-  		iphonePos : {
-  			x : pos.x + deltaLeft,
-  			y : pos.y + deltaTop
-  		},
-  		size : {
-  			width : size.width + deltaWidth,
-  			height : size.height + deltaHeight
-  		}
+      iphones : iphones
   	}))
   }
 

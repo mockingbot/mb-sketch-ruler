@@ -20,242 +20,13 @@ class IPhone extends React.Component {
 
 	//调整
 	componentDidMount() {
-		//当出现内存占用过高的问题时,可以让这些属性需要时再绑定,这里为了直观,就没改
-
-		//事件函数bind(this)以后
-		this.setPosition = this.setPosition.bind(this)
-		this.setWidth = this.setWidth.bind(this)
-		this.setHeight = this.setHeight.bind(this)
-		this.setWAndH = this.setWAndH.bind(this)
-		this.setWidthAndLeft = this.setWidthAndLeft.bind(this)
-		this.setHeightAndTop = this.setHeightAndTop.bind(this)
-		this.setWHTop = this.setWHTop.bind(this)
-		this.setWHLeft = this.setWHLeft.bind(this)
-		this.setWHTopLeft = this.setWHTopLeft.bind(this)
+		//事件监听函数两次bind(this)以后指向不用,所以提前bind
+		this.setAll = this.setAll.bind(this)
 	}
 
 	componentWillUnmount(){
 	} 
 	
-	moveIPhone(e){
-		// e.preventDefault();
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-
-		document.addEventListener('mousemove', this.setPosition)
-		var func = () => {
-			document.removeEventListener('mousemove', this.setPosition)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-
-	//设置位置
-	setPosition(e){
-		e.preventDefault()
-		var deltaX = e.clientX - this.startX
-		var deltaY = e.clientY - this.startY
-		// console.log(deltaX, deltaY)
-		
-		this.props.onMove(deltaX, deltaY, this.props.index)
-
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-	}
-
-	//右边的拖放事件
-	resizeX(e){
-		this.startX = e.clientX;
-
-		document.addEventListener('mousemove', this.setWidth)
-		
-		var func = () => {
-			document.removeEventListener('mousemove', this.setWidth)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-
-	// 其实设置宽高可以强行合成一个函数,为鼠标按下事件绑定一个参数,后续判断即可,
-	//不过那样就不清晰了,而且判断类型的代码不见得就少多少,事件的分发还会影响效率
-	setWidth(e){
-		e.preventDefault()
-		var deltaWidth = e.clientX - this.startX
-		console.log(deltaWidth)
-		this.props.onResize(deltaWidth, 0)
-		this.startX = e.clientX;
-	}
-
-	//左边的拖放事件,因为要调整定位的left值,所以与右边不同
-	resizeXLeft(e){
-		this.startX = e.clientX;
-
-		document.addEventListener('mousemove', this.setWidthAndLeft)
-		
-		var func = () => {
-			document.removeEventListener('mousemove', this.setWidthAndLeft)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-
-	setWidthAndLeft(e){
-		e.preventDefault()
-		var deltaWidth = e.clientX - this.startX
-		console.log(deltaWidth)
-		this.props.onResize(-deltaWidth, 0, deltaWidth, 0)
-		this.startX = e.clientX;
-	}
-
-
-	//下边的拖放事件
-	resizeY(e){
-		this.startY = e.clientY;
-		document.addEventListener('mousemove', this.setHeight)
-		
-		var func = () => {
-			document.removeEventListener('mousemove', this.setHeight)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-
-	//调整高度
-	setHeight(e){
-		e.preventDefault()
-		console.log('取消了')
-		var deltaHeight = e.clientY - this.startY
-		console.log(deltaHeight)
-		this.props.onResize(0, deltaHeight)
-		this.startY = e.clientY;
-	}
-
-	//上边的拖放事件,因为要调整定位的top值,所以与下边不同
-	resizeYTop(e){
-		this.startY = e.clientY;
-		document.addEventListener('mousemove', this.setHeightAndTop)
-		
-		var func = () => {
-			document.removeEventListener('mousemove', this.setHeightAndTop)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-
-	setHeightAndTop(e){
-		e.preventDefault()
-		var deltaHeight = e.clientY - this.startY
-		console.log(deltaHeight)
-		//注意这里,宽高要加负号(例如右边的边右移是变宽,而左边的边左移是变窄)
-		this.props.onResize(0, -deltaHeight, 0, deltaHeight)
-		this.startY = e.clientY;
-	}
-
-
-
-	resizeXY(e){
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-
-		document.addEventListener('mousemove', this.setWAndH)
-		
-		var func = () => {
-			document.removeEventListener('mousemove', this.setWAndH)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-
-	//调整宽高
-	setWAndH(e){
-		e.preventDefault()
-		var deltaWidth = e.clientX - this.startX
-		var deltaHeight = e.clientY - this.startY
-		console.log(deltaWidth, deltaHeight)
-		this.props.onResize(deltaWidth, deltaHeight)
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-	}
-
-	//右上
-	resizeXYTop(e){
-		e.preventDefault();
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-
-		document.addEventListener('mousemove', this.setWHTop)
-		
-		var func = () => {
-			document.removeEventListener('mousemove', this.setWHTop)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-	setWHTop(e){
-		e.preventDefault()
-		var deltaWidth = e.clientX - this.startX
-		var deltaHeight = e.clientY - this.startY
-		console.log(deltaWidth, deltaHeight)
-		this.props.onResize(deltaWidth, -deltaHeight, 0, deltaHeight)
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-	}
-
-	//左下
-	resizeXYLeft(e){
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-
-		document.addEventListener('mousemove', this.setWHLeft)
-		
-		var func = () => {
-			document.removeEventListener('mousemove', this.setWHLeft)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-	setWHLeft(e){
-		e.preventDefault()
-		var deltaWidth = e.clientX - this.startX
-		var deltaHeight = e.clientY - this.startY
-		console.log(deltaWidth, deltaHeight)
-		this.props.onResize(-deltaWidth, deltaHeight, deltaWidth, 0)
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-	}
-
-	//左上
-	rezieXYTopLeft(e){
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-
-		document.addEventListener('mousemove', this.setWHTopLeft)
-		
-		var func = () => {
-			document.removeEventListener('mousemove', this.setWHTopLeft)
-			document.removeEventListener('mouseup', func)
-		}
-
-		document.addEventListener('mouseup', func)
-	}
-	setWHTopLeft(e){
-		e.preventDefault()
-		var deltaWidth = e.clientX - this.startX
-		var deltaHeight = e.clientY - this.startY
-		console.log(deltaWidth, deltaHeight)
-		this.props.onResize(-deltaWidth, -deltaHeight, deltaWidth, deltaHeight)
-		this.startX = e.clientX;
-		this.startY = e.clientY;
-	}
-
 	allowEdit(e){
 		this.setState({
 		  	editable : true
@@ -305,6 +76,69 @@ class IPhone extends React.Component {
 		
 	}
 
+	//尝试着写个更抽象的方法
+	resize(type, e){
+		console.log(arguments)
+		console.log('-------: ',type)
+		this.type = type;
+		
+		this.startX = e.clientX;
+		this.startY = e.clientY;
+
+		document.addEventListener('mousemove', this.setAll)
+		
+		var func = () => {
+			document.removeEventListener('mousemove', this.setAll)
+			document.removeEventListener('mouseup', func)
+		}
+
+		document.addEventListener('mouseup', func)
+	}
+
+	setAll(e){
+		e.preventDefault()
+		var index = this.props.index;
+		var deltaWidth = e.clientX - this.startX
+		var deltaHeight = e.clientY - this.startY
+		// console.log(deltaWidth, deltaHeight)
+
+		//根据0(拖动)以及八个位置进行不同的处理
+		switch(this.type){
+			case 0 : 
+				this.props.onResize(index, deltaWidth, deltaHeight)
+				break;
+			case 1 :
+				this.props.onResize(index, deltaWidth, deltaHeight, -deltaWidth, -deltaHeight)
+				break;
+			case 2 :
+				this.props.onResize(index, 0, deltaHeight, 0, -deltaHeight)
+				break;
+			case 3 :
+				this.props.onResize(index, 0, deltaHeight, deltaWidth, -deltaHeight)
+				break;
+			case 4 : 
+				this.props.onResize(index, deltaWidth, 0, -deltaWidth, 0)
+				break;
+			case 5 : 
+				this.props.onResize(index, 0, 0, deltaWidth, 0)
+				break;
+			case 6 : 
+				this.props.onResize(index, deltaWidth, 0, -deltaWidth, deltaHeight)
+				break;
+			case 7 : 
+				this.props.onResize(index, 0, 0, 0, deltaHeight)
+				break;
+			case 8 : 
+				this.props.onResize(index, 0, 0, deltaWidth, deltaHeight)
+				break;
+			default : 
+				break;
+		}
+		
+		this.startX = e.clientX;
+		this.startY = e.clientY;
+	}
+
 	render() {
 		var detail = this.props.detail;
 
@@ -323,25 +157,25 @@ class IPhone extends React.Component {
 	      	  ref="iphone">
 	      	  <div className="header"
 	      	   	ref="header"
-	      	    onMouseDown={this.moveIPhone.bind(this)}
+	      	    onMouseDown={this.resize.bind(this, 0)}
 	      	    onDoubleClick={this.allowEdit.bind(this)}
 	      	    onBlur={this.forbidEdit.bind(this)}
 	      	    contentEditable={this.state.editable}>{this.props.detail.title}</div>
 	      	   {this.state.resizable ? 
 	      	   <div className="dragBox" ref="dragBox">
 	      	   	<div className="top">
-	      	   		<span onMouseDown={this.rezieXYTopLeft.bind(this)}></span>
-	      	   		<span onMouseDown={this.resizeYTop.bind(this)}></span>
-	      	   		<span onMouseDown={this.resizeXYTop.bind(this)}></span>
+	      	   		<span onMouseDown={this.resize.bind(this, 1)}></span>
+	      	   		<span onMouseDown={this.resize.bind(this, 2)}></span>
+	      	   		<span onMouseDown={this.resize.bind(this, 3)}></span>
 	      	   	</div>
 	      	   	<div className="center">
-	      	   		<span onMouseDown={this.resizeXLeft.bind(this)}></span>
-	      	   		<span onMouseDown={this.resizeX.bind(this)}></span>
+	      	   		<span onMouseDown={this.resize.bind(this, 4)}></span>
+	      	   		<span onMouseDown={this.resize.bind(this, 5)}></span>
 	      	   	</div>
 	      	   	<div className="bottom">
-	      	   		<span onMouseDown={this.resizeXYLeft.bind(this)}></span>
-	      	   		<span onMouseDown={this.resizeY.bind(this)}></span>
-	      	   		<span onMouseDown={this.resizeXY.bind(this)}></span>
+	      	   		<span onMouseDown={this.resize.bind(this, 6)}></span>
+	      	   		<span onMouseDown={this.resize.bind(this, 7)}></span>
+	      	   		<span onMouseDown={this.resize.bind(this, 8)}></span>
 	      	   	</div>
 	      	   </div> : null}
 	      	</div>
