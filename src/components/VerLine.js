@@ -49,20 +49,36 @@ class VerLine extends React.Component {
     console.log(e)
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.offsetX !== this.props.offsetX
+      || nextProps.left !== this.props.left){
+      return true;
+    }
+    return false;
+  }
+
   render() {
+
+    var left = this.props.offsetX - this.props.left;
+    // console.log(left)
+    // 这里应该控制 超出左右边界都不绘制,提升效率
+    if(!(left > 0 && left < document.body.clientWidth))
+      return null;
 
     var style = {
       position: 'absolute',
+      width: '2px',
+      height: '100%',
+      backgroundColor: 'red',
       top: 0,
-      left:  30 - this.props.left + 'px',
-      outline: '1px solid red',
-      height: '100%'
+      left:  30 + left  - 1 + 'px',
     }
+    console.log("msg")
     
     return (
-       <span className="verLine"
+       <div className="verLine"
         style={style}
-       ></span>
+       ><span className="verNum">{this.props.offsetX}</span></div>
     );
   }
 }

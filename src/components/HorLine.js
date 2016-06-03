@@ -17,9 +17,22 @@ class HorLine extends React.Component {
   touchEnd(e){
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.offsetY !== this.props.offsetY
+      || nextProps.top !== this.props.top){
+      return true;
+    }
+    return false;
+  }
+
   render() {
 
-    console.log("render")
+    var top = this.props.offsetY - this.props.top;
+
+    if(!(top > 0 && top < document.body.clientHeight))
+      return null;
+
+    console.log(top)
     var style = {
       position: 'absolute',
       height: '2px',
@@ -27,25 +40,13 @@ class HorLine extends React.Component {
       backgroundColor: 'red',
       left: 0,
       //还要减去高度的一半
-      top: 30 - this.props.top - 1 + 'px',
+      top: 30 + top - 1 + 'px',
     }
     
     return (
         <div className="horLine"
           style={style}
-        ><span className="horNum" style={{
-          position: 'absolute',
-          display: 'block',
-          color: '#900',
-          /* react的inline-style不会获得浏览器的优化
-           (如translate变为GPU渲染的translate3d,直接写3d又存在不兼容的问题,
-           效率起见,写到css文件里是最合适的*/
-          // left: '35px',
-          // bottom:'20px',
-          // transform:'translateY(-50px) rotate(-90deg)'
-          // transform:'translate3d(35px, -40px, 0) rotate(-90deg)'
-
-        }}>123</span></div>
+        ><span className="horNum">{this.props.offsetY}</span></div>
     );
   }
 }

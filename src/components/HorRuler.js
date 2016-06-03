@@ -151,19 +151,14 @@ class HorRuler extends React.Component {
     }
 
     handleClick(e) {
-        console.log(e.clientX)
-        console.log(e.pageX)
-        console.log('起始',this.props.start)
         var offsetX = e.clientX - e.target.offsetLeft
-        console.log('偏移量',offsetX)
-        var value = this.props.start + offsetX;
-        console.log('点击了',value)
+        var value = this.props.start + offsetX - 30;
         this.fgCtx.font = '20px Microsoft Yahei'
         this.fgCtx.fillStyle = '#900';
         this.fgCtx.clearRect(0, 0, this.width, this.height);
         this.fgCtx.fillText(value, (offsetX + 2) * 2, this.height / 2);
         //被clearRect坑了,该函数相当于只是用底色画了个矩形,上一次未close的路径并不会清除
-        
+        this.props.handleClick(value)
     }
 
     render() {

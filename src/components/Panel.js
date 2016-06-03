@@ -167,7 +167,7 @@ class Panel extends React.Component {
   }
 
   moveBoard(x, y){
-  	console.log(x, y)
+  	// console.log(x, y)
     this.setState(Object.assign({}, this.state, {
       boardPos : {
         x: this.state.boardPos.x - x / 2,
@@ -175,6 +175,18 @@ class Panel extends React.Component {
       }
     }))
     
+  }
+
+  drawVerLine(left){
+    this.setState(Object.assign({}, this.state, {
+      offsetX : left
+    }))
+  }
+
+  drawHorLine(top){
+    this.setState(Object.assign({}, this.state, {
+      offsetY : top
+    }))
   }
 
   componentDidMount(){
@@ -191,13 +203,15 @@ class Panel extends React.Component {
       		width={this.state.size.width} 
       		domWidth={this.props.width}
       		domHeight={30}
-      		showShadow={this.state.showShadow}/>
+      		showShadow={this.state.showShadow}
+          handleClick={this.drawVerLine.bind(this)}/>
        	<VerRuler start={this.state.boardPos.y} 
        		posY={this.state.iphonePos.y} 
        		height={this.state.size.height} 
        		domWidth={30}
        		domHeight={this.props.height}
-       		showShadow={this.state.showShadow}/>
+       		showShadow={this.state.showShadow}
+          handleClick={this.drawHorLine.bind(this)}/>/>
         <Board position={this.state.boardPos} 
         	iphonePos={this.state.iphonePos} 
         	size={this.state.size}
@@ -209,8 +223,11 @@ class Panel extends React.Component {
         	hideShadow={this.hideShadow.bind(this)}
         	moveOrigin={this.moveBoard.bind(this)}
         	/>
-        <HorLine top={this.state.boardPos.y}/>
-        <VerLine left={this.state.boardPos.x}/>
+        
+        <HorLine top={this.state.boardPos.y}
+          offsetY={this.state.offsetY}/>
+        <VerLine left={this.state.boardPos.x}
+          offsetX={this.state.offsetX}/>
 
       </div>
     );

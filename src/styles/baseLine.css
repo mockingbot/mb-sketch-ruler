@@ -6,10 +6,29 @@
 }
 .horNum{
 	/* 普通浏览器不做复杂的定位处理 */
-	transform:translate(35px, 5px) rotate(-90deg);
+	/* transform:translate(35px, 5px) rotate(-90deg); */
 	/* 能使用GPU渲染的浏览器 */
-	transform:translate3d(35px, -40px, 0) rotate(-90deg);
+	/* transform:translate3d(35px, -40px, 0) rotate(-90deg); */
+	
+	/* 数字竖着不太直观,这里暂时换成横着,看需求怎么说 */
+	transform:translate(35px, 5px);
+	transform:translate3d(35px, 5px, 0);	
+
+	position: absolute;
+    color: #900;
+    font-size:10px;
+}
+.verNum{
+	transform:translate(5px, 35px);
+	transform:translate3d(5px, 35px, 0);	
+
+	position: absolute;
+    color: #900;
+    font-size:10px;
 }
 .verLine{
 	position: absolute;
+}
+.verLine:hover{
+	cursor:ew-resize;
 }

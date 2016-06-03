@@ -142,8 +142,17 @@ class VerRuler extends React.Component {
 
     }
 
+    handleClick(e){
+        var offsetY = e.clientY - e.target.offsetTop
+        var value = this.props.start + offsetY;
+        console.log(value)
+        this.props.handleClick(value)
+    }
+
     render() {
-        return <canvas ref="ruler" id="verRuler" />;
+        return <canvas ref="ruler" 
+                id="verRuler" 
+                onClick={this.handleClick.bind(this)}/>;
     }
 }
 
