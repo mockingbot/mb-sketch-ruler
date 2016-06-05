@@ -4,48 +4,30 @@
 	<meta charset="UTF-8">
 	<title>ruler-jquery-plugin</title>
 	<style>
-		body{
-			overflow:hidden;
-		}
-		#container{
-			position:relative;
-			margin:40px auto;
-			width:700px;
-			height:450px;
-			outline: 1px solid red;
-		}
-		#test1{
-			position:absolute;
-			top:50px;
-			left:20px;
-			width:50px;
-			height:50px;
-			background-color:red;
-		}
-		#test2{
-			position:absolute;
-			top:200px;
-			left:100px;
-			width:70px;
-			height:50px;
-			background-color:green;
-		}
-		#test3{
-			position:absolute;
-			top:100px;
-			left:300px;
-			width:60px;
-			height:90px;
-			background-color:blue;
-		}
 	</style>
+	<link rel="stylesheet" href="./style.css">
 	<link rel="stylesheet" href="./controller.css">
 </head>
 <body>
-	<section id="container">
-		<div id="test1"></div>
-		<div id="test2"></div>
-		<div id="test3"></div>
+	<section id="wrap">
+		<section id="container">
+			<div id="test1">
+				<p class="font1">
+					-100	
+				</p>
+				<p class="font2">
+					-100
+				</p>
+				<p class="font3">
+					-100
+				</p>
+				<p class="font4">
+					-100
+				</p>
+			</div>
+			<div id="test2"></div>
+			<div id="test3"></div>
+		</section>
 	</section>
 	<section class="controller">
 		<h3>初始化标尺</h3>
@@ -118,13 +100,15 @@
 		    ruler.setSelect(x, y, width, height);
 		}
 		$(function() {
-			/*
+			/* 普通用例
 			 * 1.引入ruler.js
-			 * 2.使用 $('selector').initRuler(options)
-			   返回ruler对象,options为标尺的起始XY坐标,不传入默认为
-			   startX = -240, startY = -100
+			 * 2.使用 var ruler = $('selector').getRuler(options)
+			   返回ruler对象,
+			 * 3.使用 ruler.init({startX, startY, thick})初始化
+			   options为标尺的起始XY坐标,不传入默认为
+			   startX = -240, startY = -100 thick 30 (尺子的宽窄)
 			 * 注意:因为标尺的位置使用绝对定位确定,所以selector需为已
-			 	定位(absolute/relative/fixed)元素
+			 	定位(absolute/relative/fixed)元素,并在其左边和上边留出位置
 			 * 3.使用 ruler.setSelect(x, y, width, height)
 			   设置阴影位置
 			 * 4.使用ruler.setPosition(startX, startY)设置标尺
@@ -132,7 +116,7 @@
 			 */
 
 			
-			
+			//点击测试
 			var boxes = $("#container div")
 			var containerStyle = $("#container").get(0).getBoundingClientRect();
 			var conTop = containerStyle.top
@@ -142,14 +126,20 @@
 				item.addEventListener('click', function(e){
 					var ruler = $('#container').getRuler()
 					var style = e.target.getBoundingClientRect()
-					var left = style.left - conLeft + ruler.startX
-					var top = style.top - conTop + ruler.startY
+					var left = style.left - conLeft + ruler.startX - 30
+					var top = style.top - conTop + ruler.startY - 30
 					var width = style.width
 					var height = style.height
 					console.log(left, top, width, height)
 					ruler.setSelect(left, top, width, height);
 				})
 			})
+
+			var ruler = $('#container').getRuler();
+		    ruler.init({
+				startX: 0,
+				startY: 0
+			});
 			
 		});
 	</script>

@@ -41,45 +41,35 @@
 			this.startX = !isNaN(options.startX) ? options.startX : -240;
 			this.startY = !isNaN(options.startY) ? options.startY : -100;
 			this.thick = !isNaN(options.thick) ? options.thick * 2 : 60;
-			this.width = elem.width() * 2
-			this.height = elem.height() * 2
+			this.width = elem.width() * 2 - this.thick
+			this.height = elem.height() * 2 - this.thick
 			//厚度 其实就是尺子的宽度 但是变量名重复了
-
+			
 			//左上角小块
-			var corner = $('<canvas></canvas>')
+			var corner = $('<span></span>')
 			corner.css({
 				position: 'absolute',
-				bottom: '100%',
-				right: '100%',
-				width: this.thick / 2 +'px',
-				height: this.thick / 2 +'px',
+				width: this.thick / 2 - 1,
+				height: this.thick / 2 - 1,
+				backgroundColor: '#F5F5F5',
+				borderBottom: '1px solid #999',
+				borderRight: '1px solid #999',
+				'z-index':9999
 			});
 			
 			var cornerDom = corner.get(0);
-	  		cornerDom.width = this.thick;
-	  		cornerDom.height = this.thick;
-	  		var ctx = cornerDom.getContext('2d');
-
-	  		ctx.fillStyle = '#F5F5F5'
-	  		ctx.fillRect(0, 0, 60, 60);
-
-	  		ctx.lineWidth = 2;
-	  	  	ctx.strokeStyle = '#999'
-	  		ctx.moveTo(60, 0);
-	  		ctx.lineTo(60, 60);
-	  		ctx.moveTo(60, 60);
-	  		ctx.lineTo(0, 60);
-	  		ctx.stroke();
 	  		elem.prepend(corner)
-			
+
 			//水平
 			var horRuler = $('<canvas></canvas>')
 			horRuler.css({
 				position: 'absolute',
-				bottom: '100%',
-				left: 0,
+				top:0,
+				left: this.thick / 2,
 				width: this.width / 2,
-				height: this.thick / 2,
+				height: this.thick / 2 - 1,
+				borderBottom: '1px solid #999',
+				'z-index':9999
 			});
 			var horRulerDom = horRuler.get(0);
 			horRulerDom.width = this.width
@@ -93,10 +83,12 @@
 			var verRuler = $('<canvas></canvas>')
 			verRuler.css({
 				position: 'absolute',
-				right: '100%',
-				top: 0,
-				width: this.thick / 2,
+				top: this.thick / 2,
+				left: 0,
+				width: this.thick / 2 - 1,
 				height: this.height / 2,
+				borderRight: '1px solid #999',
+				'z-index':9999
 			});
 			var verRulerDom = verRuler.get(0);
 			verRulerDom.width = this.thick
@@ -174,19 +166,24 @@
 			}
 
 			//再画刻度和文字(因为刻度遮住了阴影)
-			ctx.font = '30px Microsoft Yahei'
-			
+			// ctx.font = '30px Hiragino Sans GB'
+			// ctx.font = '30px Microsoft Yahei'
+			// ctx.font = '30px Times New Roman'
+			ctx.font = '30px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif'
+			// ctx.font = '30px BlinkMacSystemFont'
+			// ctx.font = '30px sans-serif'
+
 			//设置底部刻度的样式
 			ctx.lineWidth = 2;
 			ctx.strokeStyle = '#999'
 			//绘制底部刻度,之前因为没决定用canvas,用dom的border画的,又慢又要计算定位,太挫了,还是用canvas画统一一点
-			ctx.beginPath();
+			// ctx.beginPath();
 			
-			//border-bottom(border-left对不齐,改用css实现)
-			ctx.moveTo(0, this.thick); 
-			ctx.lineTo(this.width, this.thick);
-			ctx.closePath();
-			ctx.stroke();
+			// //border-bottom(border-left对不齐,改用css实现)
+			// ctx.moveTo(0, this.thick); 
+			// ctx.lineTo(this.width, this.thick);
+			// ctx.closePath();
+			// ctx.stroke();
 
 			//移动画布原点,方便绘制
 			ctx.translate(- start * 2, 0);
@@ -242,14 +239,14 @@
 	        ctx.strokeStyle = '#999'
 	        
 	        //绘制底部刻度
-	        ctx.beginPath();
+	        // ctx.beginPath();
 	        
-	        //border-right(border-top对不齐,改用css实现)
-	        ctx.moveTo(this.thick, 0);	
-	        ctx.lineTo(this.thick, this.height);
+	        // //border-right(border-top对不齐,改用css实现)
+	        // ctx.moveTo(this.thick, 0);	
+	        // ctx.lineTo(this.thick, this.height);
 	        
-	        ctx.closePath();
-	        ctx.stroke();
+	        // ctx.closePath();
+	        // ctx.stroke();
 
 	        //移动画布原点,方便绘制
 	        ctx.translate(0, - start * 2);

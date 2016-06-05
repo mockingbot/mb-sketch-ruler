@@ -1,0 +1,60 @@
+body{
+	/* overflow:hidden; */
+}
+#wrap{
+	margin:0px auto;
+	width:600px;
+	height:600px;
+	border: 10px solid blue;
+	overflow:hidden;
+}
+#container{
+	position:relative;
+	width:100%;
+	height:100%;
+	outline: 1px solid red;
+}
+#test1{
+	position:absolute;
+	top:50px;
+	left:20px;
+	width:50px;
+	height:50px;
+	background-color:red;
+	font-size:100px;
+}
+#test2{
+	position:absolute;
+	top:200px;
+	left:100px;
+	width:70px;
+	height:50px;
+	background-color:green;
+}
+#test3{
+	position:absolute;
+	top:100px;
+	left:300px;
+	width:60px;
+	height:90px;
+	background-color:blue;
+}
+p{
+	margin:0;
+	padding:0;
+}
+.font1{
+	font-family:'-apple-system';
+	/* font-family:'SF UI Text'; */
+}
+.font2{
+	font-family:'Microsoft Yahei';
+}
+.font3{
+	font-family:'Times New Roman';
+}
+.font4{
+	font-family:'BlinkMacSystemFont';
+	/* font-family:'Arial'; */
+	/* font-family:-apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif */
+}
