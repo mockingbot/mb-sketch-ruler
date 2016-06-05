@@ -1,0 +1,28 @@
+.controller{
+	float:left;
+	display:inline-block;
+	margin-left:80px;
+	border: 1px solid #CCC;
+	background-color: #CCC;
+	border-radius:5px;
+	padding:10px;
+	text-align:center;
+}
+.controller label{
+	display:inline-block;
+	text-align:center;
+	width:70px;
+}
+.controller input{
+	width: 80px;
+	margin:10px 0 0;
+}
+.controller .btns{
+	text-align:center;
+}
+.controller button{
+	margin:10px 10px 0;
+	background-color:#FEFEFE;
+	border-radius: 5px;
+	color:#777;
+}

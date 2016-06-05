@@ -65,7 +65,7 @@ class Board extends React.Component {
   }
 
   render() {
-
+    console.log(this.props.iphones)
     var panelStyle = {
       top: - this.props.position.y,
       left:  - this.props.position.x

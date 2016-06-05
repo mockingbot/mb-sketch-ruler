@@ -7,6 +7,7 @@ import VerRuler from './VerRuler';
 import Board from './Board'
 import HorLine from './HorLine'
 import VerLine from './VerLine'
+import Controller from './Controller'
 
 /*
  * 2016.5.23 
@@ -42,7 +43,7 @@ class Panel extends React.Component {
         }
       ],
       activeIndex : 1,
-  		showShadow: false
+  	  showShadow: false
   	}
   }
 
@@ -184,10 +185,25 @@ class Panel extends React.Component {
   }
 
   componentDidMount(){
+  	
   	this.drawCorner();
   }
 
+  addIphone(iphone){
+  	console.log(this.state)
+	this.setState(Object.assign({}, this.state, {
+		iphones: this.state.iphones.push(iphone)
+	}))
+	console.log(this.state)
+	
+  }
+
+  editSelect(){
+
+  }
+
   render() {
+  	console.log(this.state)
   	var activeItem = this.state.iphones[this.state.activeIndex] || {};
 
     return (
@@ -209,9 +225,10 @@ class Panel extends React.Component {
           height={activeItem.height} 
        		showShadow={this.state.activeIndex !== -1}
           handleClick={this.drawHorLine.bind(this)}/>
+
         <Board position={this.state.boardPos} 
         	iphonePos={this.state.iphonePos} 
-          iphones={this.state.iphones}
+          	iphones={this.state.iphones}
         	size={this.state.size}
         	handleMove={this.handleMove.bind(this)}
         	moveIPhone={this.moveIPhone.bind(this)}
@@ -221,14 +238,16 @@ class Panel extends React.Component {
         	hideShadow={this.hideShadow.bind(this)}
         	moveOrigin={this.moveBoard.bind(this)}
         	/>
-        
         <HorLine top={this.state.boardPos.y}
           offsetY={this.state.offsetY}
           setOffset={this.setOffset.bind(this)}/>
         <VerLine left={this.state.boardPos.x}
           offsetX={this.state.offsetX}
           setOffset={this.setOffset.bind(this)}/>
-
+        <Controller 
+        	value={activeItem}
+        	handleAdd={this.addIphone.bind(this)}
+        	handleEdit={this.editSelect.bind(this)}/>
       </div>
     );
   }

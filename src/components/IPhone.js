@@ -162,6 +162,8 @@ class IPhone extends React.Component {
 	      	    onBlur={this.forbidEdit.bind(this)}
 	      	    contentEditable={this.state.editable}>{this.props.detail.title}</div>
 	      	   {this.state.resizable ? 
+	      	   /* 这里放 document.getElementById('#box')
+	      	     宽度高度均为100% (即撑满页面中box那个白色的区域)*/
 	      	   <div className="dragBox" ref="dragBox">
 	      	   	<div className="top">
 	      	   		<span onMouseDown={this.resize.bind(this, 1)}></span>

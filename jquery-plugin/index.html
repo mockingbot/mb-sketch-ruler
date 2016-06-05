@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>ruler-jquery-plugin</title>
+	<style>
+		body{
+			overflow:hidden;
+		}
+		#container{
+			position:relative;
+			margin:40px auto;
+			width:700px;
+			height:450px;
+			outline: 1px solid red;
+		}
+		#test1{
+			position:absolute;
+			top:50px;
+			left:20px;
+			width:50px;
+			height:50px;
+			background-color:red;
+		}
+		#test2{
+			position:absolute;
+			top:200px;
+			left:100px;
+			width:70px;
+			height:50px;
+			background-color:green;
+		}
+		#test3{
+			position:absolute;
+			top:100px;
+			left:300px;
+			width:60px;
+			height:90px;
+			background-color:blue;
+		}
+	</style>
+	<link rel="stylesheet" href="./controller.css">
+</head>
+<body>
+	<section id="container">
+		<div id="test1"></div>
+		<div id="test2"></div>
+		<div id="test3"></div>
+	</section>
+	<section class="controller">
+		<h3>初始化标尺</h3>
+		<div>
+	    	<label for="posX">startX:</label>
+	    	<input type="text" id="posX"/>
+		</div>
+		<div>
+	    	<label for="posY">startY:</label>
+	    	<input type="text" id="posY"/>
+		</div>
+		<button onclick="initRuler();">initRuler</button>
+	</section>
+	<section class="controller">
+		<h3>修改起止坐标</h3>
+		<div>
+	    	<label for="startX">startX:</label>
+	    	<input type="text" id="startX"/>
+		</div>
+		<div>
+	    	<label for="startY">startY:</label>
+	    	<input type="text" id="startY"/>
+		</div>
+		<button onclick="setPosition();">setPosition</button>
+	</section>
+	<section class="controller">
+		<h3>绘制阴影</h3>
+		<div>
+        	<label for="x">x:</label>
+        	<input type="text" id="x"/>
+    	</div>
+    	<div>
+        	<label for="y">y:</label>
+        	<input type="text" id="y"/>
+    	</div>
+    	<div>
+        	<label for="width">width:</label>
+        	<input type="text" id="width"/>
+    	</div>
+    	<div>
+        	<label for="height">height:</label>
+        	<input type="text" id="height"/>
+    	</div>
+    	<button onclick="setSelect();">setSelect</button>
+	</section>
+	<script src="./jquery-1.11.3.min.js"></script>
+	<script src="./ruler.js"></script>
+	<script>
+		function initRuler(){
+			var posX = parseInt($("#posX").val());
+		    var posY = parseInt($("#posY").val());
+		    var ruler = $('#container').getRuler();
+		    ruler.init({
+				startX: posX,
+				startY: posY
+			});
+		}
+		function setPosition(){
+			var startX = parseInt($("#startX").val());
+		    var startY = parseInt($("#startY").val());
+			var ruler = $('#container').getRuler();
+		    ruler.setPosition(startX, startY)
+		}
+		function setSelect(){
+			var x = parseInt($("#x").val());
+		    var y = parseInt($("#y").val());
+		    var width = parseInt($("#width").val());
+		    var height = parseInt($("#height").val());
+			var ruler = $('#container').getRuler();
+		    ruler.setSelect(x, y, width, height);
+		}
+		$(function() {
+			/*
+			 * 1.引入ruler.js
+			 * 2.使用 $('selector').initRuler(options)
+			   返回ruler对象,options为标尺的起始XY坐标,不传入默认为
+			   startX = -240, startY = -100
+			 * 注意:因为标尺的位置使用绝对定位确定,所以selector需为已
+			 	定位(absolute/relative/fixed)元素
+			 * 3.使用 ruler.setSelect(x, y, width, height)
+			   设置阴影位置
+			 * 4.使用ruler.setPosition(startX, startY)设置标尺
+			   起始坐标
+			 */
+
+			
+			
+			var boxes = $("#container div")
+			var containerStyle = $("#container").get(0).getBoundingClientRect();
+			var conTop = containerStyle.top
+			var conLeft = containerStyle.left
+			console.log(conTop, conLeft)
+			boxes.each(function(index, item){
+				item.addEventListener('click', function(e){
+					var ruler = $('#container').getRuler()
+					var style = e.target.getBoundingClientRect()
+					var left = style.left - conLeft + ruler.startX
+					var top = style.top - conTop + ruler.startY
+					var width = style.width
+					var height = style.height
+					console.log(left, top, width, height)
+					ruler.setSelect(left, top, width, height);
+				})
+			})
+			
+		});
+	</script>
+</body>
+</html>
