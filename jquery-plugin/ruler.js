@@ -11,12 +11,117 @@
 		return ruler;
 	};
 
+	var addEvent = (function(){
+	    	//对事件对象进行包装
+	    	var packEvent = function(event){
+	    		var type = event.type;
+	    		//如果是ff浏览器的滚轮事件
+	    		if (type == 'DOMMouseScroll'){
+					//根据axis和detail对事件进行包装,添加一个方向
+					//垂直是2,水平是1
+					var axis = event.axis;
+					//左和上为正方向
+					var detail = event.detail;
+					//水平方向
+	    			if(axis === 1){
+	    				if(detail > 5){
+	    					event.direction = 'left';
+	    				}else if(detail < -5){
+	    					event.direction = 'right';
+	    				}
+	    			}
+	    			//垂直方向
+	    			else if(axis === 2){
+	    				if(detail > 5){
+							event.direction = 'top';
+	    				}else if(detail < -5){
+	    					event.direction = 'bottom';
+	    				}
+	    			}
+	            }
+	            //如果是其他浏览器的滚轮事件
+	            if(type === 'mousewheel'){
+	            	//根据deltaX和deltaY的比较对事件进行包装,添加一个方向
+	            	var deltaX = event.deltaX;
+					var deltaY = event.deltaY;
+					
+	            	if(Math.abs(deltaX) - Math.abs(deltaY) > 10){
+				    	if(deltaX > 5){
+				    		event.direction = 'right';
+				    	}else if(deltaX < -5){
+				    		event.direction = 'left';
+				    	}
+				    }else if(Math.abs(deltaY) - Math.abs(deltaX) > 10){
+				    	if(deltaY > 5){
+				    		event.direction = 'top';
+				    	}else if(deltaY < -5){
+				    		event.direction = 'bottom';
+				    	}
+				    }
+	            }
+	            /* 其他兼容性处理(事件源,冒泡等) */
+	            if (event.srcElement && !event.target) {
+	                event.target = event.srcElement;    
+	            }
+	            if (!event.preventDefault && event.returnValue !== undefined) {
+	                event.preventDefault = function() {
+	                    event.returnValue = false;
+	                };
+	            }
+	            
+	            return event;
+	    	}
+	    	
+	    	if (window.addEventListener) {
+	            return function(el, type, fn, capture) {
+	                //如果是ff,将mousewheel事件改变为ff的类型
+	                if (type === "mousewheel" && document.mozHidden !== undefined) {
+	                    type = "DOMMouseScroll";
+	                }
+	                el.addEventListener(type, function(event) {
+	                    fn.call(this, packEvent(event));
+	                }, capture || false);
+	            }
+	        } else if (window.attachEvent) {
+	            return function(el, type, fn, capture) {
+	                el.attachEvent("on" + type, function(event) {
+	                    event = event || window.event;
+	                    fn.call(el, packEvent(event));
+	                });
+	            }
+	        }
+	    })()
+
+	function getWrapper(elem){
+		var wrapper = $('<div></div>')
+		wrapper.css({
+			position: elem.css('position'),
+			left: elem.css('left'),
+			top: elem.css('top'),
+			right: elem.css('right'),
+			bottom: elem.css('bottom'),
+			width: elem.width(),
+			height: elem.height()
+		});
+		elem.css({
+			position: 'absolute',
+			left: 0,
+			top: 0,
+			right: 0,
+			bottom: 0,
+		});
+		return wrapper;
+	}
 	var Ruler = function(elem){
-		this.elem = elem;
+		var wrapper = getWrapper(elem)
+		elem.wrap(wrapper);
+		this.wrapper = elem.parent()
+		this.elem = elem
 	}
 
 	//方法库
 	Ruler.prototype = {
+
 		_destory: function(){
 			console.log('销毁原有实例')
 			var elem = this.elem;
@@ -29,6 +134,8 @@
 		//为给定元素添加标尺(需要目标元素已定位)
 		init : function(options){
 			var elem = this.elem;
+			var wrapper = this.wrapper;
+
 			if(elem.data('ruler')){
 				this._destory();
 			}
@@ -58,7 +165,7 @@
 			});
 			
 			var cornerDom = corner.get(0);
-	  		elem.prepend(corner)
+	  		wrapper.prepend(corner)
 
 			//水平
 			var horRuler = $('<canvas></canvas>')
@@ -74,7 +181,7 @@
 			var horRulerDom = horRuler.get(0);
 			horRulerDom.width = this.width
 			horRulerDom.height = this.thick
-			elem.prepend(horRuler)
+			wrapper.prepend(horRuler)
 
 			this.horCtx = horRulerDom.getContext('2d');
 			
@@ -93,7 +200,7 @@
 			var verRulerDom = verRuler.get(0);
 			verRulerDom.width = this.thick
 			verRulerDom.height = this.height
-			elem.prepend(verRuler)
+			wrapper.prepend(verRuler)
 
 			this.verCtx = verRulerDom.getContext('2d');
 			
@@ -102,43 +209,38 @@
 			this.elem.data('ruler', this);
 			this.doms = [cornerDom, horRulerDom, verRulerDom]
 			console.log(this.doms)
+			this.initMouseWheelEvent()
 		},
-		/*
-		drawBackground : function(){
-			//水平
-			this.horCtx.fillStyle = '#F5F5F5'
-	        this.horCtx.fillRect(0, 0, this.width, this.thick);
+		initMouseWheelEvent : function(){
+			var _this = this
+	    	//使用自定义的事件处理函数,好兼容ff的鼠标滚轮事件
+	    	addEvent(document, 'mousewheel', function(event){
+	    		event.preventDefault();
+	    		console.log(event.target == _this.elem.get(0))
+	    		var direction = event.direction;
+	    		switch(direction){
+	    			case 'top':
+		    			//向上划,向下移动
+	    				console.log("top")
+	    				break;
 
-	        //设置底部刻度的样式
-			this.horCtx.lineWidth = 2;
-			this.horCtx.strokeStyle = '#999'
-			//绘制底部刻度,之前因为没决定用canvas,用dom的border画的,又慢又要计算定位,太挫了,还是用canvas画统一一点
-			this.horCtx.beginPath();
-			
-			//border-bottom(border-left对不齐,改用css实现)
-			this.horCtx.moveTo(0, this.thick); 
-			this.horCtx.lineTo(this.width, this.thick);
-			this.horCtx.closePath();
-			this.horCtx.stroke();
-
-			//垂直
-
-			this.verCtx.fillStyle = '#F5F5F5'
-	        this.verCtx.fillRect(0, 0, this.thick, this.height);
-
-			this.verCtx.lineWidth = 2;
-	        this.verCtx.strokeStyle = '#999'
-	        
-	        //绘制底部刻度
-	        this.verCtx.beginPath();
-	        
-	        //border-right(border-top对不齐,改用css实现)
-	        this.verCtx.moveTo(this.thick, 0);	
-	        this.verCtx.lineTo(this.thick, this.height);
-	        
-	        this.verCtx.closePath();
-	        this.verCtx.stroke();
-		},*/
+	    			case 'bottom':
+	    				//向下划,向上移动
+	    				console.log("down")
+	    				break;
+	    			
+	    			case 'left':
+	    				//向左划,向右移动
+	    				console.log("right")
+	    				break;
+	    			
+	    			case 'right':
+	    				//向右划,向左移动
+	    				console.log("left")
+	    				break;
+	    		}
+	    	});
+	    },
 		setPosition : function(startX, startY){
 			this.startX = startX;
 			this.startY = startY;
