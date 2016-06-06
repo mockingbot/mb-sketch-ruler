@@ -1,7 +1,13 @@
+.ctrlPane{
+	position:absolute;
+	top:0;
+	left:0;
+	width:200px;
+}
 .controller{
 	float:left;
 	display:inline-block;
-	margin-left:80px;
+	margin:10px;
 	border: 1px solid #CCC;
 	background-color: #CCC;
 	border-radius:5px;

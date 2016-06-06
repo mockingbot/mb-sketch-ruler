@@ -4,6 +4,36 @@
 	<meta charset="UTF-8">
 	<title>ruler-jquery-plugin</title>
 	<style>
+		#wrap{
+			margin:0px auto;
+			
+			border: 10px solid blue;
+			overflow:hidden;
+		}
+		#container{
+			position:relative;
+			left: 200px;
+			width:500px;
+			height:500px;
+			width:10000px;
+			height:10000px;
+			outline: 1px solid red;
+		}
+		#test4{
+			position:absolute;
+			top:1000px;
+			left:1000px;
+			width:400px;
+			height:400px;
+			background-color:yellow;
+		}
+		/* 这一版本的实现思路是: 
+		1. 初始化标尺时,在container外增加一个包裹层wrap,定位方式完全复制container,保证增加包裹层后container不产生位移
+		2. 当container宽高小于屏幕宽高时,wrap宽高与container相同, (16-17行)
+		   当container宽高大于等于屏幕宽高时,wrap宽高取屏幕大小, (可以取消18-19行的注释试试)
+		   按照宽高在内部添加标尺,并为wrap添加鼠标滚轮事件,以改变container的定位,同时重绘标尺
+		3. 当需要添加组件进去时,只需要设置好组件的位置,即使该组件不在视窗内,也能通过移动视口找到:如test4 (1000,1000);
+		4. canvas模糊的问题暂时还没去解决,font-family暂时copy了咱们网站上的...
 	</style>
 	<link rel="stylesheet" href="./style.css">
 	<link rel="stylesheet" href="./controller.css">
@@ -11,79 +41,130 @@
 <body>
 	<!-- <section id="wrap"> -->
 		<section id="container">
-			<div id="test1">
-				<p class="font1">
-					-100	
-				</p>
-				<p class="font2">
-					-100
-				</p>
-				<p class="font3">
-					-100
-				</p>
-				<p class="font4">
-					-100
-				</p>
-			</div>
+			<!-- <div id="test1"></div>
 			<div id="test2"></div>
 			<div id="test3"></div>
+			<div id="test4"></div> -->
 		</section>
-	<!-- </section> -->
-	<section class="controller">
-		<h3>初始化标尺</h3>
-		<div>
-	    	<label for="posX">startX:</label>
-	    	<input type="text" id="posX"/>
-		</div>
-		<div>
-	    	<label for="posY">startY:</label>
-	    	<input type="text" id="posY"/>
-		</div>
-		<button onclick="initRuler();">initRuler</button>
-	</section>
-	<section class="controller">
-		<h3>修改起止坐标</h3>
-		<div>
-	    	<label for="startX">startX:</label>
-	    	<input type="text" id="startX"/>
-		</div>
-		<div>
-	    	<label for="startY">startY:</label>
-	    	<input type="text" id="startY"/>
-		</div>
-		<button onclick="setPosition();">setPosition</button>
-	</section>
-	<section class="controller">
-		<h3>绘制阴影</h3>
-		<div>
-        	<label for="x">x:</label>
-        	<input type="text" id="x"/>
-    	</div>
-    	<div>
-        	<label for="y">y:</label>
-        	<input type="text" id="y"/>
-    	</div>
-    	<div>
-        	<label for="width">width:</label>
-        	<input type="text" id="width"/>
-    	</div>
-    	<div>
-        	<label for="height">height:</label>
-        	<input type="text" id="height"/>
-    	</div>
-    	<button onclick="setSelect();">setSelect</button>
+	<section class="ctrlPane">
+		<section class="controller">
+			<h3>初始化标尺</h3>
+			<div>
+		    	<label for="posX">startX:</label>
+		    	<input type="text" id="posX"/>
+			</div>
+			<div>
+		    	<label for="posY">startY:</label>
+		    	<input type="text" id="posY"/>
+			</div>
+			<div>
+		    	<label for="thick">thick:</label>
+		    	<input type="text" id="thick"/>
+			</div>
+			<div>
+		    	<label for="bgColor">bgColor:</label>
+		    	<input type="text" id="bgColor"/>
+			</div>
+			<div>
+		    	<label for="fgColor">fgColor:</label>
+		    	<input type="text" id="fgColor"/>
+			</div>
+			<div>
+		    	<label for="shadowColor">shadowColor:</label>
+		    	<input type="text" id="shadowColor"/>
+			</div>
+			<div>
+		    	<label for="font">font:</label>
+		    	<input type="text" id="font"/>
+			</div>
+			<div>
+		    	<label for="fontColor">fontColor:</label>
+		    	<input type="text" id="fontColor"/>
+			</div>
+			<div>
+		    	<label for="ratio">ratio:</label>
+		    	<input type="text" id="ratio"/>
+			</div>
+			<button onclick="initRuler();">initRuler</button>
+			<button onclick="removeRuler();">removeRuler</button>
+		</section>
+		<section class="controller">
+			<h3>修改起止坐标</h3>
+			<div>
+		    	<label for="startX">startX:</label>
+		    	<input type="text" id="startX"/>
+			</div>
+			<div>
+		    	<label for="startY">startY:</label>
+		    	<input type="text" id="startY"/>
+			</div>
+			<button onclick="setPosition();">setPosition</button>
+		</section>
+		<section class="controller">
+			<h3>绘制阴影</h3>
+			<div>
+	        	<label for="x">x:</label>
+	        	<input type="text" id="x"/>
+	    	</div>
+	    	<div>
+	        	<label for="y">y:</label>
+	        	<input type="text" id="y"/>
+	    	</div>
+	    	<div>
+	        	<label for="width">width:</label>
+	        	<input type="text" id="width"/>
+	    	</div>
+	    	<div>
+	        	<label for="height">height:</label>
+	        	<input type="text" id="height"/>
+	    	</div>
+	    	<button onclick="setSelect();">setSelect</button>
+	    	<button onclick="clearShadow();">clearShadow</button>
+		</section>
 	</section>
 	<script src="./jquery-1.11.3.min.js"></script>
 	<script src="./ruler.js"></script>
 	<script>
+		/* date 6.6 21:51
+			这一版改用scroll实现滚动,另外加上了边界处理以及像素处理
+			边界处理: 比如container宽高为1w 添加ruler后会被重置
+		*/
 		function initRuler(){
 			var posX = parseInt($("#posX").val());
 		    var posY = parseInt($("#posY").val());
-		    var ruler = $('#container').getRuler();
-		    ruler.init({
-				startX: posX,
-				startY: posY
-			});
+		    var thick = parseInt($("#thick").val());
+		    var fgColor = $("#fgColor").val()
+		    var bgColor = $("#bgColor").val()
+		    var shadowColor = $("#shadowColor").val()
+		    var font = $("#font").val()
+		    var fontColor = $("#fontColor").val()
+		    var ratio = $("#ratio").val()
+		    $('#container').getRuler({
+		    	startX: posX,
+		    	// -240
+		    	startY: posY,
+		    	// -100
+		    	thick: thick,
+		    	// 30
+		    	fgColor: fgColor,
+		    	// '#F5F5F5'
+		    	bgColor: bgColor,
+		    	// '#999'
+		    	shadowColor :shadowColor,
+		    	// '#CCC'
+		    	font: font, //这里因为用了2x 字体大小应为期望的2倍,如需要12就写24
+		    	// 详见 https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/font
+
+		    	// '15px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif'
+		    	fontColor: fontColor,
+		    	// '#000'
+		    	ratio: ratio
+		    	//canvas绘制比例,默认值为当前设备的像素倍数(一般为1, retina 2 ,越高越清晰,相应地性能消耗越高)
+		    });
+		}
+		function removeRuler(){
+			var ruler = $('#container').getRuler();
+			ruler.destory()
 		}
 		function setPosition(){
 			var startX = parseInt($("#startX").val());
@@ -99,35 +180,51 @@
 			var ruler = $('#container').getRuler();
 		    ruler.setSelect(x, y, width, height);
 		}
+		function clearShadow(){
+			var ruler = $('#container').getRuler();
+		    ruler.clearShadow();
+		}
 		$(function() {
-			/* 普通用例
-			 * 1.引入ruler.js
-			 * 2.使用 var ruler = $('selector').getRuler(options)
-			   返回ruler对象,
-			 * 3.使用 ruler.init({startX, startY, thick})初始化
-			   options为标尺的起始XY坐标,不传入默认为
-			   startX = -240, startY = -100 thick 30 (尺子的宽窄)
-			 * 注意:因为标尺的位置使用绝对定位确定,所以selector需为已
-			 	定位(absolute/relative/fixed)元素,并在其左边和上边留出位置
-			 * 3.使用 ruler.setSelect(x, y, width, height)
-			   设置阴影位置
-			 * 4.使用ruler.setPosition(startX, startY)设置标尺
-			   起始坐标
-			 */
-
+			/*
+			1. 获取标尺对象 var ruler = $('selector').getRuler(options)
+				options = {startX, startY, thick}
+				不传入默认为 startX = -240, startY = -100 thick 30 (尺子的宽窄)
+				如果该节点上已经有标尺的实例则getRuler只返回该实例,而不会根据新的参数重新渲染
+				** 注意:因为标尺的位置使用绝对定位确定,所以selector需为已定位(absolute/relative/fixed)元素,
+			
+			2.  设置标尺的起始坐标
+				ruler.setPosition(startX, startY)
+			3.  设置阴影位置
+				ruler.setSelect(x, y, width, height)
+			
+			*/
+			 var html = ''
+			 for(var i = 0 ; i < 5000 ; i ++){
+			 	var width = (50 + Math.random() * 50) >> 0
+			 	var height = (50 + Math.random() * 50) >> 0
+			 	var top = (Math.random() - 0.5) * 10000 >> 0
+			 	var left = (Math.random() - 0.5) * 10000 >> 0
+			 	var color = "#"+(Math.random()*Math.pow(256, 3)-1>>0).toString(16);
+			 	// console.log(color)
+			 	html += '<div style="background:'+color+';position:absolute;left:'+left+'px;top:'+top+'px;width:'+width+'px;height:'+height+'px"></div>'
+			 	// var div = $('div').width()
+			 }
+			 $('#container').append(html)
 			
 			//点击测试
 			var boxes = $("#container div")
 			var containerStyle = $("#container").get(0).getBoundingClientRect();
 			var conTop = containerStyle.top
 			var conLeft = containerStyle.left
-			console.log(conTop, conLeft)
+			// console.log(conTop, conLeft)
 			boxes.each(function(index, item){
 				item.addEventListener('click', function(e){
 					var ruler = $('#container').getRuler()
 					var style = e.target.getBoundingClientRect()
-					var left = style.left - conLeft + ruler.startX - 30
-					var top = style.top - conTop + ruler.startY - 30
+					// var left = style.left - conLeft + ruler.startX - 30
+					// var top = style.top - conTop + ruler.startY - 30
+					var left = parseInt(e.target.style.left)
+					var top = parseInt(e.target.style.top)
 					var width = style.width
 					var height = style.height
 					console.log(left, top, width, height)
@@ -136,10 +233,6 @@
 			})
 
 			var ruler = $('#container').getRuler();
-		    ruler.init({
-				startX: 0,
-				startY: 0
-			});
 			
 		});
 	</script>
