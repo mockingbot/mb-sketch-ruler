@@ -150,8 +150,8 @@
                 width: this.thick / this.ratio - 1,
                 height: this.thick / this.ratio - 1,
                 backgroundColor: this.bgColor,
-                borderBottom: '1px solid #999',
-                borderRight: '1px solid #999',
+                borderBottom: '1px solid ' + this.fgColor,
+                borderRight: '1px solid ' + this.fgColor,
                 'z-index': 9999
             });
 
@@ -166,7 +166,7 @@
                 left: this.thick / this.ratio,
                 width: this.width / this.ratio,
                 height: this.thick / this.ratio - 1,
-                borderBottom: '1px solid #999',
+                borderBottom: '1px solid '+ this.fgColor,
                 'z-index': 9999
             });
             var horRulerDom = horRuler.get(0);
@@ -184,7 +184,7 @@
                 left: 0,
                 width: this.thick / this.ratio - 1,
                 height: this.height / this.ratio,
-                borderRight: '1px solid #999',
+                borderRight: '1px solid ' + this.fgColor,
                 'z-index': 9999
             });
             var verRulerDom = verRuler.get(0);
