@@ -15,9 +15,9 @@
 			left: 200px;
 			width:500px;
 			height:500px;
-			width:10000px;
-			height:10000px;
-			outline: 1px solid red;
+			/* width:10000px;
+			height:10000px; */
+			box-shadow:0 0 0 1px red;
 		}
 		#test4{
 			position:absolute;
@@ -27,13 +27,7 @@
 			height:400px;
 			background-color:yellow;
 		}
-		/* 这一版本的实现思路是: 
-		1. 初始化标尺时,在container外增加一个包裹层wrap,定位方式完全复制container,保证增加包裹层后container不产生位移
-		2. 当container宽高小于屏幕宽高时,wrap宽高与container相同, (16-17行)
-		   当container宽高大于等于屏幕宽高时,wrap宽高取屏幕大小, (可以取消18-19行的注释试试)
-		   按照宽高在内部添加标尺,并为wrap添加鼠标滚轮事件,以改变container的定位,同时重绘标尺
-		3. 当需要添加组件进去时,只需要设置好组件的位置,即使该组件不在视窗内,也能通过移动视口找到:如test4 (1000,1000);
-		4. canvas模糊的问题暂时还没去解决,font-family暂时copy了咱们网站上的...
+		
 	</style>
 	<link rel="stylesheet" href="./style.css">
 	<link rel="stylesheet" href="./controller.css">
@@ -125,10 +119,6 @@
 	<script src="./jquery-1.11.3.min.js"></script>
 	<script src="./ruler.js"></script>
 	<script>
-		/* date 6.6 21:51
-			这一版改用scroll实现滚动,另外加上了边界处理以及像素处理
-			边界处理: 比如container宽高为1w 添加ruler后会被重置
-		*/
 		function initRuler(){
 			var posX = parseInt($("#posX").val());
 		    var posY = parseInt($("#posY").val());
@@ -138,7 +128,7 @@
 		    var shadowColor = $("#shadowColor").val()
 		    var font = $("#font").val()
 		    var fontColor = $("#fontColor").val()
-		    var ratio = $("#ratio").val()
+		    var ratio = parseInt($("#ratio").val())
 		    $('#container').getRuler({
 		    	startX: posX,
 		    	// -240

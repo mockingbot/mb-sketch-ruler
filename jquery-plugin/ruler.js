@@ -37,7 +37,7 @@
             //参数默认处理
             options = options || {}
             this.ratio = !isNaN(options.ratio) ? options.ratio : getPixelRatio()
-            this.ratio = 1
+            // this.ratio = 1
             this.startX = !isNaN(options.startX) ? options.startX : -240;
             this.startY = !isNaN(options.startY) ? options.startY : -100;
             this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio;
@@ -60,7 +60,7 @@
             this._addRuler();
             this._drawRuler();
             this.elem.data('ruler', this);
-            this.initScrollEvent();
+            this._initScrollEvent();
             // this._initMouseWheelEvent()
         },
         addWrapper: function(elem, thick) {
@@ -137,7 +137,7 @@
         _addRuler() {
             var elem = this.elem;
             var wrapper = this.wrapper
-
+            var _this = this
             // parseInt会将空串转换为number类型,我晕
             // this.startX = typeof options.startX !== 'undefined' ? options.startX : -240;
             // this.startY = typeof options.startY !== 'undefined' ? options.startY : -100;
@@ -149,10 +149,10 @@
                 position: 'absolute',
                 width: this.thick / this.ratio - 1,
                 height: this.thick / this.ratio - 1,
-                backgroundColor: this.bgColor,
                 borderBottom: '1px solid ' + this.fgColor,
                 borderRight: '1px solid ' + this.fgColor,
-                'z-index': 9999
+                'zIndex': 9999,
+                backgroundColor: this.bgColor,
             });
 
             var cornerDom = corner.get(0);
@@ -167,14 +167,25 @@
                 width: this.width / this.ratio,
                 height: this.thick / this.ratio - 1,
                 borderBottom: '1px solid '+ this.fgColor,
-                'z-index': 9999
+                'zIndex': 9999,
+                backgroundColor: this.bgColor,
+            });
+            
+            horRuler.on('click', function(event) {
+              event.preventDefault();
+              _this.drawHorLine(event.offsetX)
             });
             var horRulerDom = horRuler.get(0);
             horRulerDom.width = this.width
             horRulerDom.height = this.thick
             wrapper.prepend(horRuler)
 
-            this.horCtx = horRulerDom.getContext('2d');
+            var horCtx = horRulerDom.getContext('2d');
+            //设置字体以及刻度的样式
+            horCtx.font = this.font
+            horCtx.lineWidth = this.ratio;
+            horCtx.strokeStyle = this.fgColor
+            this.horCtx = horCtx
 
             //垂直
             var verRuler = $('<canvas></canvas>')
@@ -185,19 +196,66 @@
                 width: this.thick / this.ratio - 1,
                 height: this.height / this.ratio,
                 borderRight: '1px solid ' + this.fgColor,
-                'z-index': 9999
+                'z-index': 9999,
+                backgroundColor: this.bgColor,
+            });
+            
+            verRuler.on('click', function(event) {
+              event.preventDefault();
+
+              console.log('点击了: ',_this.startY + event.offsetY)
             });
             var verRulerDom = verRuler.get(0);
             verRulerDom.width = this.thick
             verRulerDom.height = this.height
             wrapper.prepend(verRuler)
 
-            this.verCtx = verRulerDom.getContext('2d');
+            var verCtx = verRulerDom.getContext('2d');
+            //设置字体以及刻度的样式
+            verCtx.font = this.font
+            verCtx.lineWidth = this.ratio;
+            verCtx.strokeStyle = this.fgColor
+            this.verCtx = verCtx
+            
             this.doms = [cornerDom, horRulerDom, verRulerDom]
+        },
+        drawHorLine(offsetX){
+          console.log(this.startX + offsetX)
+          if(!this.horLine){
+            var horLine = $('<div></div>')
+            horLine.css({
+              position: 'absolute',
+              border: '1px solid red',
+              top: 0,
+              height: '100%',
+              width: 0,
+              'zIndex': 10000
+            });
+            var span = $('<span></span>')
+            span.css({
+              position:'absolute',
+              left: 3,
+              top: this.thick / this.ratio + 3,
+              fontSize: 12 
+            });
+            horLine.append(span)
+            this.wrapper.append(horLine)
+            this.horLine = horLine
+            // console.log(horLine)
+          }
+          this.horLine.css({
+            left: this.thick / this.ratio + offsetX,
+          });
+          this.horLine.find('span').html(this.startX + offsetX)
+          // <div class="horLine"
+            //<span class="horNum">{this.props.offsetY}</span>
+          //</div>
+           
+  
         },
         //为给定元素添加标尺(需要目标元素已定位)
 
-        initScrollEvent() {
+        _initScrollEvent() {
             var innerWrapper = this.innerWrapper
             var origin = this.origin;
             var originX = origin.x;
@@ -292,29 +350,22 @@
         },
         _drawHorRuler: function(posX, width, needShadow) {
             var start = this.startX;
-
             var posX = typeof posX !== 'undefined' ? posX : 0
             var width = typeof width !== 'undefined' ? width : 320
             var needShadow = needShadow || false;
             var ctx = this.horCtx;
-            //绘制刻度尺的背景
-            ctx.fillStyle = this.bgColor
-            ctx.fillRect(0, 0, this.width, this.thick);
+
+            //刻度尺背景改用dom的bgcolor实现,这样可以减少ctx.fillStyle状态改变带来的效率损失
+            ctx.clearRect(0, 0, this.width, this.thick);  
 
             //先根据iphone宽度绘制阴影
             if (needShadow) {
                 ctx.fillStyle = this.shadowColor
                 ctx.fillRect((posX - start) * this.ratio, 0, width * this.ratio, this.thick);
+                // ctx.fillRect(20, 0, 2, this.thick);
             }
 
             //再画刻度和文字(因为刻度遮住了阴影)
-
-            ctx.font = this.font
-
-            //设置底部刻度的样式
-            ctx.lineWidth = this.ratio;
-            ctx.strokeStyle = this.fgColor
-
             //移动画布原点,方便绘制
             ctx.translate(-start * this.ratio, 0);
 
@@ -326,22 +377,24 @@
                 //这样绘制当起点不为10的倍数时,长标和文字都不会出现
                 // for(var i = start ; i < start+this.width ; i += 10){
                 //正确的方法是:偏移到10的倍数,再开始绘制
-            for (var i = startX; i < startX + this.width / this.ratio; i += 10) {
+            for (var i = startX; i < startX + this.width / this.ratio; i += perWidth) {
 
-                ctx.moveTo(i * this.ratio + 0.5, this.thick);
+                ctx.moveTo((i + 0.5) * this.ratio, this.thick);
 
                 //绘制长刻度
                 if (i % 100 === 0) {
                     ctx.fillText(i, (i + 4) * this.ratio, this.thick / 2);
-                    ctx.lineTo(i * this.ratio + 0.5, 0);
+                    ctx.lineTo((i + 0.5) * this.ratio, 0);
                 } else { //绘制短刻度
-                    ctx.lineTo(i * this.ratio + 0.5, this.thick * 2 / 3);
+                    ctx.lineTo((i + 0.5) * this.ratio, this.thick * 2 / 3);
                 }
                 ctx.stroke();
             }
+            
             ctx.closePath();
 
             ctx.translate(start * this.ratio, 0);
+
         },
         _drawVerRuler: function(posY, height, needShadow) {
             var start = this.startY;
@@ -349,9 +402,9 @@
             var height = typeof height !== 'undefined' ? height : 568
             var needShadow = needShadow || false;
             var ctx = this.verCtx;
+            
             //绘制刻度尺的背景
-            ctx.fillStyle = this.bgColor
-            ctx.fillRect(0, 0, this.thick, this.height);
+            ctx.clearRect(0, 0, this.thick, this.height);  
 
             //先根据iphone高度绘制阴影
             if (needShadow) {
@@ -360,17 +413,8 @@
             }
 
             //再画刻度和文字(因为刻度遮住了阴影)
-            ctx.font = this.font
-
-            //设置底部刻度的样式
-            ctx.lineWidth = this.ratio;
-            ctx.strokeStyle = this.fgColor
-
-            //绘制底部刻度
-
             //移动画布原点,方便绘制
             ctx.translate(0, -start * this.ratio);
-
 
             ctx.beginPath();
             ctx.fillStyle = this.fontColor
@@ -378,9 +422,9 @@
             var perHeight = 10;
             var startY = start - start % perHeight
 
-            for (var i = startY; i < startY + this.height / this.ratio; i += 10) {
+            for (var i = startY; i < startY + this.height / this.ratio; i += perHeight) {
 
-                ctx.moveTo(this.thick, i * this.ratio + 0.5);
+                ctx.moveTo(this.thick, (i + 0.5) * this.ratio);
 
                 //绘制长刻度
                 if (i % 100 === 0) {
@@ -394,10 +438,10 @@
                     ctx.fillText(i, 2 * this.ratio, -this.thick / 2)
                         //回复刚刚保存的状态
                     ctx.restore();
-                    ctx.lineTo(0, i * this.ratio + 0.5)
+                    ctx.lineTo(0, (i + 0.5) * this.ratio)
 
                 } else { //绘制短刻度
-                    ctx.lineTo(this.thick * 2 / 3, i * this.ratio + 0.5)
+                    ctx.lineTo(this.thick * 2 / 3, (i + 0.5) * this.ratio)
                 }
                 ctx.stroke();
             }
