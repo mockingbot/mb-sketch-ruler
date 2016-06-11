@@ -1,6 +1,6 @@
 /**
- * 2016.6.5 iny
- * 为了便于非react环境的调用,改造成jquery插件
+ * 2016.6.11 iny
+ * jquery插件v0.2 直接append canvas
  */
 (function($) {
 
@@ -31,32 +31,59 @@
 
     var HorLine = function(options){
       options = options || {}
-      var top = options.top || 30
+      var thick = options.thick || 30
       var horLine = $('<div></div>')
       horLine.css({
         position: 'absolute',
-        border: '1px solid blue',
-        top: 0,
-        height: '100%',
-        width: 0,
+        borderLeft: '1px solid red',
+        top: 0 - thick,
+        bottom: 0,
+        width: 5,
         'zIndex': 10000
       });
-      var span = $('<span></span>')
+      //文字
+      var text = $('<p></p>')
+      text.css({
+        position:'absolute',
+        paddingLeft: 3,
+        top: thick + 3,
+        font: '12px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif',
+      });
+      horLine.append(text)
+      //图标
+      var span = $('<span>×</span>')
       span.css({
         position:'absolute',
-        left: 3,
-        top: top + 3,
-        fontSize: 12 
+        display: 'none',
+        left:'100%',
+        paddingLeft: 2,
+        top: thick + 3,
+        fontSize: 14,
+        cursor: 'pointer'
       });
-      var icon = $('<span></span>')
-      icon.css({
-        position:'absolute',
-        left: 3,
-        top: top + 3,
-        fontSize: 12 
-      });
-      
       horLine.append(span)
+
+      span.on('click', function(event) {
+        event.preventDefault();
+        console.log("delete")
+      });
+      horLine.on('mouseenter', function(e) {
+          event.preventDefault();
+          if(e.target == text.get(0)){
+            return 
+          }
+          span.css({
+            top: e.offsetY - 10,
+            left: 0
+          });
+          span.show(); 
+      });
+      horLine.on('mouseleave', function(e) {
+        event.preventDefault();
+        span.hide();
+        
+        
+      });
       return horLine;
     }
 
@@ -83,66 +110,21 @@
                     y: this.elem.height() / 2
                 }
                 //如果已经初始化,则需要先销毁原有实例
-            this.addWrapper();
-            this.width = this.wrapper.width() * this.ratio - this.thick
-            this.height = this.wrapper.height() * this.ratio - this.thick
+            this.width = this.elem.width() * this.ratio
+            this.height = this.elem.height() * this.ratio
 
 
             this._addRuler();
             this._drawRuler();
             this.elem.data('ruler', this);
-            this._initScrollEvent();
+            
             if(options.horLine){
               this.drawHorLine(options.horLine)
             }
+            // this._initScrollEvent();
             // this._initMouseWheelEvent()
         },
-        addWrapper: function(elem, thick) {
-            var elem = this.elem;
-            var thick = this.thick / this.ratio
-                //外部包裹层(负责存放标尺)
-            var wrapper = $('<section></section>')
-            var width = elem.width() < document.body.clientWidth ? elem.width() : document.body.clientWidth;
-            var height = elem.height() < document.body.clientHeight ? elem.height() : document.body.clientHeight;
-            wrapper.css({
-                position: elem.css('position'),
-                left: elem.css('left'),
-                top: elem.css('top'),
-                right: elem.css('right'),
-                bottom: elem.css('bottom'),
-                //性能优化:elem宽高小于屏幕,则使用elem宽高,超出屏幕则使用屏幕宽高
-                width: width,
-                height: height,
-                overflow: 'hidden'
-            });
-            // 内部包裹层(可见视窗)
-            var innerWrapper = $('<div></div>');
-            innerWrapper.css({
-                position: 'absolute',
-                left: thick,
-                top: thick,
-                width: width - thick,
-                height: height - thick,
-                overflow: 'scroll'
-            });
-
-            elem.css({
-                position: 'absolute',
-                left: this.origin.x,
-                top: this.origin.y,
-                width: elem.width() / 2,
-                height: elem.height() / 2,
-                // width: elem.width() - thick,
-                // height : elem.height() - thick
-            });
-            elem.wrap(wrapper)
-            var outerWrapper = elem.parent()
-            elem.wrap(innerWrapper)
-            var innerWrapper = elem.parent()
-
-            this.innerWrapper = innerWrapper;
-            this.wrapper = outerWrapper;
-        },
+        
         destory: function() {
 
             var wrapper = this.wrapper
@@ -170,35 +152,41 @@
         },
         _addRuler() {
             var elem = this.elem;
-            var wrapper = this.wrapper
             var _this = this
             // parseInt会将空串转换为number类型,我晕
             // this.startX = typeof options.startX !== 'undefined' ? options.startX : -240;
             // this.startY = typeof options.startY !== 'undefined' ? options.startY : -100;
             // this.thick = typeof options.thick !== 'undefined' ? options.thick * 2 : 60;
-
+            elem.css({
+              overflow: 'scroll',
+              marginTop: this.thick / this.ratio,
+              marginLeft: this.thick / this.ratio,
+            });
             //左上角小块
             var corner = $('<span></span>')
             corner.css({
-                position: 'absolute',
+                position: 'fixed',
+                // top:0,
+                // left:0,
                 width: this.thick / this.ratio - 1,
                 height: this.thick / this.ratio - 1,
                 borderBottom: '1px solid ' + this.fgColor,
                 borderRight: '1px solid ' + this.fgColor,
                 'zIndex': 9999,
+                // bottom: '100%',
+                // right: '100%',
                 backgroundColor: this.bgColor,
             });
 
             var cornerDom = corner.get(0);
-            wrapper.prepend(corner)
+            elem.prepend(corner)
 
             //水平
             var horRuler = $('<canvas></canvas>')
             horRuler.css({
-                position: 'absolute',
-                top: 0,
-                left: this.thick / this.ratio,
-                width: this.width / this.ratio,
+                position: 'fixed',
+                marginLeft: this.thick / this.ratio,
+                width: (this.width - this.thick) / this.ratio,
                 height: this.thick / this.ratio - 1,
                 borderBottom: '1px solid '+ this.fgColor,
                 'zIndex': 9999,
@@ -212,7 +200,7 @@
             var horRulerDom = horRuler.get(0);
             horRulerDom.width = this.width
             horRulerDom.height = this.thick
-            wrapper.prepend(horRuler)
+            elem.prepend(horRuler)
 
             var horCtx = horRulerDom.getContext('2d');
             //设置字体以及刻度的样式
@@ -224,11 +212,11 @@
             //垂直
             var verRuler = $('<canvas></canvas>')
             verRuler.css({
-                position: 'absolute',
-                top: this.thick / this.ratio,
-                left: 0,
+                position: 'fixed',
+                marginTop: this.thick / this.ratio,
+                
                 width: this.thick / this.ratio - 1,
-                height: this.height / this.ratio,
+                height: (this.height - this.thick) / this.ratio,
                 borderRight: '1px solid ' + this.fgColor,
                 'z-index': 9999,
                 backgroundColor: this.bgColor,
@@ -242,7 +230,7 @@
             var verRulerDom = verRuler.get(0);
             verRulerDom.width = this.thick
             verRulerDom.height = this.height
-            wrapper.prepend(verRuler)
+            elem.prepend(verRuler)
 
             var verCtx = verRulerDom.getContext('2d');
             //设置字体以及刻度的样式
@@ -256,52 +244,35 @@
         drawHorLine(value){
           console.log(value)
           if(!this.horLine){
-            // var horLine = $('<div></div>')
-            // horLine.css({
-            //   position: 'absolute',
-            //   border: '1px solid blue',
-            //   top: 0,
-            //   height: '100%',
-            //   width: 0,
-            //   'zIndex': 10000
-            // });
-            // var span = $('<span></span>')
-            // span.css({
-            //   position:'absolute',
-            //   left: 3,
-            //   top: this.thick / this.ratio + 3,
-            //   fontSize: 12 
-            // });
-            // horLine.append(span)
             var horLine = new HorLine({
-              top: this.thick / this.ratio
+              thick: this.thick / this.ratio
             });
-            this.wrapper.append(horLine)
+            this.elem.append(horLine)
             this.horLine = horLine
             // console.log(horLine)
           }
           this.horLine.css({
-            left: this.thick / this.ratio + value - this.startX,
+            left: value - this.startX,
           });
-          this.horLine.find('span').html(value)
+          this.horLine.find('p').html(value)
           $(document.body).trigger('newAlignLine', value);     
         },
         //为给定元素添加标尺(需要目标元素已定位)
 
         _initScrollEvent() {
-            var innerWrapper = this.innerWrapper
+            var elem = this.elem
             var origin = this.origin;
             var originX = origin.x;
             var originY = origin.y;
 
-            innerWrapper.scrollLeft(originX + this.startX)
-            innerWrapper.scrollTop(originY + this.startY)
+            elem.scrollLeft(originX + this.startX)
+            elem.scrollTop(originY + this.startY)
             var _this = this
-            this.innerWrapper.on('scroll', function(event) {
+            elem.on('scroll', function(event) {
                 event.preventDefault();
                 event.stopPropagation();
-                var top = innerWrapper.scrollTop()
-                var left = innerWrapper.scrollLeft()
+                var top = elem.scrollTop()
+                var left = elem.scrollLeft()
                     // container.css('left', parseInt(container.css('left')) - detail);
                 _this.setPosition(left - originX, top - originY)
                     // container.css('top', parseInt(container.css('top')) - detail);
@@ -364,12 +335,12 @@
             this.startX = startX;
             this.startY = startY;
 
-            var innerWrapper = this.innerWrapper
+            var elem = this.elem
             var originX = this.origin.x;
             var originY = this.origin.y;
 
-            innerWrapper.scrollLeft(originX + this.startX)
-            innerWrapper.scrollTop(originY + this.startY)
+            elem.scrollLeft(originX + this.startX)
+            elem.scrollTop(originY + this.startY)
 
             this._drawRuler();
             if (this.shadow) {

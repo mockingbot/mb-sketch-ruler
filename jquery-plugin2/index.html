@@ -5,19 +5,21 @@
   <title>ruler-jquery-plugin</title>
   <style>
     #wrap{
+      
       margin:0px auto;
       
       border: 10px solid blue;
       overflow:hidden;
     }
-    #container{
-      position:relative;
-      left: 200px;
+    #screens{
+      position:fixed;
+      top:0px;
+      left: 250px;
       width:500px;
-      height:500px;
+      height:700px;
       /* width:10000px;
       height:10000px; */
-      box-shadow:0 0 0 1px red;
+      box-shadow:0 0 0 1px #999;
     }
     #test4{
       position:absolute;
@@ -34,7 +36,7 @@
 </head>
 <body>
   <!-- <section id="wrap"> -->
-    <section id="container">
+    <section id="screens">
       <!-- <div id="test1"></div>
       <div id="test2"></div>
       <div id="test3"></div>
@@ -129,7 +131,7 @@
         var font = $("#font").val()
         var fontColor = $("#fontColor").val()
         var ratio = parseInt($("#ratio").val())
-        $('#container').getRuler({
+        $('#screens').getRuler({
           startX: posX,
           // -240
           startY: posY,
@@ -153,13 +155,13 @@
         });
     }
     function removeRuler(){
-      var ruler = $('#container').getRuler();
+      var ruler = $('#screens').getRuler();
       ruler.destory()
     }
     function setPosition(){
       var startX = parseInt($("#startX").val());
         var startY = parseInt($("#startY").val());
-      var ruler = $('#container').getRuler();
+      var ruler = $('#screens').getRuler();
         ruler.setPosition(startX, startY)
     }
     function setSelect(){
@@ -167,11 +169,11 @@
         var y = parseInt($("#y").val());
         var width = parseInt($("#width").val());
         var height = parseInt($("#height").val());
-      var ruler = $('#container').getRuler();
+      var ruler = $('#screens').getRuler();
         ruler.setSelect(x, y, width, height);
     }
     function clearShadow(){
-      var ruler = $('#container').getRuler();
+      var ruler = $('#screens').getRuler();
         ruler.clearShadow();
     }
     $(function() {
@@ -199,17 +201,17 @@
         html += '<div style="background:'+color+';position:absolute;left:'+left+'px;top:'+top+'px;width:'+width+'px;height:'+height+'px"></div>'
         // var div = $('div').width()
        }
-       $('#container').append(html)
+       $('#screens').append(html)
       
       //点击测试
-      var boxes = $("#container div")
-      var containerStyle = $("#container").get(0).getBoundingClientRect();
-      var conTop = containerStyle.top
-      var conLeft = containerStyle.left
+      var boxes = $("#screens div")
+      var screensStyle = $("#screens").get(0).getBoundingClientRect();
+      var conTop = screensStyle.top
+      var conLeft = screensStyle.left
       // console.log(conTop, conLeft)
       boxes.each(function(index, item){
         item.addEventListener('click', function(e){
-          var ruler = $('#container').getRuler()
+          var ruler = $('#screens').getRuler()
           var style = e.target.getBoundingClientRect()
           // var left = style.left - conLeft + ruler.startX - 30
           // var top = style.top - conTop + ruler.startY - 30
@@ -222,7 +224,7 @@
         })
       })
 
-      var ruler = $('#container').getRuler({
+      var ruler = $('#screens').getRuler({
         horLine: 150,
         verLine: 150
       });
