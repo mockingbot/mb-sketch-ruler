@@ -166,11 +166,11 @@
     }
     function setSelect(){
       var x = parseInt($("#x").val());
-        var y = parseInt($("#y").val());
-        var width = parseInt($("#width").val());
-        var height = parseInt($("#height").val());
+      var y = parseInt($("#y").val());
+      var width = parseInt($("#width").val());
+      var height = parseInt($("#height").val());
       var ruler = $('#screens').getRuler();
-        ruler.setSelect(x, y, width, height);
+      ruler.setSelect(x, y, width, height);
     }
     function clearShadow(){
       var ruler = $('#screens').getRuler();
@@ -191,11 +191,13 @@
       
       */
        var html = ''
-       for(var i = 0 ; i < 5000 ; i ++){
+       for(var i = 0 ; i < 50 ; i ++){
         var width = (50 + Math.random() * 50) >> 0
         var height = (50 + Math.random() * 50) >> 0
-        var top = (Math.random() - 0.5) * 10000 >> 0
-        var left = (Math.random() - 0.5) * 10000 >> 0
+        // var top = (Math.random() - 0.5) * 10000 >> 0
+        // var left = (Math.random() - 0.5) * 10000 >> 0
+        var top = Math.random() * 1000 + 10 >> 0 
+        var left = Math.random() * 1000 + 10 >> 0 
         var color = "#"+(Math.random()*Math.pow(256, 3)-1>>0).toString(16);
         // console.log(color)
         html += '<div style="background:'+color+';position:absolute;left:'+left+'px;top:'+top+'px;width:'+width+'px;height:'+height+'px"></div>'
@@ -212,11 +214,12 @@
       boxes.each(function(index, item){
         item.addEventListener('click', function(e){
           var ruler = $('#screens').getRuler()
+          console.log(e.target.offset)
           var style = e.target.getBoundingClientRect()
-          // var left = style.left - conLeft + ruler.startX - 30
-          // var top = style.top - conTop + ruler.startY - 30
-          var left = parseInt(e.target.style.left)
-          var top = parseInt(e.target.style.top)
+          var left = style.left - conLeft + ruler.startX - 30
+          var top = style.top - conTop + ruler.startY - 30
+          // var left = parseInt(e.target.style.left)
+          // var top = parseInt(e.target.style.top)
           var width = style.width
           var height = style.height
           console.log(left, top, width, height)
@@ -229,11 +232,12 @@
         verLine: 150
       });
 
-      $(document.body).on('newAlignLine', function(event, value) {
+      $(document.body).on('setAlignLine', function(event, position) {
         event.preventDefault();
-        console.log("hahahaha", value)
-        /* Act on the event */
+        console.log("Horizontal", position.horValue)
+        console.log("Vertical", position.verValue)
       });
+      $(document.body)
       
     });
   </script>
