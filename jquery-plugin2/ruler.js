@@ -141,6 +141,7 @@
                 span.show(); 
               }
           });
+
           horLine.on('mouseleave', function(e) {
             e.preventDefault();
             span.hide();
@@ -256,14 +257,11 @@
         },
         _addRuler() {
             var elem = this.elem;
-            var _this = this
             var factory = this.factory;
-            
             //父元素改为scroll
             elem.css({
               overflow: 'scroll',
             });
-
             //左上角小块
             var corner = factory.getCorner();
             elem.prepend(corner)
@@ -276,13 +274,13 @@
             
             horRuler.on('click', function(event) {
               event.preventDefault();
-              _this.horLineValue = event.offsetX + _this.startX;
-              _this._drawHorLine()
+              this.horLineValue = event.offsetX + this.startX;
+              this._drawHorLine()
               $(document.body).trigger('setAlignLine', {
-                horValue : _this.horLineValue,
-                verValue : _this.verLineValue
+                horValue : this.horLineValue,
+                verValue : this.verLineValue
               }); 
-            });
+            }.bind(this));
 
             //创建垂直标尺
             var verRuler = factory.getVerRuler();
@@ -292,14 +290,13 @@
             verRuler.on('click', function(event) {
               event.preventDefault();
               console.log(event.offsetY)
-              _this.verLineValue = event.offsetY + _this.startY;
-              _this._drawVerLine()
+              this.verLineValue = event.offsetY + this.startY;
+              this._drawVerLine()
               $(document.body).trigger('setAlignLine', {
-                horValue : _this.horLineValue,
-                verValue : _this.verLineValue
+                horValue : this.horLineValue,
+                verValue : this.verLineValue
               });
-              
-            });
+            }.bind(this));
             
             this.horRuler = horRuler;
             this.verRuler = verRuler;
@@ -316,9 +313,9 @@
         _drawHorLine(){
           var value = this.horLineValue
           if(!this.horLine){
-            var _this = this;
+            
             var horLine = this.factory.getHorLine()
-            horLine.find('span').on('click', this._destoryHorLine.bind(this));
+            horLine.find('span').one('click', this._destroyHorLine.bind(this));
             this.elem.append(horLine)
             this.horLine = horLine
           }
@@ -340,9 +337,9 @@
           var value = this.verLineValue
           
           if(!this.verLine){
-            var _this = this;
+            
             var verLine = this.factory.getVerLine()
-            verLine.find('span').on('click', this._destoryVerLine.bind(this));
+            verLine.find('span').one('click', this._destroyVerLine.bind(this));
             this.elem.append(verLine)
             this.verLine = verLine
           }
@@ -360,29 +357,22 @@
           }
         },
 
-        //为给定元素添加标尺(需要目标元素已定位)
-
         _initScrollEvent() {
             var elem = this.elem
-            // var origin = this.origin;
-            // var originX = origin.x;
-            // var originY = origin.y;
 
-            // elem.scrollLeft(originX + this.startX)
-            // elem.scrollTop(originY + this.startY)
-            var _this = this
-            elem.on('scroll', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                var top = elem.scrollTop()
-                var left = elem.scrollLeft()
-                    // container.css('left', parseInt(container.css('left')) - detail);                
-                // _this.setPosition(_this.startX + left, _this.startY + top)
-                _this.setPosition(_this.originX + left, _this.originY + top)
-                _this._drawAlignLine()
-                    // container.css('top', parseInt(container.css('top')) - detail);
+            //当需要滚动事件时,需要根据当前滚轮位置绘制标尺,而不是傻傻地每次都从头开始
+            this.setPosition(this.originX + elem.scrollLeft(), this.originY + elem.scrollTop())
 
-            });
+            this.elem.on('scroll', function(event){
+
+              event.preventDefault();
+              event.stopPropagation();
+              var top = elem.scrollTop()
+              var left = elem.scrollLeft()
+              
+              this.setPosition(this.originX + left, this.originY + top)
+              this._drawAlignLine()
+            }.bind(this));
         },
 
         _moveRuler(deltaX, deltaY) {
@@ -396,7 +386,8 @@
         setPosition: function(startX, startY) {
             this.startX = startX;
             this.startY = startY;
-
+            this.elem.scrollLeft(startX - this.originX)
+            this.elem.scrollTop(startY - this.originY)
             this._drawRuler();
             if (this.shadow) {
                 this.setSelect(this.shadow.x, this.shadow.y, this.shadow.width, this.shadow.height);
@@ -522,16 +513,31 @@
             this.shadow = null;
             this._drawRuler();
         },
-        destory: function() {
+        destroy: function() {
+          // 事件解绑
+          this.horRuler.off('click')
+          this.verRuler.off('click')
+          this.elem.off('scroll')
+          // 移除dom
           this.horRuler.remove()
           this.verRuler.remove()
           this.corner.remove()
+          if(this.horLineValue){
+            this._destroyHorLine();
+          }
+          if(this.verLineValue){
+            this._destroyVerLine();
+          }
           
           this.elem.removeData('ruler')
         },
-        _destoryHorLine(event){
+        _destroyHorLine(event){
           event.preventDefault();
           this.horLineValue = null;
+          // 事件解绑
+          this.horLine.off('mouseenter');
+          this.horLine.off('mouseleave');
+          
           this.horLine.remove()
           this.horLine = null;
 
@@ -540,9 +546,13 @@
             verValue : this.verLineValue
           });
         },
-        _destoryVerLine(event){
+        _destroyVerLine(event){
           event.preventDefault();
           this.verLineValue = null;
+          // 事件解绑
+          this.verLine.off('mouseenter');
+          this.verLine.off('mouseleave');
+          
           this.verLine.remove()
           this.verLine = null;
 

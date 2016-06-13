@@ -156,7 +156,7 @@
     }
     function removeRuler(){
       var ruler = $('#screens').getRuler();
-      ruler.destory()
+      ruler.destroy()
     }
     function setPosition(){
       var startX = parseInt($("#startX").val());
@@ -216,8 +216,8 @@
           var ruler = $('#screens').getRuler()
           
           var style = e.target.getBoundingClientRect()
-          var left = style.left - conLeft + ruler.startX - 30
-          var top = style.top - conTop + ruler.startY - 30
+          var left = style.left - conLeft + ruler.startX - ruler.thick / ruler.ratio
+          var top = style.top - conTop + ruler.startY - ruler.thick / ruler.ratio
           // var left = parseInt(e.target.style.left)
           // var top = parseInt(e.target.style.top)
           var width = style.width
