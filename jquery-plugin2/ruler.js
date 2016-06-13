@@ -332,8 +332,11 @@
         _drawVerLine(){
           
           var value = this.verLineValue
+          
           if(!this.verLine){
+            var _this = this;
             var verLine = this.factory.getVerLine()
+            verLine.find('span').on('click', this._destoryVerLine.bind(this));
             this.elem.append(verLine)
             this.verLine = verLine
           }
