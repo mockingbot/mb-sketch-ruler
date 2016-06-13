@@ -191,13 +191,13 @@
       
       */
        var html = ''
-       for(var i = 0 ; i < 50 ; i ++){
+       for(var i = 0 ; i < 500 ; i ++){
         var width = (50 + Math.random() * 50) >> 0
         var height = (50 + Math.random() * 50) >> 0
         // var top = (Math.random() - 0.5) * 10000 >> 0
         // var left = (Math.random() - 0.5) * 10000 >> 0
-        var top = Math.random() * 1000 + 10 >> 0 
-        var left = Math.random() * 1000 + 10 >> 0 
+        var top = Math.random() * 5000 + 10 >> 0 
+        var left = Math.random() * 5000 + 10 >> 0 
         var color = "#"+(Math.random()*Math.pow(256, 3)-1>>0).toString(16);
         // console.log(color)
         html += '<div style="background:'+color+';position:absolute;left:'+left+'px;top:'+top+'px;width:'+width+'px;height:'+height+'px"></div>'
@@ -214,7 +214,7 @@
       boxes.each(function(index, item){
         item.addEventListener('click', function(e){
           var ruler = $('#screens').getRuler()
-          console.log(e.target.offset)
+          
           var style = e.target.getBoundingClientRect()
           var left = style.left - conLeft + ruler.startX - 30
           var top = style.top - conTop + ruler.startY - 30
@@ -237,7 +237,6 @@
         console.log("Horizontal", position.horValue)
         console.log("Vertical", position.verValue)
       });
-      $(document.body)
       
     });
   </script>

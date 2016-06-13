@@ -31,6 +31,7 @@
       var fgColor = options.fgColor
       var bgColor = options.bgColor
       var font = options.font
+      var lineColor = options.lineColor
       
       return {
         getCorner : function(){
@@ -79,7 +80,6 @@
           verRuler.css({
               position: 'fixed',
               marginTop: thick,
-              
               width: thick - 1,
               height: height,
               borderRight: '1px solid ' + fgColor,
@@ -104,7 +104,7 @@
           horLine.css({
             position: 'fixed',
             height: height + thick,
-            borderLeft: '1px solid red',
+            borderLeft: '1px solid ' + lineColor,
             width: 5,
             'zIndex': 10000
           });
@@ -131,15 +131,18 @@
           horLine.append(span)
 
           horLine.on('mouseenter', function(e) {
-              event.preventDefault();
-              span.css({
-                top: e.offsetY - 10,
-                left: 0
-              });
-              span.show(); 
+              e.preventDefault();
+              var offset = e.offsetY;
+              if(offset > thick){
+                span.css({
+                  top: offset - 10,
+                  left: 0
+                });
+                span.show(); 
+              }
           });
           horLine.on('mouseleave', function(e) {
-            event.preventDefault();
+            e.preventDefault();
             span.hide();
           });
           return horLine;
@@ -149,7 +152,7 @@
           verLine.css({
             position: 'fixed',
             width: width + thick,
-            borderTop: '1px solid red',
+            borderTop: '1px solid ' + lineColor,
             height: 5,
             'zIndex': 10000
           });
@@ -176,14 +179,17 @@
           verLine.append(span)
 
           verLine.on('mouseenter', function(e) {
-              event.preventDefault();
-              span.css({
-                left: e.offsetX - 10,
-              });
-              span.show(); 
+              e.preventDefault();
+              var offset = e.offsetX;
+              if(offset > thick){
+                span.css({
+                  left: e.offsetX - 10,
+                });
+                span.show(); 
+              }
           });
           verLine.on('mouseleave', function(e) {
-            event.preventDefault();
+            e.preventDefault();
             span.hide();
           });
           return verLine;
@@ -207,13 +213,16 @@
             this.ratio = !isNaN(options.ratio) ? options.ratio : getPixelRatio()
             // this.ratio = 1
             this.startX = !isNaN(options.startX) ? options.startX : -240;
+            // console.log(this.startX)
             this.startY = !isNaN(options.startY) ? options.startY : -100;
+            
             this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio;
             this.bgColor = options.bgColor || '#F5F5F5';
             this.fgColor = options.fgColor || '#999';
             this.shadowColor = options.shadowColor || '#CCC';
             this.font = options.font || 12 * this.ratio + 'px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif';
             this.fontColor = options.fontColor || '#000';
+            this.lineColor = options.lineColor || 'red';
             //如果已经初始化,则需要先销毁原有实例
             this.width = this.elem.width() * this.ratio - this.thick
             this.height = this.elem.height() * this.ratio - this.thick
@@ -226,28 +235,24 @@
               fgColor : this.fgColor,
               bgColor : this.bgColor,
               font : this.font,
+              lineColor : this.lineColor,
             })
 
             //对齐线信息
             this.horLineValue = options.horLineValue
             this.verLineValue = options.verLineValue
 
-            // console.log(this.elem.scrollLeft())
             //起始位置
-            this.origin = {
-                x: this.elem.width() / 2,
-                y: this.elem.height() / 2
-            }
+            this.originX = this.startX
+            this.originY = this.startY
             
-
-
             this._addRuler();
             this._drawRuler();
             this._drawAlignLine();
 
             this.elem.data('ruler', this);
             this._initScrollEvent();
-            // this._initMouseWheelEvent()
+            
         },
         _addRuler() {
             var elem = this.elem;
@@ -286,6 +291,7 @@
             
             verRuler.on('click', function(event) {
               event.preventDefault();
+              console.log(event.offsetY)
               _this.verLineValue = event.offsetY + _this.startY;
               _this._drawVerLine()
               $(document.body).trigger('setAlignLine', {
@@ -358,20 +364,21 @@
 
         _initScrollEvent() {
             var elem = this.elem
-            var origin = this.origin;
-            var originX = origin.x;
-            var originY = origin.y;
+            // var origin = this.origin;
+            // var originX = origin.x;
+            // var originY = origin.y;
 
-            elem.scrollLeft(originX + this.startX)
-            elem.scrollTop(originY + this.startY)
+            // elem.scrollLeft(originX + this.startX)
+            // elem.scrollTop(originY + this.startY)
             var _this = this
             elem.on('scroll', function(event) {
                 event.preventDefault();
                 event.stopPropagation();
                 var top = elem.scrollTop()
                 var left = elem.scrollLeft()
-                    // container.css('left', parseInt(container.css('left')) - detail);
-                _this.setPosition(left - originX, top - originY)
+                    // container.css('left', parseInt(container.css('left')) - detail);                
+                // _this.setPosition(_this.startX + left, _this.startY + top)
+                _this.setPosition(_this.originX + left, _this.originY + top)
                 _this._drawAlignLine()
                     // container.css('top', parseInt(container.css('top')) - detail);
 
@@ -389,13 +396,6 @@
         setPosition: function(startX, startY) {
             this.startX = startX;
             this.startY = startY;
-
-            var elem = this.elem
-            var originX = this.origin.x;
-            var originY = this.origin.y;
-
-            elem.scrollLeft(originX + this.startX)
-            elem.scrollTop(originY + this.startY)
 
             this._drawRuler();
             if (this.shadow) {
