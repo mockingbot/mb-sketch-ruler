@@ -19,7 +19,7 @@
             context.msBackingStorePixelRatio ||
             context.oBackingStorePixelRatio ||
             context.backingStorePixelRatio || 1;
-        console.log("当前设备像素倍数: ", window.devicePixelRatio)
+        // console.log("当前设备像素倍数: ", window.devicePixelRatio)
         return (window.devicePixelRatio || 1) / backingStore;
     };
 
@@ -51,7 +51,7 @@
           });
           return corner;
         },
-        getHorRuler : function(options){
+        getHorRuler : function(){
           var horRuler = $('<canvas></canvas>')
           horRuler.css({
               position: 'fixed',
@@ -99,15 +99,18 @@
           ctx.strokeStyle = fgColor
           return verRuler;
         },
-        getHorLine : function(){
+        getHorLine : function(cancelSelect){
           var horLine = $('<div></div>')
           horLine.css({
             position: 'fixed',
             height: height + thick,
             borderLeft: '1px solid ' + lineColor,
             width: 5,
+            // cursor: 'ew-resize',
+            pointerEvents: cancelSelect ? 'none' : 'auto',
             'zIndex': 10000
           });
+          // console.log(horLine.css('pointerEvents'))
           //文字
           var text = $('<p></p>')
           text.css({
@@ -131,20 +134,24 @@
           horLine.append(span)
 
           horLine.on('mouseenter', function(e) {
-              e.preventDefault();
-              var offset = e.offsetY;
-              if(offset > thick){
-                span.css({
-                  top: offset - 10,
-                  left: 0
-                });
-                span.show(); 
-              }
+            e.preventDefault();
+            var offset = e.offsetY;
+            if(offset > thick){
+              span.css({
+                top: offset - 10,
+                left: 0
+              });
+              span.show(); 
+            }
+            /*进入可拖动状态*/
+            // horLine.data('dragable', true)
           });
 
           horLine.on('mouseleave', function(e) {
             e.preventDefault();
             span.hide();
+            /*退出可拖动状态*/
+            // horLine.data('dragable', false)
           });
           return horLine;
         },
@@ -155,7 +162,8 @@
             width: width + thick,
             borderTop: '1px solid ' + lineColor,
             height: 5,
-            'zIndex': 10000
+            // cursor: 'ns-resize',
+            'zIndex': 10000,
           });
           //文字
           var text = $('<p></p>')
@@ -194,12 +202,62 @@
             span.hide();
           });
           return verLine;
-        }
+        },
+        getHorCur : function(){
+          
+          var horCur = $('<div></div>')
+          horCur.css({
+            position: 'fixed',
+            height: thick,
+            paddingLeft: thick,
+            borderRight: '1px solid ' + lineColor,
+            display: 'none',
+            zIndex: 9999,
+            pointerEvents: 'none'
+          });
+          var text = $('<p></p>')
+          text.css({
+            position: 'absolute',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            marginLeft: 5,
+            // border: '1px solid green',
+            font: '12px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif',
+          });
+          horCur.append(text);
+          return horCur;
+        },
+        getVerCur : function(){
+          
+          var verCur = $('<div></div>')
+          
+          verCur.css({
+            position: 'fixed',
+            width: thick,
+            paddingTop: thick,
+            borderBottom: '1px solid ' + lineColor,
+            display: 'none',
+            zIndex: 9999,
+            pointerEvents: 'none'
+          });
+          var text = $('<p></p>')
+          text.css({
+            position: 'absolute',
+            marginLeft: '20%',
+            transformOrigin: '0% 0%',
+            transform: 'rotate(-90deg)',
+            // border: '1px solid green',
+            font: '12px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif',
+          });
+          verCur.append(text);
+          return verCur;
+        },
+
       }
     }
 
     var Ruler = function(elem, options) {
-        console.log("创建ruler")
+        // console.log("创建ruler")
         this.elem = elem
         this._init(options)
     }
@@ -242,6 +300,9 @@
             //对齐线信息
             this.horLineValue = options.horLineValue
             this.verLineValue = options.verLineValue
+            // console.log(this.horLineValue == undefined)
+            // this.horLineValue = 20
+            // this.verLineValue = 840
 
             //起始位置
             this.originX = this.startX
@@ -271,11 +332,10 @@
             elem.prepend(horRuler)
             this.horCtx = horRuler.get(0).getContext('2d')
             
-            
             horRuler.on('click', function(event) {
               event.preventDefault();
               this.horLineValue = event.offsetX + this.startX;
-              this._drawHorLine()
+              this._drawHorLine(true)
               $(document.body).trigger('setAlignLine', {
                 horValue : this.horLineValue,
                 verValue : this.verLineValue
@@ -289,9 +349,9 @@
             
             verRuler.on('click', function(event) {
               event.preventDefault();
-              console.log(event.offsetY)
+              // console.log(event.offsetY)
               this.verLineValue = event.offsetY + this.startY;
-              this._drawVerLine()
+              this._drawVerLine(true)
               $(document.body).trigger('setAlignLine', {
                 horValue : this.horLineValue,
                 verValue : this.verLineValue
@@ -300,21 +360,114 @@
             
             this.horRuler = horRuler;
             this.verRuler = verRuler;
-            this.corner = corner
+            this.corner = corner;
+
+            this._addCurrentValue();
         },
-        _drawAlignLine(){
-          if(this.horLineValue){
-            this._drawHorLine();
+        _addCurrentValue(){
+          this._addHorCurrentValue();
+          this._addVerCurrentValue();
+        },
+        _addHorCurrentValue(){
+          var factory = this.factory;
+          var horCur = factory.getHorCur();
+          var horSpan = horCur.find('p');
+          var horRuler = this.horRuler;
+          
+          horRuler.after(horCur);
+
+          //当鼠标进入标尺时,显示刻度,如果有对齐线,则禁止对齐线的鼠标事件
+          horRuler.on('mouseenter', function(event) {
+            event.preventDefault();
+            // console.log("enter")
+            if(this.horLine){
+              // console.log("change")
+              this.horLine.css('pointerEvents', 'none');
+            }
+            horCur.css({
+              display: 'block',
+            });
+            
+          }.bind(this));
+          //当鼠标在标尺上移动时,改变鼠标指向的刻度
+          horRuler.on('mousemove', function(event) {
+            event.preventDefault();
+            var value = this.startX + event.offsetX
+            horCur.css({
+              marginLeft: event.offsetX
+            });
+            horSpan.html(value)
+          }.bind(this));
+
+          //当鼠标离开标尺时,隐藏刻度,如果有对齐线,则恢复对齐线的鼠标事件
+          horRuler.on('mouseout', function(event) {
+            event.preventDefault();
+            // console.log("exit")
+            if(this.horLine){
+              this.horLine.css('pointerEvents', 'auto');
+            }
+            horCur.css({
+              display: 'none',
+            });
+          }.bind(this));
+        },
+        _addVerCurrentValue(){
+          var factory = this.factory;
+          var verCur = factory.getVerCur();
+          var verSpan = verCur.find('p');
+          var verRuler = this.verRuler;
+          
+          verRuler.after(verCur);
+
+          //当鼠标进入标尺时,显示刻度,如果有对齐线,则禁止对齐线的鼠标事件
+          verRuler.on('mouseenter', function(event) {
+            event.preventDefault();
+            // console.log("enter")
+            if(this.verLine){
+              // console.log("change")
+              this.verLine.css('pointerEvents', 'none');
+            }
+            verCur.css({
+              display: 'block',
+            });
+            
+          }.bind(this));
+          //当鼠标在标尺上移动时,改变鼠标指向的刻度
+          verRuler.on('mousemove', function(event) {
+            event.preventDefault();
+            var value = this.startY + event.offsetY
+            console.log(verCur.css('borderColor'))
+            verCur.css({
+              marginTop: event.offsetY
+            });
+            verSpan.html(value)
+          }.bind(this));
+
+          //当鼠标离开标尺时,隐藏刻度,如果有对齐线,则恢复对齐线的鼠标事件
+          verRuler.on('mouseout', function(event) {
+            event.preventDefault();
+            // console.log("exit")
+            if(this.verLine){
+              this.verLine.css('pointerEvents', 'auto');
+            }
+            verCur.css({
+              display: 'none',
+            });
+          }.bind(this));
+        },
+        _drawAlignLine(cancelSelect){
+          
+          if(this.horLineValue != undefined){
+            this._drawHorLine(cancelSelect);
           }
-          if(this.verLineValue){
-            this._drawVerLine();
+          if(this.verLineValue != undefined){
+            this._drawVerLine(cancelSelect);
           }
         },
-        _drawHorLine(){
+        _drawHorLine(cancelSelect){
           var value = this.horLineValue
           if(!this.horLine){
-            
-            var horLine = this.factory.getHorLine()
+            var horLine = this.factory.getHorLine(cancelSelect)
             horLine.find('span').one('click', this._destroyHorLine.bind(this));
             this.elem.append(horLine)
             this.horLine = horLine
