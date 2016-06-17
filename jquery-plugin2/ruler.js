@@ -302,8 +302,8 @@
             //对齐线信息
             this.horLineValue = options.horLineValue || [];
             this.verLineValue = options.verLineValue || [];
-            this.horLineValue = [0, 50]
-            this.verLineValue = [20, 100]
+            // this.horLineValue = [0, 50]
+            // this.verLineValue = [20, 100]
             this.horLine = [];
             this.verLine = [];
             // console.log(this.horLineValue == undefined)
@@ -729,39 +729,41 @@
           // 事件解绑
           this.horRuler.off('click')
           this.verRuler.off('click')
+          this.horRuler.off('mousemove')
+          this.verRuler.off('mousemove')
           this.elem.off('scroll')
           // 移除dom
           this.horRuler.remove()
           this.verRuler.remove()
           this.corner.remove()
-          if(this.horLineValue){
-            this._destroyHorLine();
-          }
-          if(this.verLineValue){
-            this._destroyVerLine();
-          }
+          // if(this.horLineValue){
+          //   this._destroyHorLine();
+          // }
+          // if(this.verLineValue){
+          //   this._destroyVerLine();
+          // }
           
           this.elem.removeData('ruler')
         },
         _destroyHorLine(){
-          console.log(this)
-          event.preventDefault();
+          // console.log(this)
+          // event.preventDefault();
           
         },
         _destroyVerLine(event){
-          event.preventDefault();
-          this.verLineValue = null;
-          // 事件解绑
-          this.verLine.off('mouseenter');
-          this.verLine.off('mouseleave');
+          // event.preventDefault();
+          // this.verLineValue = null;
+          // // 事件解绑
+          // this.verLine.off('mouseenter');
+          // this.verLine.off('mouseleave');
           
-          this.verLine.remove()
-          this.verLine = null;
+          // this.verLine.remove()
+          // this.verLine = null;
 
-          $(document.body).trigger('setAlignLine', {
-            horValue : this.horLineValue,
-            verValue : this.verLineValue
-          });
+          // $(document.body).trigger('setAlignLine', {
+          //   horValue : this.horLineValue,
+          //   verValue : this.verLineValue
+          // });
         },
     }
 })(jQuery)
