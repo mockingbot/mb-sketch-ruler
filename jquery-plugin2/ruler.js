@@ -254,8 +254,6 @@
         this._init(options)
     }
 
-    //为已定位的元素增加厚度为thick的包裹层
-
     //方法
     Ruler.prototype = {
         _init: function(options) {
@@ -292,8 +290,8 @@
             //对齐线信息
             this.horLineValue = options.horLineValue || [];
             this.verLineValue = options.verLineValue || [];
-            this.horLineValue = [0, 50]
-            this.verLineValue = [20, 100]
+            // this.horLineValue = [0, 50]
+            // this.verLineValue = [20, 100]
             this.horLine = [];
             this.verLine = [];
             // console.log(this.horLineValue == undefined)
