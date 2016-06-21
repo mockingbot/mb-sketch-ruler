@@ -268,6 +268,7 @@
             this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio;
             //每一小格的宽度
             this.perWidth = !isNaN(options.perWidth) ? options.perWidth : 10;
+            // this.perWidth = 50
             this.scale = this.perWidth / 10;
 
             this.bgColor = options.bgColor || '#F5F5F5';
@@ -417,8 +418,8 @@
             event.preventDefault();
             var value = this.startX + event.offsetX
             var scale = this.scale;
-            if(value % scale == 0){
-              value /= scale;
+            value = value / scale >> 0
+            if(value != this.horCurrentValue){
               this.horCurrentValue = value;
               horCur.css({
                 marginLeft: event.offsetX
@@ -456,15 +457,17 @@
           //当鼠标在标尺上移动时,改变鼠标指向的刻度
           verRuler.on('mousemove', function(event) {
             event.preventDefault();
+
             var value = this.startY + event.offsetY
             var scale = this.scale;
-            if(value % scale == 0){
-              value /= scale;
+            value = value / scale >> 0
+            if(value != this.verCurrentValue){
               this.verCurrentValue = value;
               verCur.css({
                 marginTop: event.offsetY
               });
               verSpan.html(value)
+              
             }
           }.bind(this));
 
@@ -619,6 +622,8 @@
         _drawRuler: function() {
             this._drawHorRuler();
             this._drawVerRuler();
+            // this._drawHorRuler(-100, 100, true);
+            // this._drawVerRuler(100, 100, true);
         },
         _drawHorRuler: function(posX, width, needShadow) {
             var start = this.startX;
@@ -633,7 +638,7 @@
             //先根据iphone宽度绘制阴影
             if (needShadow) {
                 ctx.fillStyle = this.shadowColor
-                ctx.fillRect((posX - start) * this.ratio, 0, width * this.ratio, this.thick);
+                ctx.fillRect((posX * this.scale - start) * this.ratio, 0, width * this.ratio * this.scale, this.thick);
                 // ctx.fillRect(20, 0, 2, this.thick);
             }
 
@@ -682,7 +687,9 @@
             //先根据iphone高度绘制阴影
             if (needShadow) {
                 ctx.fillStyle = this.shadowColor
-                ctx.fillRect(0, (posY - start) * this.ratio, this.thick, height * this.ratio);
+                // console.log(posY)
+                // console.log((posY - start) * this.ratio)
+                ctx.fillRect(0, (posY * this.scale - start) * this.ratio, this.thick, height * this.ratio * this.scale);
             }
 
             //再画刻度和文字(因为刻度遮住了阴影)
