@@ -296,8 +296,8 @@
             //对齐线信息
             this.horLineValue = options.horLineValue || [];
             this.verLineValue = options.verLineValue || [];
-            this.horLineValue = [0, 50]
-            this.verLineValue = [20, 100]
+            // this.horLineValue = [0, 50]
+            // this.verLineValue = [20, 100]
             this.horLine = [];
             this.verLine = [];
             // console.log(this.horLineValue == undefined)
