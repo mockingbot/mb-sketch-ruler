@@ -756,4 +756,4 @@
           this.verDiv.remove();
         }
     }
-})(jQuery)
+})(jQuery);
