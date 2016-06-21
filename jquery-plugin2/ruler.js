@@ -34,7 +34,7 @@
       var lineColor = options.lineColor
       
       return {
-        getCorner : function(){
+        getCorner: function(){
           var corner = $('<span></span>')
           corner.css({
               position: 'fixed',
@@ -47,7 +47,7 @@
           });
           return corner;
         },
-        getHorRuler : function(){
+        getHorRuler: function(){
           var horRuler = $('<canvas></canvas>')
           horRuler.css({
               position: 'fixed',
@@ -72,7 +72,7 @@
           ctx.textBaseline = 'middle'
           return horRuler;
         },
-        getVerRuler : function(){
+        getVerRuler: function(){
           var verRuler = $('<canvas></canvas>')
           verRuler.css({
               position: 'fixed',
@@ -97,7 +97,7 @@
           ctx.textBaseline = 'middle'
           return verRuler;
         },
-        getHorLine : function(){
+        getHorLine: function(){
           var horLine = $('<div></div>')
           horLine.css({
             position: 'fixed',
@@ -152,7 +152,7 @@
           });
           return horLine;
         },
-        getVerLine : function(){
+        getVerLine: function(){
           var verLine = $('<div></div>')
           verLine.css({
             position: 'fixed',
@@ -199,7 +199,7 @@
           });
           return verLine;
         },
-        getHorCur : function(){
+        getHorCur: function(){
           
           var horCur = $('<div></div>')
           horCur.css({
@@ -220,7 +220,7 @@
           horCur.append(text);
           return horCur;
         },
-        getVerCur : function(){
+        getVerCur: function(){
           
           var verCur = $('<div></div>')
           
@@ -311,7 +311,7 @@
             this._initScrollEvent();
             
         },
-        _addRuler() {
+        _addRuler: function(){
             var elem = this.elem;
             var factory = this.factory;
             //父元素改为scroll
@@ -384,11 +384,11 @@
 
             this._addCurrentValue();
         },
-        _addCurrentValue(){
+        _addCurrentValue: function(){
           this._addHorCurrentValue();
           this._addVerCurrentValue();
         },
-        _addHorCurrentValue(){
+        _addHorCurrentValue: function(){
           var factory = this.factory;
           var horCur = factory.getHorCur();
           var horSpan = horCur.find('p');
@@ -425,7 +425,7 @@
             });
           }.bind(this));
         },
-        _addVerCurrentValue(){
+        _addVerCurrentValue: function(){
           var factory = this.factory;
           var verCur = factory.getVerCur();
           var verSpan = verCur.find('p');
@@ -461,11 +461,11 @@
             });
           }.bind(this));
         },
-        _drawAlignLine(){
+        _drawAlignLine: function(){
           this._drawHorLine();
           this._drawVerLine();
         },
-        _addAlignLine(){
+        _addAlignLine: function(){
           $.each(this.horLineValue, function(index, value){
             this._addHorLine(value);
           }.bind(this))
@@ -475,7 +475,7 @@
           }.bind(this))
         },
         //新增一条对齐线
-        _addHorLine(value){
+        _addHorLine: function(value){
           var horLine = this.factory.getHorLine()
           var offsetX = value - this.startX
           horLine.css('marginLeft', offsetX);
@@ -502,7 +502,7 @@
           }.bind(this));
         },
         //新增一条对齐线
-        _addVerLine(value){
+        _addVerLine: function(value){
           
           var verLine = this.factory.getVerLine()
 
@@ -531,7 +531,7 @@
           }.bind(this))
         },
         //绘制当前所有对齐线
-        _drawHorLine(){
+        _drawHorLine: function(){
           $.each(this.horLineValue, function(index, value) {
             var me = this.horLine[index];
             var offsetX = value - this.startX
@@ -548,7 +548,7 @@
             }
           }.bind(this));
         },
-        _drawVerLine(){
+        _drawVerLine: function(){
           $.each(this.verLineValue, function(index, value) {
             var me = this.verLine[index];
             var offsetY = value - this.startY
@@ -565,8 +565,7 @@
             }
           }.bind(this));
         },
-
-        _initScrollEvent() {
+        _initScrollEvent: function() {
             var elem = this.elem
 
             //当需要滚动事件时,需要根据当前滚轮位置绘制标尺,而不是傻傻地每次都从头开始
@@ -583,8 +582,7 @@
               this._drawAlignLine()
             }.bind(this));
         },
-
-        _moveRuler(deltaX, deltaY) {
+        _moveRuler: function(deltaX, deltaY) {
             this.startX = this.startX + deltaX
             this.startY = this.startY + deltaY
             this._drawRuler();
@@ -603,7 +601,6 @@
             }
         },
         _drawRuler: function() {
-
             this._drawHorRuler();
             this._drawVerRuler();
         },
@@ -740,7 +737,7 @@
           
           this.elem.removeData('ruler')
         },
-        _destroyHorLine(){
+        _destroyHorLine: function(){
           //解绑每个对齐线的时间
           $.each(this.horLine, function(index, elem){
             elem.find('span').off('click')
@@ -749,7 +746,7 @@
           //移除对齐线container
           this.horDiv.remove();
         },
-        _destroyVerLine(){
+        _destroyVerLine: function(){
           //解绑每个对齐线的事件
           $.each(this.verLine, function(index, elem){
             elem.find('span').off('click')
