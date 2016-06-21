@@ -76,6 +76,10 @@
           <label for="ratio">ratio:</label>
           <input type="text" id="ratio"/>
       </div>
+      <div>
+          <label for="ratio">perWidth:</label>
+          <input type="text" id="perWidth"/>
+      </div>
       <button onclick="initRuler();">initRuler</button>
       <button onclick="removeRuler();">removeRuler</button>
     </section>
@@ -126,6 +130,7 @@
         var font = $("#font").val()
         var fontColor = $("#fontColor").val()
         var ratio = parseInt($("#ratio").val())
+        var perWidth = parseInt($("#perWidth").val())
         $('#screens').getRuler({
           startX: posX,
           // -240
@@ -145,8 +150,10 @@
           // '15px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif'
           fontColor: fontColor,
           // '#000'
-          ratio: ratio
+          ratio: ratio,
           //canvas绘制比例,默认值为当前设备的像素倍数(一般为1, retina 2 ,越高越清晰,相应地性能消耗越高)
+          perWidth: perWidth
+          //10
         });
     }
     function removeRuler(){

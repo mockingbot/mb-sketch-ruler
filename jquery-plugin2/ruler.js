@@ -266,6 +266,10 @@
             this.startY = !isNaN(options.startY) ? options.startY : -100;
             
             this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio;
+            //每一小格的宽度
+            this.perWidth = !isNaN(options.perWidth) ? options.perWidth : 10;
+            this.scale = this.perWidth / 10;
+
             this.bgColor = options.bgColor || '#F5F5F5';
             this.fgColor = options.fgColor || '#999';
             this.shadowColor = options.shadowColor || '#CCC';
@@ -275,6 +279,7 @@
             //如果已经初始化,则需要先销毁原有实例
             this.width = this.elem.width() * this.ratio - this.thick
             this.height = this.elem.height() * this.ratio - this.thick
+
 
             this.factory = new RulerFactory({
               ratio : this.ratio,
@@ -290,8 +295,8 @@
             //对齐线信息
             this.horLineValue = options.horLineValue || [];
             this.verLineValue = options.verLineValue || [];
-            // this.horLineValue = [0, 50]
-            // this.verLineValue = [20, 100]
+            this.horLineValue = [0, 50]
+            this.verLineValue = [20, 100]
             this.horLine = [];
             this.verLine = [];
             // console.log(this.horLineValue == undefined)
@@ -352,13 +357,14 @@
             //点击标尺绘制对齐线
             horRuler.on('click', function(event) {
               event.preventDefault();
-              var value = event.offsetX + this.startX
+              var value = this.horCurrentValue
               this.horLineValue.push(value);
               this._addHorLine(value)
               $(document.body).trigger('setAlignLine', {
                 horValue : this.horLineValue,
                 verValue : this.verLineValue
               });
+              
             }.bind(this));
 
             //创建垂直标尺
@@ -369,7 +375,7 @@
             //点击标尺绘制对齐线
             verRuler.on('click', function(event) {
               event.preventDefault();
-              var value = event.offsetY + this.startY
+              var value = this.verCurrentValue
               this.verLineValue.push(value)
               this._addVerLine(value);
               $(document.body).trigger('setAlignLine', {
@@ -410,10 +416,15 @@
           horRuler.on('mousemove', function(event) {
             event.preventDefault();
             var value = this.startX + event.offsetX
-            horCur.css({
-              marginLeft: event.offsetX
-            });
-            horSpan.html(value)
+            var scale = this.scale;
+            if(value % scale == 0){
+              value /= scale;
+              this.horCurrentValue = value;
+              horCur.css({
+                marginLeft: event.offsetX
+              });
+              horSpan.html(value)
+            }
           }.bind(this));
 
           //当鼠标离开标尺时,隐藏刻度,恢复对齐线的鼠标事件
@@ -446,10 +457,15 @@
           verRuler.on('mousemove', function(event) {
             event.preventDefault();
             var value = this.startY + event.offsetY
-            verCur.css({
-              marginTop: event.offsetY
-            });
-            verSpan.html(value)
+            var scale = this.scale;
+            if(value % scale == 0){
+              value /= scale;
+              this.verCurrentValue = value;
+              verCur.css({
+                marginTop: event.offsetY
+              });
+              verSpan.html(value)
+            }
           }.bind(this));
 
           //当鼠标离开标尺时,隐藏刻度,恢复对齐线的鼠标事件
@@ -477,7 +493,7 @@
         //新增一条对齐线
         _addHorLine: function(value){
           var horLine = this.factory.getHorLine()
-          var offsetX = value - this.startX
+          var offsetX = value * this.scale - this.startX
           horLine.css('marginLeft', offsetX);
           horLine.find('p').html(value)
           this.horDiv.append(horLine)
@@ -506,7 +522,7 @@
           
           var verLine = this.factory.getVerLine()
 
-          var offsetY = value - this.startY
+          var offsetY = value * this.scale - this.startY
           verLine.css('marginTop', offsetY);
           verLine.find('p').html(value)
           this.verDiv.append(verLine)
@@ -534,7 +550,7 @@
         _drawHorLine: function(){
           $.each(this.horLineValue, function(index, value) {
             var me = this.horLine[index];
-            var offsetX = value - this.startX
+            var offsetX = value * this.scale - this.startX
             if(offsetX < 0 || offsetX > this.width / this.ratio){
               me.css({
                 display: 'none'
@@ -551,7 +567,7 @@
         _drawVerLine: function(){
           $.each(this.verLineValue, function(index, value) {
             var me = this.verLine[index];
-            var offsetY = value - this.startY
+            var offsetY = value * this.scale - this.startY
             if(offsetY < 0 || offsetY > this.height / this.ratio){
               me.css({
                 display: 'none'
@@ -628,7 +644,8 @@
             ctx.beginPath(); //一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制
             ctx.fillStyle = this.fontColor
 
-            var perWidth = 10;
+            var perWidth = this.perWidth;
+            var scale = this.scale;
             var startX = start - start % perWidth
                 //这样绘制当起点不为10的倍数时,长标和文字都不会出现
                 // for(var i = start ; i < start+this.width ; i += 10){
@@ -638,8 +655,8 @@
                 ctx.moveTo((i + 0.5) * this.ratio, this.thick);
 
                 //绘制长刻度
-                if (i % 100 === 0) {
-                    ctx.fillText(i, (i + 4) * this.ratio, this.thick / 3);
+                if (i % (perWidth * 10) === 0) {
+                    ctx.fillText(i / scale, (i + 4) * this.ratio, this.thick / 3);
                     ctx.lineTo((i + 0.5) * this.ratio, 0);
                 } else { //绘制短刻度
                     ctx.lineTo((i + 0.5) * this.ratio, this.thick * 2 / 3);
@@ -675,15 +692,16 @@
             ctx.beginPath();
             ctx.fillStyle = this.fontColor
 
-            var perHeight = 10;
-            var startY = start - start % perHeight
+            var perHeight = this.perWidth;
+            var scale = this.scale;
 
+            var startY = start - start % perHeight
             for (var i = startY; i < startY + this.height / this.ratio; i += perHeight) {
 
                 ctx.moveTo(this.thick, (i + 0.5) * this.ratio);
 
                 //绘制长刻度
-                if (i % 100 === 0) {
+                if (i % (perHeight * 10) === 0) {
                     //这里先保存一下状态
                     ctx.save();
                     //将原点转移到当前画笔所在点
@@ -691,7 +709,7 @@
                         //旋转 -90 度
                     ctx.rotate(-Math.PI / 2)
                         //画文字
-                    ctx.fillText(i, 2 * this.ratio, -this.thick / 3 * 2)
+                    ctx.fillText(i / scale, 2 * this.ratio, -this.thick / 3 * 2)
                         //回复刚刚保存的状态
                     ctx.restore();
                     ctx.lineTo(0, (i + 0.5) * this.ratio)
