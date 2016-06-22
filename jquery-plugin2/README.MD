@@ -14,6 +14,15 @@
   * √ 要不给drawHorLine加个参数绘制时判断?点击绘制时说明鼠标在标尺上,直接不接受鼠标事件,而调用绘制时,接收鼠标事件,这样虽然略有瑕疵,但是效率会好很多
 
 ###笔记
+  * 兼容文字不可选 text.attr('unselectable','on').css({
+            '-moz-user-select':'-moz-none',
+            '-moz-user-select':'none',
+            '-o-user-select':'none',
+            '-khtml-user-select':'none', /* you could also put this in a class */
+            '-webkit-user-select':'none',/* and add the CSS class here instead */
+            '-ms-user-select':'none',
+            'user-select':'none'
+          }).bind('selectstart', function(){ return false; });
   * jQuery点击事件的4个位置(以X为例):
     * event.offsetX  距离当前元素左上角的距离
     * event.clientX  距离当前可视区域左上角的距离
@@ -39,7 +48,7 @@
     但是各种逻辑实在有些复杂,最后只能用css3的pointer-events:none/auto;的切换来强行禁止相关元素的鼠标事件了,现代浏览器兼容性都不错,IE好像不太行
 
 ###优化
-
+  * 添加了removeRuler时解绑每条对齐线的mouse事件，并删除对每个dom的移除，改为移除对齐线容器
   * 鼠标在标尺上移动时,每次都需要计算marginLeft : this.thick / this.ratio太讨厌了, 于是在初始化时将这个值以padding的形式加入
   * 经测试,改变canvas画笔的状态效率极低,于是优化如下:
     * 将一次性配置不再改变的属性在初始化时配置好(如font/fgColor)
@@ -47,6 +56,10 @@
 
 
 ###日志
+  * date 6.21
+    * 1.为防止删除图标x影响内容区的操作，将其固定到标尺旁边，并用mouseover替代mouseenter
+    * 2.改用滚动条后，setPosition对外部来说没啥用，改为私有
+    * 3.改动了x以及对齐线数值的位置，增加了对齐线的吸附力
   * date 6.20
     * 为缩放增加了标尺两个刻度间距的配置,当标尺上两个相邻坐标的间距大于1px时,点击添加对齐线事件会出现小数,于是在悬浮坐标处增设了一个成员变量VerCurrentValue,用以在点击标尺时调用
   * date 6.20

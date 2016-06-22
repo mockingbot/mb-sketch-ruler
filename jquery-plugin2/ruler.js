@@ -103,7 +103,7 @@
             position: 'fixed',
             height: height + thick,
             borderLeft: '1px solid ' + lineColor,
-            width: 5
+            width: 8
             // cursor: 'ew-resize',
             // pointerEvents: cancelSelect ? 'none' : 'auto',
           });
@@ -112,9 +112,9 @@
           var text = $('<p></p>')
           text.css({
             position:'absolute',
-            paddingLeft: 3,
+            left: 5,
             top: thick + 3,
-            font: '12px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif'
+            cursor: 'default'
           });
           horLine.append(text)
           //图标
@@ -122,22 +122,23 @@
           span.css({
             position:'absolute',
             display: 'none',
-            left:'100%',
-            padding: 5,
-            top: thick + 3,
+            lineHeight: 1,
             fontSize: 14,
+            right:'100%',
+            padding: '0 5px 5px 5px',
+            top: thick + 3,
             cursor: 'pointer'
           });
           horLine.append(span)
 
-          horLine.on('mouseenter', function(e) {
+          horLine.on('mouseover', function(e) {
             e.preventDefault();
             var offset = e.offsetY;
             if(offset > thick){
-              span.css({
-                top: offset - 10,
-                left: 0
-              });
+              // span.css({
+                // top: offset - 10,
+                // left: 0
+              // });
               span.show();
             }
             /*进入可拖动状态*/
@@ -158,7 +159,7 @@
             position: 'fixed',
             width: width + thick,
             borderTop: '1px solid ' + lineColor,
-            height: 5,
+            height: 8,
             // cursor: 'ns-resize',
             'zIndex': 10000
           });
@@ -166,30 +167,33 @@
           var text = $('<p></p>')
           text.css({
             position:'absolute',
-            paddingTop: 3,
-            left: thick + 3
+            top: 5,
+            left: thick + 3,
+            cursor: 'default'
           });
+
           verLine.append(text)
           //图标
           var span = $('<span>×</span>')
           span.css({
             position:'absolute',
             display: 'none',
-            bottom:'100%',
+            bottom: '100%',
             padding: 5,
             left: thick + 3,
+            lineHeight: 1,
             fontSize: 14,
             cursor: 'pointer'
           });
           verLine.append(span)
 
-          verLine.on('mouseenter', function(e) {
+          verLine.on('mouseover', function(e) {
               e.preventDefault();
               var offset = e.offsetX;
               if(offset > thick){
-                span.css({
-                  left: e.offsetX - 10
-                });
+                // span.css({
+                //   paddingLeft: verLine.find('p').width() / 2
+                // });
                 span.show();
               }
           });
@@ -588,7 +592,7 @@
             var elem = this.elem
 
             //当需要滚动事件时,需要根据当前滚轮位置绘制标尺,而不是傻傻地每次都从头开始
-            this.setPosition(this.originX + elem.scrollLeft(), this.originY + elem.scrollTop())
+            this._setPosition(this.originX + elem.scrollLeft(), this.originY + elem.scrollTop())
 
             this.elem.on('scroll', function(event){
 
@@ -597,7 +601,7 @@
               var top = elem.scrollTop()
               var left = elem.scrollLeft()
               
-              this.setPosition(this.originX + left, this.originY + top)
+              this._setPosition(this.originX + left, this.originY + top)
               this._drawAlignLine()
             }.bind(this));
         },
@@ -609,7 +613,7 @@
                 this.setSelect(this.shadow.x, this.shadow.y, this.shadow.width, this.shadow.height);
             }
         },
-        setPosition: function(startX, startY) {
+        _setPosition: function(startX, startY) {
             this.startX = startX;
             this.startY = startY;
             this.elem.scrollLeft(startX - this.originX)
@@ -766,7 +770,9 @@
           //解绑每个对齐线的时间
           $.each(this.horLine, function(index, elem){
             elem.find('span').off('click')
-            elem.remove()
+            elem.off('mouseover');
+            elem.off('mouseleave');
+            // elem.remove()
           })
           //移除对齐线container
           this.horDiv.remove();
@@ -775,6 +781,8 @@
           //解绑每个对齐线的事件
           $.each(this.verLine, function(index, elem){
             elem.find('span').off('click')
+            elem.off('mouseover');
+            elem.off('mouseleave');
             // elem.remove()
           })
           //移除对齐线container
