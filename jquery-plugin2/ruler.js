@@ -32,7 +32,7 @@
       var bgColor = options.bgColor
       var font = options.font
       var lineColor = options.lineColor
-      
+
       return {
         getCorner: function(){
           var corner = $('<span></span>')
@@ -204,7 +204,7 @@
           return verLine;
         },
         getHorCur: function(){
-          
+
           var horCur = $('<div></div>')
           horCur.css({
             position: 'fixed',
@@ -219,15 +219,16 @@
             position: 'absolute',
             bottom: '66%',
             transform: 'translateY(50%)',
-            paddingLeft: 4
+            backgroundColor: bgColor,
+            marginLeft: 4
           });
           horCur.append(text);
           return horCur;
         },
         getVerCur: function(){
-          
+
           var verCur = $('<div></div>')
-          
+
           verCur.css({
             position: 'fixed',
             width: thick,
@@ -241,7 +242,8 @@
             position: 'absolute',
             left: '33%',
             bottom: 0,
-            paddingLeft: 4,
+            backgroundColor: bgColor,
+            marginBottom: 4,
             'transformOrigin': '0% 50%',
             transform: 'translateY(50%) rotate(-90deg)'
           });
@@ -268,7 +270,7 @@
             this.startX = !isNaN(options.startX) ? options.startX : -240;
             // console.log(this.startX)
             this.startY = !isNaN(options.startY) ? options.startY : -100;
-            
+
             this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio;
             //每一小格的宽度
             this.perWidth = !isNaN(options.perWidth) ? options.perWidth : 10;
@@ -311,7 +313,7 @@
             //起始位置
             this.originX = this.startX
             this.originY = this.startY
-            
+
             this._addRuler();
             this._drawRuler();
             this._addAlignLine();
@@ -319,15 +321,12 @@
 
             this.elem.data('ruler', this);
             this._initScrollEvent();
-            
+
         },
         _addRuler: function(){
             var elem = this.elem;
             var factory = this.factory;
-            //父元素改为scroll
-            elem.css({
-              overflow: 'scroll'
-            });
+
             //左上角小块
             var corner = factory.getCorner();
             elem.prepend(corner)
@@ -358,7 +357,7 @@
             });
             elem.prepend(verDiv);
             this.verDiv = verDiv;
-            
+
             //点击标尺绘制对齐线
             horRuler.on('click', function(event) {
               event.preventDefault();
@@ -369,14 +368,14 @@
                 horValue : this.horLineValue,
                 verValue : this.verLineValue
               });
-              
+
             }.bind(this));
 
             //创建垂直标尺
             var verRuler = factory.getVerRuler();
             elem.prepend(verRuler)
             this.verCtx = verRuler.get(0).getContext('2d')
-            
+
             //点击标尺绘制对齐线
             verRuler.on('click', function(event) {
               event.preventDefault();
@@ -388,7 +387,7 @@
                 verValue : this.verLineValue
               });
             }.bind(this));
-            
+
             this.horRuler = horRuler;
             this.verRuler = verRuler;
             this.corner = corner;
@@ -404,9 +403,9 @@
           var horCur = factory.getHorCur();
           var horSpan = horCur.find('p');
           var horRuler = this.horRuler;
-          
+
           this.horDiv.prepend(horCur)
-          
+
           //当鼠标进入标尺时,显示刻度,禁止对齐线的鼠标事件
           horRuler.on('mouseenter', function(event) {
             event.preventDefault();
@@ -414,9 +413,9 @@
             horCur.css({
               display: 'block'
             });
-            
+
           }.bind(this));
-          
+
           //当鼠标在标尺上移动时,改变鼠标指向的刻度
           horRuler.on('mousemove', function(event) {
             event.preventDefault();
@@ -446,7 +445,7 @@
           var verCur = factory.getVerCur();
           var verSpan = verCur.find('p');
           var verRuler = this.verRuler;
-          
+
           this.verDiv.prepend(verCur)
 
           //当鼠标进入标尺时,显示刻度,禁止对齐线的鼠标事件
@@ -456,7 +455,7 @@
             verCur.css({
               display: 'block'
             });
-            
+
           }.bind(this));
           //当鼠标在标尺上移动时,改变鼠标指向的刻度
           verRuler.on('mousemove', function(event) {
@@ -471,7 +470,7 @@
                 marginTop: event.offsetY
               });
               verSpan.html(value)
-              
+
             }
           }.bind(this));
 
@@ -526,7 +525,7 @@
         },
         //新增一条对齐线
         _addVerLine: function(value){
-          
+
           var verLine = this.factory.getVerLine()
 
           var offsetY = value * this.scale - this.startY
@@ -595,12 +594,9 @@
             this._setPosition(this.originX + elem.scrollLeft(), this.originY + elem.scrollTop())
 
             this.elem.on('scroll', function(event){
-
-              event.preventDefault();
-              event.stopPropagation();
               var top = elem.scrollTop()
               var left = elem.scrollLeft()
-              
+
               this._setPosition(this.originX + left, this.originY + top)
               this._drawAlignLine()
             }.bind(this));
@@ -672,7 +668,7 @@
                 }
                 ctx.stroke();
             }
-            
+
             ctx.closePath();
 
             ctx.translate(start * this.ratio, 0);
@@ -684,7 +680,7 @@
             var height = typeof height !== 'undefined' ? height : 568
             var needShadow = needShadow || false;
             var ctx = this.verCtx;
-            
+
             //绘制刻度尺的背景
             ctx.clearRect(0, 0, this.thick, this.height);
 
@@ -763,7 +759,7 @@
           //移除对齐线
           this._destroyHorLine();
           this._destroyVerLine();
-          
+
           this.elem.removeData('ruler')
         },
         _destroyHorLine: function(){
