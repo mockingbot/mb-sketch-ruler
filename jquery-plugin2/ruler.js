@@ -219,7 +219,8 @@
             position: 'absolute',
             bottom: '66%',
             transform: 'translateY(50%)',
-            paddingLeft: 4
+            marginLeft: 4,
+            backgroundColor: bgColor
           });
           horCur.append(text);
           return horCur;
@@ -243,7 +244,8 @@
             bottom: 0,
             paddingLeft: 4,
             'transformOrigin': '0% 50%',
-            transform: 'translateY(50%) rotate(-90deg)'
+            transform: 'translateY(50%) rotate(-90deg)',
+            backgroundColor: 'black'
           });
           verCur.append(text);
           return verCur;
@@ -264,6 +266,7 @@
             //参数默认处理
             options = options || {}
             this.ratio = !isNaN(options.ratio) ? options.ratio : getPixelRatio()
+            this.ratio = 1
             // this.ratio = 1
             this.startX = !isNaN(options.startX) ? options.startX : -240;
             // console.log(this.startX)
@@ -272,6 +275,7 @@
             this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio;
             //每一小格的宽度
             this.perWidth = !isNaN(options.perWidth) ? options.perWidth : 10;
+            this.perWidth = 7.5 
             // this.perWidth = 50
             this.scale = this.perWidth / 10;
 
@@ -313,7 +317,7 @@
             this.originY = this.startY
             
             this._addRuler();
-            this._drawRuler();
+            // this._drawRuler();
             this._addAlignLine();
             // this._drawAlignLine();
 
@@ -590,12 +594,9 @@
         },
         _initScrollEvent: function() {
             var elem = this.elem
-
             //当需要滚动事件时,需要根据当前滚轮位置绘制标尺,而不是傻傻地每次都从头开始
             this._setPosition(this.originX + elem.scrollLeft(), this.originY + elem.scrollTop())
-
             this.elem.on('scroll', function(event){
-
               event.preventDefault();
               event.stopPropagation();
               var top = elem.scrollTop()
@@ -659,16 +660,15 @@
                 //这样绘制当起点不为10的倍数时,长标和文字都不会出现
                 // for(var i = start ; i < start+this.width ; i += 10){
                 //正确的方法是:偏移到10的倍数,再开始绘制
+            // console.log(startX)
             for (var i = startX; i < startX + this.width / this.ratio; i += perWidth) {
-
-                ctx.moveTo((i + 0.5) * this.ratio, this.thick);
-
+                ctx.moveTo(((i >> 0) + 0.5) * this.ratio, this.thick);
                 //绘制长刻度
                 if (i % (perWidth * 10) === 0) {
                     ctx.fillText(i / scale, (i + 4) * this.ratio, this.thick / 3);
-                    ctx.lineTo((i + 0.5) * this.ratio, 0);
+                    ctx.lineTo(((i >> 0) + 0.5) * this.ratio, 0);
                 } else { //绘制短刻度
-                    ctx.lineTo((i + 0.5) * this.ratio, this.thick * 2 / 3);
+                    ctx.lineTo(((i >> 0) + 0.5) * this.ratio, this.thick * 2 / 3);
                 }
                 ctx.stroke();
             }
@@ -709,7 +709,7 @@
             var startY = start - start % perHeight
             for (var i = startY; i < startY + this.height / this.ratio; i += perHeight) {
 
-                ctx.moveTo(this.thick, (i + 0.5) * this.ratio);
+                ctx.moveTo(this.thick, ((i >> 0) + 0.5) * this.ratio);
 
                 //绘制长刻度
                 if (i % (perHeight * 10) === 0) {
@@ -723,10 +723,10 @@
                     ctx.fillText(i / scale, 2 * this.ratio, -this.thick / 3 * 2)
                         //回复刚刚保存的状态
                     ctx.restore();
-                    ctx.lineTo(0, (i + 0.5) * this.ratio)
+                    ctx.lineTo(0, ((i >> 0) + 0.5) * this.ratio)
 
                 } else { //绘制短刻度
-                    ctx.lineTo(this.thick * 2 / 3, (i + 0.5) * this.ratio)
+                    ctx.lineTo(this.thick * 2 / 3, ((i >> 0) + 0.5) * this.ratio)
                 }
                 ctx.stroke();
             }
