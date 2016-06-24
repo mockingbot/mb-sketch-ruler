@@ -191,9 +191,6 @@
               e.preventDefault();
               var offset = e.offsetX;
               if(offset > thick){
-                // span.css({
-                //   paddingLeft: verLine.find('p').width() / 2
-                // });
                 span.show();
               }
           });
@@ -245,8 +242,7 @@
             backgroundColor: bgColor,
             marginBottom: 4,
             'transformOrigin': '0% 50%',
-            transform: 'translateY(50%) rotate(-90deg)',
-            backgroundColor: 'black'
+            transform: 'translateY(50%) rotate(-90deg)'
           });
           verCur.append(text);
           return verCur;
@@ -267,16 +263,15 @@
             //参数默认处理
             options = options || {}
             this.ratio = !isNaN(options.ratio) ? options.ratio : getPixelRatio()
-            this.ratio = 1
             // this.ratio = 1
-            this.startX = !isNaN(options.startX) ? options.startX : -240;
-            // console.log(this.startX)
-            this.startY = !isNaN(options.startY) ? options.startY : -100;
+            //标尺起始坐标
+            this.originX = !isNaN(options.startX) ? options.startX : -240;
+            this.originY = !isNaN(options.startY) ? options.startY : -100;
 
             this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio;
             //每一小格的宽度
-            this.perWidth = !isNaN(options.perWidth) ? options.perWidth : 10;
-            this.perWidth = 7.5
+            this.perWidth = options.perWidth ? parseFloat(options.perWidth) : 10;
+            // this.perWidth = 7.5
             this.scale = this.perWidth / 10;
 
             this.bgColor = options.bgColor || '#F5F5F5';
@@ -289,7 +284,6 @@
             this.width = this.elem.width() * this.ratio - this.thick
             this.height = this.elem.height() * this.ratio - this.thick
 
-
             this.factory = new RulerFactory({
               ratio : this.ratio,
               thick : this.thick / this.ratio,
@@ -301,6 +295,14 @@
               lineColor : this.lineColor
             })
 
+            //添加标尺的dom节点
+            this._addRuler();
+            
+            //需要根据当前已经滚动的距离绘制标尺,而不是傻傻地每次都从头开始
+            this.startX = this.originX + this.elem.scrollLeft();
+            this.startY = this.originY + this.elem.scrollTop();
+            this._drawRuler();
+
             //对齐线信息
             this.horLineValue = options.horLineValue || [];
             this.verLineValue = options.verLineValue || [];
@@ -308,21 +310,10 @@
             // this.verLineValue = [20, 100]
             this.horLine = [];
             this.verLine = [];
-            // console.log(this.horLineValue == undefined)
-            // this.horLineValue = 20
-            // this.verLineValue = 840
-
-            //起始位置
-            this.originX = this.startX
-            this.originY = this.startY
-
-            this._addRuler();
-            // this._drawRuler();
             this._addAlignLine();
-            // this._drawAlignLine();
 
-            this.elem.data('ruler', this);
             this._initScrollEvent();
+            this.elem.data('ruler', this);
 
         },
         _addRuler: function(){
@@ -591,59 +582,45 @@
         },
         _initScrollEvent: function() {
             var elem = this.elem
-            //当需要滚动事件时,需要根据当前滚轮位置绘制标尺,而不是傻傻地每次都从头开始
-            this._setPosition(this.originX + elem.scrollLeft(), this.originY + elem.scrollTop())
-            this.elem.on('scroll', function(){
+            //监听scroll事件
+            elem.on('scroll', function(){
               var top = elem.scrollTop()
               var left = elem.scrollLeft()
               this._setPosition(this.originX + left, this.originY + top)
               this._drawAlignLine()
             }.bind(this));
         },
-        // _moveRuler: function(deltaX, deltaY) {
-        //     this.startX = this.startX + deltaX
-        //     this.startY = this.startY + deltaY
-        //     this._drawRuler();
-        //     if (this.shadow) {
-        //         this.setSelect(this.shadow.x, this.shadow.y, this.shadow.width, this.shadow.height);
-        //     }
-        // },
+        
         _setPosition: function(startX, startY) {
-            this.startX = startX;
-            this.startY = startY;
-            this.elem.scrollLeft(startX - this.originX)
-            this.elem.scrollTop(startY - this.originY)
-            this._drawRuler();
-            if (this.shadow) {
-                this.setSelect(this.shadow.x, this.shadow.y, this.shadow.width, this.shadow.height);
-            }else{
-              
+            if(this.startX != startX){
+              this.startX = startX;
+              this._drawHorRuler();
+            }
+            if(this.startY != startY){
+              this.startY = startY;
+              this._drawVerRuler();
             }
         },
         _drawRuler: function() {
-            console.log("_drawHorRuler11111")
             this._drawHorRuler();
             this._drawVerRuler();
-            // this._drawHorRuler(-100, 100, true);
-            // this._drawVerRuler(100, 100, true);
         },
-        _drawHorRuler: function(posX, width, needShadow) {
-            
+        _drawHorRuler: function() {
             var start = this.startX;
-            var posX = typeof posX !== 'undefined' ? posX : 0
-            var width = typeof width !== 'undefined' ? width : 320
-            var needShadow = needShadow || false;
             var ctx = this.horCtx;
 
             //刻度尺背景改用dom的bgcolor实现,这样可以减少ctx.fillStyle状态改变带来的效率损失
             ctx.clearRect(0, 0, this.width, this.thick);
 
             //先根据iphone宽度绘制阴影
-            if (needShadow) {
+            if (this.shadow) {
+                //阴影起点坐标
+                var posX = (this.shadow.x * this.scale - start) * this.ratio
+                //阴影宽度
+                var width = this.shadow.width * this.ratio * this.scale
                 ctx.fillStyle = this.shadowColor
-                ctx.fillRect((posX * this.scale - start) * this.ratio, 0, width * this.ratio * this.scale, this.thick);
+                ctx.fillRect(posX, 0, width, this.thick);
             }
-
             //再画刻度和文字(因为刻度遮住了阴影)
             //移动画布原点,方便绘制
             ctx.translate(-start * this.ratio, 0);
@@ -657,8 +634,8 @@
                 //这样绘制当起点不为10的倍数时,长标和文字都不会出现
                 // for(var i = start ; i < start+this.width ; i += 10){
                 //正确的方法是:偏移到10的倍数,再开始绘制
-            // console.log(startX)
             for (var i = startX; i < startX + this.width / this.ratio; i += perWidth) {
+                
                 var tempX = ((i >> 0) + 0.5) * this.ratio;
                 ctx.moveTo(tempX, this.thick);
                 //绘制长刻度
@@ -676,20 +653,20 @@
             ctx.translate(start * this.ratio, 0);
 
         },
-        _drawVerRuler: function(posY, height, needShadow) {
+        _drawVerRuler: function() {
             var start = this.startY;
-            var posY = typeof posY !== 'undefined' ? posY : 0
-            var height = typeof height !== 'undefined' ? height : 568
-            var needShadow = needShadow || false;
             var ctx = this.verCtx;
 
             //绘制刻度尺的背景
             ctx.clearRect(0, 0, this.thick, this.height);
 
             //先根据iphone高度绘制阴影
-            if (needShadow) {
+            if (this.shadow) {
+                //阴影起点坐标
+                var posY = (this.shadow.y * this.scale - start) * this.ratio
+                var height = this.shadow.height * this.ratio * this.scale
                 ctx.fillStyle = this.shadowColor
-                ctx.fillRect(0, (posY * this.scale - start) * this.ratio, this.thick, height * this.ratio * this.scale);
+                ctx.fillRect(0, posY, this.thick, height);
             }
 
             //再画刻度和文字(因为刻度遮住了阴影)
@@ -735,9 +712,7 @@
                 width: width,
                 height: height
             }
-            console.log("draw2")
-            this._drawHorRuler(x, width, true);
-            this._drawVerRuler(y, height, true);
+            this._drawRuler();
         },
         clearShadow: function() {
             this.shadow = null;

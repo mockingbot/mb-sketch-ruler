@@ -14,6 +14,7 @@
   * √ 要不给drawHorLine加个参数绘制时判断?点击绘制时说明鼠标在标尺上,直接不接受鼠标事件,而调用绘制时,接收鼠标事件,这样虽然略有瑕疵,但是效率会好很多
 
 ###笔记
+  * 因为perWidth可能为小数(7.5),所以要用parseFloat处理,而不能用parseInt
   * 兼容文字不可选 text.attr('unselectable','on').css({
             '-moz-user-select':'-moz-none',
             '-moz-user-select':'none',
@@ -56,6 +57,12 @@
 
 
 ###日志
+  * date 6.24
+    * 1.去掉了暂时没用上的moveRuler(deltaX, deltaY)方法(该方法可能会需要支持在键盘，鼠标拖拽等存在deltaXY的事件时用到)
+    * 2.在scroll时，带shadow的标尺被绘制了两次，重新梳理逻辑，将shadow的判断移动到draw方法中
+    * 3.在一个方向scroll时，另一个方向的重绘是不必要的,改!
+  * date 6.23
+    * 75%下，奇数倍数的刻度坐标为.5 在1x下再+0.5就变成整数，所以会变粗，使用 ((i >> 0) + 0.5) * this.ratio 解决
   * date 6.21
     * 1.为防止删除图标x影响内容区的操作，将其固定到标尺旁边，并用mouseover替代mouseenter
     * 2.改用滚动条后，setPosition对外部来说没啥用，改为私有

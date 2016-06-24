@@ -4,32 +4,14 @@
   <meta charset="UTF-8">
   <title>ruler-jquery-plugin</title>
   <style>
-    #wrap{
-      
-      margin:0px auto;
-      
-      border: 10px solid blue;
-      overflow:hidden;
-    }
     #screens{
       position:fixed;
       top:0px;
       left: 250px;
       width:500px;
       height:700px;
-      /* width:10000px;
-      height:10000px; */
       box-shadow:0 0 0 1px #999;
     }
-    #test4{
-      position:absolute;
-      top:1000px;
-      left:1000px;
-      width:400px;
-      height:400px;
-      background-color:yellow;
-    }
-    
   </style>
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./controller.css">
@@ -118,7 +100,7 @@
         var font = $("#font").val()
         var fontColor = $("#fontColor").val()
         var ratio = parseInt($("#ratio").val())
-        var perWidth = parseInt($("#perWidth").val())
+        var perWidth = $("#perWidth").val()
         $('#screens').getRuler({
           startX: posX,
           // -240
