@@ -210,7 +210,9 @@
           ruler.setSelect(left, top, width, height);
         })
       })
-
+      $('#screens').css({
+        overflow: 'scroll'
+      });
       var ruler = $('#screens').getRuler({
         horLine: 150,
         verLine: 150

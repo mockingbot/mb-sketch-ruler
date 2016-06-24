@@ -32,7 +32,7 @@
       var bgColor = options.bgColor
       var font = options.font
       var lineColor = options.lineColor
-      
+
       return {
         getCorner: function(){
           var corner = $('<span></span>')
@@ -204,7 +204,7 @@
           return verLine;
         },
         getHorCur: function(){
-          
+
           var horCur = $('<div></div>')
           horCur.css({
             position: 'fixed',
@@ -219,16 +219,16 @@
             position: 'absolute',
             bottom: '66%',
             transform: 'translateY(50%)',
-            marginLeft: 4,
-            backgroundColor: bgColor
+            backgroundColor: bgColor,
+            marginLeft: 4
           });
           horCur.append(text);
           return horCur;
         },
         getVerCur: function(){
-          
+
           var verCur = $('<div></div>')
-          
+
           verCur.css({
             position: 'fixed',
             width: thick,
@@ -242,7 +242,8 @@
             position: 'absolute',
             left: '33%',
             bottom: 0,
-            paddingLeft: 4,
+            backgroundColor: bgColor,
+            marginBottom: 4,
             'transformOrigin': '0% 50%',
             transform: 'translateY(50%) rotate(-90deg)',
             backgroundColor: 'black'
@@ -271,12 +272,11 @@
             this.startX = !isNaN(options.startX) ? options.startX : -240;
             // console.log(this.startX)
             this.startY = !isNaN(options.startY) ? options.startY : -100;
-            
+
             this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio;
             //每一小格的宽度
             this.perWidth = !isNaN(options.perWidth) ? options.perWidth : 10;
-            this.perWidth = 7.5 
-            // this.perWidth = 50
+            this.perWidth = 7.5
             this.scale = this.perWidth / 10;
 
             this.bgColor = options.bgColor || '#F5F5F5';
@@ -315,7 +315,7 @@
             //起始位置
             this.originX = this.startX
             this.originY = this.startY
-            
+
             this._addRuler();
             // this._drawRuler();
             this._addAlignLine();
@@ -323,15 +323,12 @@
 
             this.elem.data('ruler', this);
             this._initScrollEvent();
-            
+
         },
         _addRuler: function(){
             var elem = this.elem;
             var factory = this.factory;
-            //父元素改为scroll
-            elem.css({
-              overflow: 'scroll'
-            });
+
             //左上角小块
             var corner = factory.getCorner();
             elem.prepend(corner)
@@ -362,7 +359,7 @@
             });
             elem.prepend(verDiv);
             this.verDiv = verDiv;
-            
+
             //点击标尺绘制对齐线
             horRuler.on('click', function(event) {
               event.preventDefault();
@@ -373,14 +370,14 @@
                 horValue : this.horLineValue,
                 verValue : this.verLineValue
               });
-              
+
             }.bind(this));
 
             //创建垂直标尺
             var verRuler = factory.getVerRuler();
             elem.prepend(verRuler)
             this.verCtx = verRuler.get(0).getContext('2d')
-            
+
             //点击标尺绘制对齐线
             verRuler.on('click', function(event) {
               event.preventDefault();
@@ -392,7 +389,7 @@
                 verValue : this.verLineValue
               });
             }.bind(this));
-            
+
             this.horRuler = horRuler;
             this.verRuler = verRuler;
             this.corner = corner;
@@ -408,9 +405,9 @@
           var horCur = factory.getHorCur();
           var horSpan = horCur.find('p');
           var horRuler = this.horRuler;
-          
+
           this.horDiv.prepend(horCur)
-          
+
           //当鼠标进入标尺时,显示刻度,禁止对齐线的鼠标事件
           horRuler.on('mouseenter', function(event) {
             event.preventDefault();
@@ -418,9 +415,9 @@
             horCur.css({
               display: 'block'
             });
-            
+
           }.bind(this));
-          
+
           //当鼠标在标尺上移动时,改变鼠标指向的刻度
           horRuler.on('mousemove', function(event) {
             event.preventDefault();
@@ -450,7 +447,7 @@
           var verCur = factory.getVerCur();
           var verSpan = verCur.find('p');
           var verRuler = this.verRuler;
-          
+
           this.verDiv.prepend(verCur)
 
           //当鼠标进入标尺时,显示刻度,禁止对齐线的鼠标事件
@@ -460,7 +457,7 @@
             verCur.css({
               display: 'block'
             });
-            
+
           }.bind(this));
           //当鼠标在标尺上移动时,改变鼠标指向的刻度
           verRuler.on('mousemove', function(event) {
@@ -475,7 +472,7 @@
                 marginTop: event.offsetY
               });
               verSpan.html(value)
-              
+
             }
           }.bind(this));
 
@@ -530,7 +527,7 @@
         },
         //新增一条对齐线
         _addVerLine: function(value){
-          
+
           var verLine = this.factory.getVerLine()
 
           var offsetY = value * this.scale - this.startY
@@ -596,24 +593,21 @@
             var elem = this.elem
             //当需要滚动事件时,需要根据当前滚轮位置绘制标尺,而不是傻傻地每次都从头开始
             this._setPosition(this.originX + elem.scrollLeft(), this.originY + elem.scrollTop())
-            this.elem.on('scroll', function(event){
-              event.preventDefault();
-              event.stopPropagation();
+            this.elem.on('scroll', function(){
               var top = elem.scrollTop()
               var left = elem.scrollLeft()
-              
               this._setPosition(this.originX + left, this.originY + top)
               this._drawAlignLine()
             }.bind(this));
         },
-        _moveRuler: function(deltaX, deltaY) {
-            this.startX = this.startX + deltaX
-            this.startY = this.startY + deltaY
-            this._drawRuler();
-            if (this.shadow) {
-                this.setSelect(this.shadow.x, this.shadow.y, this.shadow.width, this.shadow.height);
-            }
-        },
+        // _moveRuler: function(deltaX, deltaY) {
+        //     this.startX = this.startX + deltaX
+        //     this.startY = this.startY + deltaY
+        //     this._drawRuler();
+        //     if (this.shadow) {
+        //         this.setSelect(this.shadow.x, this.shadow.y, this.shadow.width, this.shadow.height);
+        //     }
+        // },
         _setPosition: function(startX, startY) {
             this.startX = startX;
             this.startY = startY;
@@ -622,15 +616,19 @@
             this._drawRuler();
             if (this.shadow) {
                 this.setSelect(this.shadow.x, this.shadow.y, this.shadow.width, this.shadow.height);
+            }else{
+              
             }
         },
         _drawRuler: function() {
+            console.log("_drawHorRuler11111")
             this._drawHorRuler();
             this._drawVerRuler();
             // this._drawHorRuler(-100, 100, true);
             // this._drawVerRuler(100, 100, true);
         },
         _drawHorRuler: function(posX, width, needShadow) {
+            
             var start = this.startX;
             var posX = typeof posX !== 'undefined' ? posX : 0
             var width = typeof width !== 'undefined' ? width : 320
@@ -644,7 +642,6 @@
             if (needShadow) {
                 ctx.fillStyle = this.shadowColor
                 ctx.fillRect((posX * this.scale - start) * this.ratio, 0, width * this.ratio * this.scale, this.thick);
-                // ctx.fillRect(20, 0, 2, this.thick);
             }
 
             //再画刻度和文字(因为刻度遮住了阴影)
@@ -662,17 +659,18 @@
                 //正确的方法是:偏移到10的倍数,再开始绘制
             // console.log(startX)
             for (var i = startX; i < startX + this.width / this.ratio; i += perWidth) {
-                ctx.moveTo(((i >> 0) + 0.5) * this.ratio, this.thick);
+                var tempX = ((i >> 0) + 0.5) * this.ratio;
+                ctx.moveTo(tempX, this.thick);
                 //绘制长刻度
                 if (i % (perWidth * 10) === 0) {
                     ctx.fillText(i / scale, (i + 4) * this.ratio, this.thick / 3);
-                    ctx.lineTo(((i >> 0) + 0.5) * this.ratio, 0);
+                    ctx.lineTo(tempX, 0);
                 } else { //绘制短刻度
-                    ctx.lineTo(((i >> 0) + 0.5) * this.ratio, this.thick * 2 / 3);
+                    ctx.lineTo(tempX, this.thick * 2 / 3);
                 }
                 ctx.stroke();
             }
-            
+
             ctx.closePath();
 
             ctx.translate(start * this.ratio, 0);
@@ -684,15 +682,13 @@
             var height = typeof height !== 'undefined' ? height : 568
             var needShadow = needShadow || false;
             var ctx = this.verCtx;
-            
+
             //绘制刻度尺的背景
             ctx.clearRect(0, 0, this.thick, this.height);
 
             //先根据iphone高度绘制阴影
             if (needShadow) {
                 ctx.fillStyle = this.shadowColor
-                // console.log(posY)
-                // console.log((posY - start) * this.ratio)
                 ctx.fillRect(0, (posY * this.scale - start) * this.ratio, this.thick, height * this.ratio * this.scale);
             }
 
@@ -708,9 +704,8 @@
 
             var startY = start - start % perHeight
             for (var i = startY; i < startY + this.height / this.ratio; i += perHeight) {
-
-                ctx.moveTo(this.thick, ((i >> 0) + 0.5) * this.ratio);
-
+                var tempY = ((i >> 0) + 0.5) * this.ratio
+                ctx.moveTo(this.thick, tempY);
                 //绘制长刻度
                 if (i % (perHeight * 10) === 0) {
                     //这里先保存一下状态
@@ -723,10 +718,10 @@
                     ctx.fillText(i / scale, 2 * this.ratio, -this.thick / 3 * 2)
                         //回复刚刚保存的状态
                     ctx.restore();
-                    ctx.lineTo(0, ((i >> 0) + 0.5) * this.ratio)
+                    ctx.lineTo(0, tempY)
 
                 } else { //绘制短刻度
-                    ctx.lineTo(this.thick * 2 / 3, ((i >> 0) + 0.5) * this.ratio)
+                    ctx.lineTo(this.thick * 2 / 3, tempY)
                 }
                 ctx.stroke();
             }
@@ -734,15 +729,15 @@
             ctx.translate(0, start * this.ratio);
         },
         setSelect: function(x, y, width, height) {
-
-            this._drawHorRuler(x, width, true);
-            this._drawVerRuler(y, height, true);
             this.shadow = {
                 x: x,
                 y: y,
                 width: width,
                 height: height
             }
+            console.log("draw2")
+            this._drawHorRuler(x, width, true);
+            this._drawVerRuler(y, height, true);
         },
         clearShadow: function() {
             this.shadow = null;
@@ -763,7 +758,7 @@
           //移除对齐线
           this._destroyHorLine();
           this._destroyVerLine();
-          
+
           this.elem.removeData('ruler')
         },
         _destroyHorLine: function(){
