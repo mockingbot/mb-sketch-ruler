@@ -211,6 +211,14 @@
             display: 'none',
             pointerEvents: 'none'
           });
+          var div = $('<div></div>')
+          div.css({
+            position: 'absolute',
+            top: '100%',
+            borderRight: '1px dotted ' + lineColor,
+            height: height
+          });
+          horCur.append(div);
           var text = $('<p></p>')
           text.css({
             position: 'absolute',
@@ -234,6 +242,14 @@
             display: 'none',
             pointerEvents: 'none'
           });
+          var div = $('<div></div>')
+          div.css({
+            position: 'absolute',
+            left: '100%',
+            borderBottom: '1px dotted ' + lineColor,
+            width: width
+          });
+          verCur.append(div);
           var text = $('<p></p>')
           text.css({
             position: 'absolute',
@@ -306,8 +322,8 @@
             //对齐线信息
             this.horLineValue = options.horLineValue || [];
             this.verLineValue = options.verLineValue || [];
-            // this.horLineValue = [0, 50]
-            // this.verLineValue = [20, 100]
+            this.horLineValue = [0, 50]
+            this.verLineValue = [20, 100]
             this.horLine = [];
             this.verLine = [];
             this._addAlignLine();
@@ -733,7 +749,6 @@
           //移除对齐线
           this._destroyHorLine();
           this._destroyVerLine();
-
           this.elem.removeData('ruler')
         },
         _destroyHorLine: function(){
