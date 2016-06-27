@@ -316,7 +316,7 @@
 
             //添加标尺的dom节点
             this._addRuler();
-            
+
             //需要根据当前已经滚动的距离绘制标尺,而不是傻傻地每次都从头开始
             this.startX = this.originX + this.elem.scrollLeft();
             this.startY = this.originY + this.elem.scrollTop();
@@ -325,13 +325,10 @@
             //对齐线信息
             this.horLineValue = options.horLineValue || [];
             this.verLineValue = options.verLineValue || [];
-            // this.horLineValue = [0, 50]
-            // this.verLineValue = [20, 100]
             this.horLine = [];
             this.verLine = [];
             this._addAlignLine();
 
-            this._initScrollEvent();
             this.elem.data('ruler', this);
 
         },
@@ -685,17 +682,7 @@
             }
           }.bind(this));
         },
-        _initScrollEvent: function() {
-            var elem = this.elem
-            //监听scroll事件
-            elem.on('scroll', function(){
-              var top = elem.scrollTop()
-              var left = elem.scrollLeft()
-              this._setPosition(this.originX + left, this.originY + top)
-              this._drawAlignLine()
-            }.bind(this));
-        },
-        
+
         _setPosition: function(startX, startY) {
             if(this.startX != startX){
               this.startX = startX;
@@ -740,7 +727,7 @@
                 // for(var i = start ; i < start+this.width ; i += 10){
                 //正确的方法是:偏移到10的倍数,再开始绘制
             for (var i = startX; i < startX + this.width / this.ratio; i += perWidth) {
-                
+
                 var tempX = ((i >> 0) + 0.5) * this.ratio;
                 ctx.moveTo(tempX, this.thick);
                 //绘制长刻度
@@ -822,6 +809,13 @@
             this.shadow = null;
             this._drawRuler();
         },
+        update: function() {
+            var elem = this.elem
+            var top = elem.scrollTop()
+            var left = elem.scrollLeft()
+            this._setPosition(this.originX + left, this.originY + top)
+            this._drawAlignLine()
+        },
 
         destroy: function() {
           // 事件解绑
@@ -829,7 +823,6 @@
           this.verRuler.off('click')
           this.horRuler.off('mousemove')
           this.verRuler.off('mousemove')
-          this.elem.off('scroll')
           // 移除dom
           this.horRuler.remove()
           this.verRuler.remove()
