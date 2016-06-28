@@ -15,10 +15,11 @@
     "amd": true,
     "es6": true,
     "node": true,
-    "mocha": true
+    "mocha": true,
+    "jquery": true,
   },
   "rules": {
-    "comma-dangle": 1,
+    "comma-dangle": ["error", "only-multiline"],
     "quotes": [ 1, "single" ],
     "no-undef": 1,
     "global-strict": 0,

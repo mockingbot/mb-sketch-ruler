@@ -56,7 +56,7 @@
               height: thick - 1,
               borderBottom: '1px solid '+ fgColor,
               'zIndex': 9999,
-              backgroundColor: bgColor,
+              backgroundColor: bgColor
               // userSelect: 'none'
           });
 
@@ -105,10 +105,8 @@
             height: height + thick,
             borderLeft: '1px solid ' + lineColor,
             width: 8,
-            cursor: 'ew-resize'
-            // pointerEvents: cancelSelect ? 'none' : 'auto',
+            // cursor: 'ew-resize'
           });
-          // console.log(horLine.css('pointerEvents'))
           //文字
           var text = $('<p></p>')
           text.css({
@@ -136,21 +134,13 @@
             e.preventDefault();
             var offset = e.offsetY;
             if(offset > thick){
-              // span.css({
-                // top: offset - 10,
-                // left: 0
-              // });
               span.show();
             }
-            /*进入可拖动状态*/
-            // horLine.data('dragable', true)
           });
 
           horLine.on('mouseleave', function(e) {
             e.preventDefault();
             span.hide();
-            /*退出可拖动状态*/
-            // horLine.data('dragable', false)
           });
           return horLine;
         },
@@ -161,8 +151,8 @@
             width: width + thick,
             borderTop: '1px solid ' + lineColor,
             height: 8,
-            cursor: 'ns-resize',
             'zIndex': 10000
+            // cursor: 'ns-resize',
           });
           //文字
           var text = $('<p></p>')
@@ -520,6 +510,7 @@
             // 事件解绑
             horLine.off('mouseenter');
             horLine.off('mouseleave');
+            // horLine.off('mousedown');
             // 删除元素
             var index = this.horLine.indexOf(horLine)
             this.horLine.splice(index, 1);
@@ -534,6 +525,7 @@
           }.bind(this));
 
           //增加拖动事件
+          /*
           horLine.on('mousedown', function(e) {
             e.preventDefault();
             var startX = e.clientX;
@@ -554,11 +546,11 @@
 
             $(document).one('mouseup', function(event) {
               event.preventDefault();
-              
+
               //改变对齐线位置
               var index = this.horLine.indexOf(horLine)
               var newValue = horLine.find('p').html() >> 0
-              
+
               //如果位置与拖动前相比发生了改变,传播事件
               if(this.horLineValue[index] != newValue){
                 this.horLineValue[index] = newValue;
@@ -571,17 +563,18 @@
 
               //解绑事件
               $(document).off('mousemove');
-              
+
             }.bind(this));
-            
+
           }.bind(this));
+          */
         },
         //新增一条对齐线
         _addVerLine: function(value){
 
           var verLine = this.factory.getVerLine()
           var offsetY = value * this.scale - this.startY
-          
+
           verLine.css('marginTop', offsetY);
           verLine.find('p').html(value)
           this.verDiv.append(verLine)
@@ -592,7 +585,7 @@
             // 事件解绑
             verLine.off('mouseenter');
             verLine.off('mouseleave');
-            verLine.off('mousedown');
+            // verLine.off('mousedown');
             // 删除元素
             var index = this.verLine.indexOf(verLine)
             this.verLine.splice(index, 1);
@@ -607,6 +600,7 @@
           }.bind(this))
 
           //增加拖动事件
+          /*
           verLine.on('mousedown', function(e) {
             e.preventDefault();
             var startY = e.clientY;
@@ -627,11 +621,11 @@
 
             $(document).one('mouseup', function(event) {
               event.preventDefault();
-              
+
               //改变对齐线位置
               var index = this.verLine.indexOf(verLine)
               var newValue = verLine.find('p').html() >> 0
-              
+
               //如果位置与拖动前相比发生了改变,传播事件
               if(this.verLineValue[index] != newValue){
                 this.verLineValue[index] = newValue;
@@ -642,10 +636,11 @@
               }
               //解绑事件
               $(document).off('mousemove');
-              
+
             }.bind(this));
-            
+
           }.bind(this));
+          */
         },
         //绘制当前所有对齐线
         _drawHorLine: function(){
@@ -838,8 +833,7 @@
             elem.find('span').off('click')
             elem.off('mouseover');
             elem.off('mouseleave');
-            elem.off('mousedown');
-            // elem.remove()
+            // elem.off('mousedown');
           })
           //移除对齐线container
           this.horDiv.remove();
@@ -850,8 +844,7 @@
             elem.find('span').off('click')
             elem.off('mouseover');
             elem.off('mouseleave');
-            elem.off('mousedown');
-            // elem.remove()
+            // elem.off('mousedown');
           })
           //移除对齐线container
           this.verDiv.remove();
