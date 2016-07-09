@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <title>ruler-jquery-plugin</title>
   <style>
+    p{
+      margin:0;
+      padding:0;
+    }
     #screens{
       position:fixed;
       top:0px;
@@ -13,7 +17,6 @@
       box-shadow:0 0 0 1px #999;
     }
   </style>
-  <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./controller.css">
 </head>
 <body>
@@ -91,7 +94,7 @@
   <script src="./ruler.js"></script>
   <script>
     function initRuler(){
-      var posX = parseInt($('#posX').val())
+        var posX = parseInt($('#posX').val())
         var posY = parseInt($('#posY').val())
         var thick = parseInt($('#thick').val())
         var fgColor = $('#fgColor').val()
