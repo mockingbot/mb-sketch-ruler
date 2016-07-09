@@ -51,15 +51,14 @@ Sometimes, a div contains so many elements in it that you have to add a scroll b
           ruler.update();
         });
 
-5. you can alse draw a shadow on the ruler by the method ``setSelect(x, y, width, height)``, in this example, you can click the colorful div [That](https://mockingbot.github.io/A-sketch-like-ruler-in-javascript/)
+5. you can alse draw a shadow on the ruler by the method ``setSelect(x, y, width, height)``, in this example, you can click the colorful div like [That](https://mockingbot.github.io/A-sketch-like-ruler-in-javascript/)
 
 6. By the way, the ruler is clickable to draw align line on it, the align line can be deleted when hover on it.Both will trigger a jQuery event, you can listene the event ``setAlignLine`` like this
 		
-	$(document.body).on('setAlignLine', function(event, position) {
+		$(document.body).on('setAlignLine', function(event, position) {
         	event.preventDefault();
 	        console.log('Horizontal', position.horValue)
     	    console.log('Vertical', position.verValue)
-	});
-
+		});
 
 ###© 2016 [MockingBot](https://mockingbot.com)
