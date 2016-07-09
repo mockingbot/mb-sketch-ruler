@@ -2,7 +2,7 @@
 
 ###Introduction
 
-Ruler.js is a jQuery plugin based on HTML5 (canvas) which provide you two sketch lick rulers (vertical and horizontal) at the left and top of a ``div``or other ``block-level`` HTML Element.
+Ruler.js is a jQuery plugin based on HTML5 (canvas) which provide you two sketch like rulers (vertical and horizontal) at the left and top of a ``div``or other ``block-level`` HTML Element.
 
 
 Sometimes, a div contains so many elements in it that you have to add a scroll bar. In this scene, you might want to know the exact position of the elements in your eyes when scrolling is carried out.
