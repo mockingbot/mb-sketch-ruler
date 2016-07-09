@@ -1,4 +1,4 @@
-#A sketch like ruler in javascript
+#A sketch like ruler in javascript [中文介绍](https://github.com/mockingbot/A-sketch-like-ruler-in-javascript/blob/master/README_CN.MD)
 
 ###Introduction
 
@@ -7,8 +7,7 @@ Ruler.js is a jQuery plugin based on HTML5 (canvas) which provide you two sketch
 
 Sometimes, a div contains so many elements in it that you have to add a scroll bar. In this scene, you might want to know the exact position of the elements in your eyes when scrolling is carried out.
 
-####Ruler.js will help you like that: [Use Case](http://iny7.com/ruler/) . Any issue will be appreciated.
-
+####Ruler.js will help you like that: [Use Case](https://mockingbot.github.io/A-sketch-like-ruler-in-javascript/) . Any issue will be appreciated.
 
 ###Usage
 
@@ -42,6 +41,7 @@ Sometimes, a div contains so many elements in it that you have to add a scroll b
           ratio: 2, // canvas PixelRatio, 1 on ordinary display, 2 on retina
           perWidth: 10 // width between two pegs
         });
+
 4. update ruler when the container scroll
 
 		$('#demo').css({
@@ -50,9 +50,10 @@ Sometimes, a div contains so many elements in it that you have to add a scroll b
           event.preventDefault();
           ruler.update();
         });
-5. you can alse draw a shadow on the ruler by the method ``setSelect(x, y, width, height)``like [That](http://iny7.com/ruler/)
 
-6. By the way, the ruler is clickable to draw align line on it, you can listene the jQuery event ``setAlignLine`` like this
+5. you can alse draw a shadow on the ruler by the method ``setSelect(x, y, width, height)``, in this example, you can click the colorful div [That](https://mockingbot.github.io/A-sketch-like-ruler-in-javascript/)
+
+6. By the way, the ruler is clickable to draw align line on it, the align line can be deleted when hover on it.Both will trigger a jQuery event, you can listene the event ``setAlignLine`` like this
 		
 		$(document.body).on('setAlignLine', function(event, position) {
         	event.preventDefault();
@@ -61,4 +62,4 @@ Sometimes, a div contains so many elements in it that you have to add a scroll b
       });
 
 
-© 2016 MockingBot
+###© 2016 [MockingBot](https://mockingbot.com)
