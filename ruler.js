@@ -103,7 +103,7 @@
           height: height + thick,
           borderLeft: '1px solid ' + lineColor,
           width: 8,
-          // cursor: 'ew-resize'
+          cursor: 'ew-resize'
         })
         //文字
         var text = $('<p></p>')
@@ -114,32 +114,6 @@
           pointerEvents: 'none'
         })
         horLine.append(text)
-        // 删除图标
-        var span = $('<span>×</span>')
-        span.css({
-          position:'absolute',
-          display: 'none',
-          lineHeight: 1,
-          fontSize: 14,
-          right:'100%',
-          padding: '0 5px 5px 5px',
-          top: thick + 3,
-          cursor: 'pointer'
-        })
-        horLine.append(span)
-
-        horLine.on('mouseover', function(e) {
-          e.preventDefault()
-          var offset = e.offsetY
-          if(offset > thick){
-            span.show()
-          }
-        })
-
-        horLine.on('mouseleave', function(e) {
-          e.preventDefault()
-          span.hide()
-        })
         return horLine
       },
       getVerLine: function(){
@@ -150,7 +124,7 @@
           borderTop: '1px solid ' + lineColor,
           height: 8,
           'zIndex': 10000,
-          // cursor: 'ns-resize'
+          cursor: 'ns-resize'
         })
         //文字
         var text = $('<p></p>')
@@ -163,30 +137,6 @@
 
         verLine.append(text)
         // 删除图标
-        var span = $('<span>×</span>')
-        span.css({
-          position:'absolute',
-          display: 'none',
-          bottom: '100%',
-          padding: 5,
-          left: thick + 3,
-          lineHeight: 1,
-          fontSize: 14,
-          cursor: 'pointer'
-        })
-        verLine.append(span)
-
-        verLine.on('mouseover', function(e) {
-          e.preventDefault()
-          var offset = e.offsetX
-          if(offset > thick){
-            span.show()
-          }
-        })
-        verLine.on('mouseleave', function(e) {
-          e.preventDefault()
-          span.hide()
-        })
         return verLine
       },
       getHorCur: function(){
@@ -523,7 +473,6 @@
       }.bind(this))
 
       //增加拖动事件
-      /*
       horLine.on('mousedown', function(e) {
         e.preventDefault();
         var startX = e.clientX;
@@ -558,6 +507,7 @@
               verValue : this.verLineValue
             });
           }
+          // TODO 这里如果拖拽超出标尺的范围(可以用newValue判断), 则删除, 并通知(代码在 :457)
 
           //解绑事件
           $(document).off('mousemove');
@@ -565,7 +515,6 @@
         }.bind(this));
 
       }.bind(this));
-      */
     },
     //新增一条对齐线
     _addVerLine: function(value){
@@ -598,7 +547,6 @@
       }.bind(this))
 
       //增加拖动事件
-      /*
       verLine.on('mousedown', function(e) {
         e.preventDefault();
         var startY = e.clientY;
@@ -632,13 +580,13 @@
               verValue : this.verLineValue
             });
           }
+          // TODO 这里如果拖拽超出标尺的范围(可以用newValue判断), 则删除, 并通知(代码在 :533)
           //解绑事件
           $(document).off('mousemove');
 
         }.bind(this));
 
       }.bind(this));
-      */
     },
     //绘制当前所有对齐线
     _drawHorLine: function(){
@@ -826,7 +774,6 @@
     _destroyHorLine: function(){
       //解绑每个对齐线的时间
       $.each(this.horLine, function(index, elem){
-        elem.find('span').off('click')
         elem.off('mouseover')
         elem.off('mouseleave')
         // elem.off('mousedown')
@@ -837,7 +784,6 @@
     _destroyVerLine: function(){
       //解绑每个对齐线的事件
       $.each(this.verLine, function(index, elem){
-        elem.find('span').off('click')
         elem.off('mouseover')
         elem.off('mouseleave')
         // elem.off('mousedown')
