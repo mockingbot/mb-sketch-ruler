@@ -37,7 +37,7 @@
         getCorner: function(){
           var corner = $('<span></span>')
           corner.css({
-              position: 'fixed',
+              position: 'absolute',
               width: thick - 1,
               height: thick - 1,
               borderBottom: '1px solid ' + fgColor,
@@ -325,14 +325,19 @@
         _addRuler: function(){
             var elem = this.elem;
             var factory = this.factory;
+            var rulerBox = $('<div></div>')
+            rulerBox.css({
+              position: 'fixed',
+            });
+            this.rulerBox = rulerBox
 
             //左上角小块
-            var corner = factory.getCorner();
-            elem.prepend(corner)
+            var corner = factory.getCorner()
+            rulerBox.prepend(corner)
 
             //创建水平标尺
             var horRuler = factory.getHorRuler();
-            elem.prepend(horRuler)
+            rulerBox.prepend(horRuler)
             this.horCtx = horRuler.get(0).getContext('2d')
 
             //水平对齐线container
@@ -344,7 +349,7 @@
               'userSelect': 'none',
               'font': '12px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif'
             });
-            elem.prepend(horDiv);
+            rulerBox.prepend(horDiv);
             this.horDiv = horDiv;
 
             //竖直对齐线container
@@ -356,7 +361,7 @@
               'userSelect': 'none',
               'font': '12px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif'
             });
-            elem.prepend(verDiv);
+            rulerBox.prepend(verDiv);
             this.verDiv = verDiv;
 
             //点击标尺绘制对齐线
@@ -374,7 +379,8 @@
 
             //创建垂直标尺
             var verRuler = factory.getVerRuler();
-            elem.prepend(verRuler)
+            rulerBox.prepend(verRuler)
+            elem.prepend(rulerBox)
             this.verCtx = verRuler.get(0).getContext('2d')
 
             //点击标尺绘制对齐线
@@ -819,9 +825,7 @@
           this.horRuler.off('mousemove')
           this.verRuler.off('mousemove')
           // 移除dom
-          this.horRuler.remove()
-          this.verRuler.remove()
-          this.corner.remove()
+          this.rulerBox.remove()
           //移除对齐线
           this._destroyHorLine();
           this._destroyVerLine();
