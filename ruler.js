@@ -453,68 +453,56 @@
       this.horDiv.append(horLine)
 
       this.horLine.push(horLine)
-      //点击删除图标移除该对齐线
-      horLine.find('span').one('click', function(){
-        // 事件解绑
-        horLine.off('mouseenter')
-        horLine.off('mouseleave')
-        // horLine.off('mousedown')
-        // 删除元素
-        var index = this.horLine.indexOf(horLine)
-        this.horLine.splice(index, 1)
-        this.horLineValue.splice(index, 1)
-        //移除dom
-        horLine.remove()
-        //通知事件
-        $(document.body).trigger('setAlignLine', {
-          horValue : this.horLineValue,
-          verValue : this.verLineValue
-        })
-      }.bind(this))
 
       //增加拖动事件
       horLine.on('mousedown', function(e) {
-        e.preventDefault();
-        var startX = e.clientX;
+        e.preventDefault()
+        var startX = e.clientX
 
         $(document).on('mousemove', function(event) {
-          event.preventDefault();
+          event.preventDefault()
           var deltaX = event.clientX - startX
-          startX = event.clientX;
+          startX = event.clientX
 
           //改变对齐线的位置
           var marginLeft = parseInt(horLine.css('marginLeft')) + deltaX
-          horLine.css('marginLeft', marginLeft);
+          horLine.css('marginLeft', marginLeft)
           //改变对齐线的值
           var newValue = (this.startX + marginLeft) / this.scale >> 0
           horLine.find('p').html(newValue)
 
-        }.bind(this));
+        }.bind(this))
 
         $(document).one('mouseup', function(event) {
-          event.preventDefault();
+          event.preventDefault()
 
           //改变对齐线位置
           var index = this.horLine.indexOf(horLine)
           var newValue = horLine.find('p').html() >> 0
 
-          //如果位置与拖动前相比发生了改变,传播事件
-          if(this.horLineValue[index] != newValue){
-            this.horLineValue[index] = newValue;
-            //通知对齐线位置改变
+          // 如果位置与拖动前相比发生了改变,传播事件
+          if (this.horLineValue[index] != newValue) {
+            // 超出标尺的刻度范围
+            if (newValue < this.startX || newValue > this.startX + this.width / this.ratio) {
+              // 删除元素
+              var index = this.horLine.indexOf(horLine)
+              this.horLine.splice(index, 1)
+              this.horLineValue.splice(index, 1)
+              // 移除dom
+              horLine.remove()
+            } else {
+              this.horLineValue[index] = newValue
+            }
+            // 通知对齐线数据改变
             $(document.body).trigger('setAlignLine', {
               horValue : this.horLineValue,
               verValue : this.verLineValue
-            });
+            })
           }
-          // TODO 这里如果拖拽超出标尺的范围(可以用newValue判断), 则删除, 并通知(代码在 :457)
-
           //解绑事件
-          $(document).off('mousemove');
-
-        }.bind(this));
-
-      }.bind(this));
+          $(document).off('mousemove')
+        }.bind(this))
+      }.bind(this))
     },
     //新增一条对齐线
     _addVerLine: function(value){
@@ -525,68 +513,55 @@
       verLine.css('marginTop', offsetY)
       verLine.find('p').html(value)
       this.verDiv.append(verLine)
-
       this.verLine.push(verLine)
-      //点击删除图标移除该对齐线
-      verLine.find('span').one('click', function(){
-        // 事件解绑
-        verLine.off('mouseenter')
-        verLine.off('mouseleave')
-        // verLine.off('mousedown')
-        // 删除元素
-        var index = this.verLine.indexOf(verLine)
-        this.verLine.splice(index, 1)
-        this.verLineValue.splice(index, 1)
-        //移除dom
-        verLine.remove()
-        //通知事件
-        $(document.body).trigger('setAlignLine', {
-          horValue : this.horLineValue,
-          verValue : this.verLineValue
-        })
-      }.bind(this))
 
       //增加拖动事件
       verLine.on('mousedown', function(e) {
-        e.preventDefault();
-        var startY = e.clientY;
+        e.preventDefault()
+        var startY = e.clientY
 
         $(document).on('mousemove', function(event) {
-          event.preventDefault();
+          event.preventDefault()
           var deltaY = event.clientY - startY
-          startY = event.clientY;
+          startY = event.clientY
 
           //改变对齐线的位置
           var marginTop = parseInt(verLine.css('marginTop')) + deltaY
-          verLine.css('marginTop', marginTop);
+          verLine.css('marginTop', marginTop)
           //改变对齐线的值
           var newValue = (this.startY + marginTop) / this.scale >> 0
           verLine.find('p').html(newValue)
 
-        }.bind(this));
+        }.bind(this))
 
         $(document).one('mouseup', function(event) {
-          event.preventDefault();
+          event.preventDefault()
 
           //改变对齐线位置
           var index = this.verLine.indexOf(verLine)
           var newValue = verLine.find('p').html() >> 0
 
           //如果位置与拖动前相比发生了改变,传播事件
-          if(this.verLineValue[index] != newValue){
-            this.verLineValue[index] = newValue;
+          if (this.verLineValue[index] != newValue) {
+            if (newValue < this.startY || newValue > this.startY + this.height / this.ratio) {
+              // 删除元素
+              var index = this.verLine.indexOf(verLine)
+              this.verLine.splice(index, 1)
+              this.verLineValue.splice(index, 1)
+              //移除dom
+              verLine.remove()
+            } else {
+              this.verLineValue[index] = newValue
+            }
             $(document.body).trigger('setAlignLine', {
               horValue : this.horLineValue,
               verValue : this.verLineValue
-            });
+            })
           }
-          // TODO 这里如果拖拽超出标尺的范围(可以用newValue判断), 则删除, 并通知(代码在 :533)
           //解绑事件
-          $(document).off('mousemove');
-
-        }.bind(this));
-
-      }.bind(this));
+          $(document).off('mousemove')
+        }.bind(this))
+      }.bind(this))
     },
     //绘制当前所有对齐线
     _drawHorLine: function(){
@@ -664,19 +639,16 @@
       var perWidth = this.perWidth
       var scale = this.scale
       var startX = start - start % perWidth
-        //这样绘制当起点不为10的倍数时,长标和文字都不会出现
-        // for(var i = start ; i < start+this.width ; i += 10){
-        //正确的方法是:偏移到10的倍数,再开始绘制
       for (var i = startX; i < startX + this.width / this.ratio; i += perWidth) {
 
         var tempX = ((i >> 0) + 0.5) * this.ratio
         ctx.moveTo(tempX, this.thick)
         //绘制长刻度
         if (i % (perWidth * 10) === 0) {
-            ctx.fillText(i / scale, (i + 4) * this.ratio, this.thick / 3)
-            ctx.lineTo(tempX, 0)
+          ctx.fillText(i / scale, (i + 4) * this.ratio, this.thick / 3)
+          ctx.lineTo(tempX, 0)
         } else { //绘制短刻度
-            ctx.lineTo(tempX, this.thick * 2 / 3)
+          ctx.lineTo(tempX, this.thick * 2 / 3)
         }
         ctx.stroke()
       }
@@ -779,7 +751,7 @@
         // elem.off('mousedown')
       })
       //移除对齐线container
-      this.horDiv.remove();
+      this.horDiv.remove()
     },
     _destroyVerLine: function(){
       //解绑每个对齐线的事件
