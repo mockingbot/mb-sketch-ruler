@@ -114,6 +114,32 @@
           pointerEvents: 'none'
         })
         horLine.append(text)
+        // 删除图标
+        var span = $('<span>×</span>')
+        span.css({
+          position:'absolute',
+          display: 'none',
+          lineHeight: 1,
+          fontSize: 14,
+          right:'100%',
+          padding: '0 5px 5px 5px',
+          top: thick + 3,
+          cursor: 'pointer'
+        })
+        horLine.append(span)
+
+        horLine.on('mouseover', function(e) {
+          e.preventDefault()
+          var offset = e.offsetY
+          if(offset > thick){
+            span.show()
+          }
+        })
+
+        horLine.on('mouseleave', function(e) {
+          e.preventDefault()
+          span.hide()
+        })
         return horLine
       },
       getVerLine: function(){
@@ -137,6 +163,30 @@
 
         verLine.append(text)
         // 删除图标
+        var span = $('<span>×</span>')
+        span.css({
+          position:'absolute',
+          display: 'none',
+          bottom: '100%',
+          padding: 5,
+          left: thick + 3,
+          lineHeight: 1,
+          fontSize: 14,
+          cursor: 'pointer'
+        })
+        verLine.append(span)
+
+        verLine.on('mouseover', function(e) {
+          e.preventDefault()
+          var offset = e.offsetX
+          if(offset > thick){
+            span.show()
+          }
+        })
+        verLine.on('mouseleave', function(e) {
+          e.preventDefault()
+          span.hide()
+        })
         return verLine
       },
       getHorCur: function(){
@@ -453,6 +503,24 @@
       this.horDiv.append(horLine)
 
       this.horLine.push(horLine)
+      //点击删除图标移除该对齐线
+      horLine.find('span').one('click', function(){
+        // 事件解绑
+        horLine.off('mouseenter')
+        horLine.off('mouseleave')
+        // horLine.off('mousedown')
+        // 删除元素
+        var index = this.horLine.indexOf(horLine)
+        this.horLine.splice(index, 1)
+        this.horLineValue.splice(index, 1)
+        //移除dom
+        horLine.remove()
+        //通知事件
+        $(document.body).trigger('setAlignLine', {
+          horValue : this.horLineValue,
+          verValue : this.verLineValue
+        })
+      }.bind(this))
 
       //增加拖动事件
       horLine.on('mousedown', function(e) {
@@ -514,6 +582,24 @@
       verLine.find('p').html(value)
       this.verDiv.append(verLine)
       this.verLine.push(verLine)
+      //点击删除图标移除该对齐线
+      verLine.find('span').one('click', function(){
+        // 事件解绑
+        verLine.off('mouseenter')
+        verLine.off('mouseleave')
+        // verLine.off('mousedown')
+        // 删除元素
+        var index = this.verLine.indexOf(verLine)
+        this.verLine.splice(index, 1)
+        this.verLineValue.splice(index, 1)
+        //移除dom
+        verLine.remove()
+        //通知事件
+        $(document.body).trigger('setAlignLine', {
+          horValue : this.horLineValue,
+          verValue : this.verLineValue
+        })
+      }.bind(this))
 
       //增加拖动事件
       verLine.on('mousedown', function(e) {
@@ -746,6 +832,7 @@
     _destroyHorLine: function(){
       //解绑每个对齐线的时间
       $.each(this.horLine, function(index, elem){
+        elem.find('span').off('click')
         elem.off('mouseover')
         elem.off('mouseleave')
         // elem.off('mousedown')
@@ -756,6 +843,7 @@
     _destroyVerLine: function(){
       //解绑每个对齐线的事件
       $.each(this.verLine, function(index, elem){
+        elem.find('span').off('click')
         elem.off('mouseover')
         elem.off('mouseleave')
         // elem.off('mousedown')
