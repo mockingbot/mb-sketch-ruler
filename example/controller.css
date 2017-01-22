@@ -1,3 +1,15 @@
+p{
+  margin:0;
+  padding:0;
+}
+#screens{
+  position:fixed;
+  top:0px;
+  left: 250px;
+  width:500px;
+  height:700px;
+  box-shadow:0 0 0 1px #999;
+}
 .ctrlPane{
 	position:absolute;
 	top:0;
