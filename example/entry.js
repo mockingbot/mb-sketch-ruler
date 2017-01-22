@@ -60,10 +60,18 @@ function clearShadow(){
   var ruler = $('#screens').getRuler();
     ruler.clearShadow();
 }
-$(function() {
 
-   var html = ''
-   for(var i = 0 ; i < 200 ; i ++){
+function bindFunction () {
+  $('#setSelect').on('click', setSelect)
+  $('#initRuler').on('click', initRuler)
+  $('#removeRuler').on('click', removeRuler)
+  $('#clearShadow').on('click', clearShadow)
+}
+
+$(() => {
+  bindFunction()
+  var html = ''
+  for(var i = 0 ; i < 200 ; i ++){
     var width = (50 + Math.random() * 50) >> 0
     var height = (50 + Math.random() * 50) >> 0
     // var top = (Math.random() - 0.5) * 10000 >> 0
@@ -72,31 +80,26 @@ $(function() {
     var left = Math.random() * 5000 + 10 >> 0
     var color = '#'+(Math.random()*Math.pow(256, 3)-1>>0).toString(16);
     // console.log(color)
-    html += '<div style="background:'+color+';position:absolute;left:'+left+'px;top:'+top+'px;width:'+width+'px;height:'+height+'px"></div>'
+    html += `<div class="cube" style="background:${color};left:${left}px;top:${top}px;width:${width}px;height:${height}px"></div>`
     // var div = $('div').width()
-   }
-   $('#screens').append(html)
+  }
+  $('#screens .screen_container').append(html)
 
-  //点击测试
-  var boxes = $('#screens div')
   var screensStyle = $('#screens').get(0).getBoundingClientRect();
   var conTop = screensStyle.top
   var conLeft = screensStyle.left
   // console.log(conTop, conLeft)
-  boxes.each(function(index, item){
-    item.addEventListener('click', function(e){
-      var ruler = $('#screens').getRuler()
+  //点击测试
+  $('#screens').on('click', '.cube', (e) => {
+    var ruler = $('#screens').getRuler()
 
-      var style = e.target.getBoundingClientRect()
-      var left = style.left - conLeft + ruler.startX - ruler.thick / ruler.ratio
-      var top = style.top - conTop + ruler.startY - ruler.thick / ruler.ratio
-      // var left = parseInt(e.target.style.left)
-      // var top = parseInt(e.target.style.top)
-      var width = style.width
-      var height = style.height
-      console.log(left, top, width, height)
-      ruler.setSelect(left, top, width, height);
-    })
+    var style = e.target.getBoundingClientRect()
+    var left = style.left - conLeft + ruler.startX - ruler.thick / ruler.ratio
+    var top = style.top - conTop + ruler.startY - ruler.thick / ruler.ratio
+    var width = style.width
+    var height = style.height
+    // console.log(left, top, width, height)
+    ruler.setSelect(left, top, width, height);
   })
 
   var ruler = $('#screens').getRuler({
@@ -115,5 +118,4 @@ $(function() {
     console.log('Horizontal', position.horValue)
     console.log('Vertical', position.verValue)
   });
-
 });

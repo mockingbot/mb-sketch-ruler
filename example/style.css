@@ -10,6 +10,12 @@ p{
   height:700px;
   box-shadow:0 0 0 1px #999;
 }
+.mb-ruler {
+  z-index: 2
+}
+.cube {
+  position: absolute;
+}
 .ctrlPane{
 	position:absolute;
 	top:0;

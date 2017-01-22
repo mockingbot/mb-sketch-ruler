@@ -6,6 +6,7 @@
 </head>
 <body>
   <section id="screens">
+    <div class="screen_container"></div>
   </section>
   <section class="ctrlPane">
     <section class="controller">
@@ -50,8 +51,8 @@
         <label for="ratio">perWidth:</label>
         <input type="text" id="perWidth"/>
       </div>
-      <button onclick="initRuler();">initRuler</button>
-      <button onclick="removeRuler();">removeRuler</button>
+      <button id="initRuler">initRuler</button>
+      <button id="removeRuler">removeRuler</button>
     </section>
     <section class="controller">
       <h3>绘制阴影</h3>
@@ -71,8 +72,8 @@
         <label for="height">height:</label>
         <input type="text" id="height"/>
       </div>
-      <button onclick="setSelect();">setSelect</button>
-      <button onclick="clearShadow();">clearShadow</button>
+      <button id="setSelect">setSelect</button>
+      <button id="clearShadow">clearShadow</button>
     </section>
   </section>
   <script src="lib/jquery-1.11.3.min.js"></script>
