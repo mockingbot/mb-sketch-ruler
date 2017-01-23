@@ -1,5 +1,5 @@
 const { $ } = window
-import './controller.css'
+import './style.css'
 
 function initRuler(){
   var posX = parseInt($('#posX').val())

@@ -2,12 +2,25 @@ $line-color: #F00
 
 .mb-ruler
   position: fixed
+  .corner, .hor-ruler, .ver-ruler
+    box-sizing: border-box
+
   .hor-div, .ver-div
     position: fixed
     z-index: 10000
     user-select: none
     font: 12px '-apple-system', ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif
 
+  /* 左上角方块 */
+  .corner
+    position: absolute
+    z-index: 9999
+    width: 30px
+    height: 30px
+  /* ruler */
+  .hor-ruler, .ver-ruler
+    position: fixed
+    z-index: 9999
   /* 对齐线 */
   .hor-line, .ver-line
     position: fixed

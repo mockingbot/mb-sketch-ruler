@@ -25,7 +25,21 @@ function getPixelRatio () {
 }
 
 $.fn.getRuler = function(options = {}) {
-  var me = this
-  var ruler = me.data('ruler') ? me.data('ruler') : new Ruler(me, $.extend(defaultOptions, options))
+  const ops = Object.assign(defaultOptions, options)
+  const perWidth = parseFloat(ops.perWidth)
+  const thick = (ops.thick || 30) * ops.ratio
+  const ops2 = Object.assign({}, ops, {
+    // 标尺起始坐标
+    originX: ops.startX,
+    originY: ops.startY,
+    //每一小格的宽度
+    perWidth: perWidth,
+    scale: perWidth / 10,
+    thick: thick,
+    width: this.width() * ops.ratio - thick,
+    height: this.height() * ops.ratio - thick,
+    font: ops.font || `${12 * ops.ratio}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Heiti SC', 'Microsoft Yahei', sans-serif`,
+  })
+  const ruler = this.data('ruler') ? this.data('ruler') : new Ruler(this, ops2)
   return ruler
 }

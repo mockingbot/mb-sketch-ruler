@@ -14,21 +14,9 @@ export default class Ruler {
 
   _init (options = {}) {
     // 参数默认处理
-    $.extend(this, options)
-    // 标尺起始坐标
-    this.originX = options.startX
-    this.originY = options.startY
-
-    //每一小格的宽度
-    this.perWidth = parseFloat(this.perWidth)
-    this.font = options.font || 12 * this.ratio + 'px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif'
-    this.thick = !isNaN(options.thick) ? options.thick * this.ratio : 30 * this.ratio
-    this.scale = this.perWidth / 10
+    Object.assign(this, options)
 
     //如果已经初始化,则需要先销毁原有实例
-    this.width = this.elem.width() * this.ratio - this.thick
-    this.height = this.elem.height() * this.ratio - this.thick
-
     this.factory = new RulerFactory({
       ratio : this.ratio,
       thick : this.thick / this.ratio,

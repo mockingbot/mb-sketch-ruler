@@ -15,27 +15,22 @@ export default class RulerFactory {
   getCorner () {
     var corner = $('<span class="corner"></span>')
     corner.css({
-      position: 'absolute',
-      width: thick - 1,
-      height: thick - 1,
+      // width: thick,
+      // height: thick,
       borderBottom: '1px solid ' + fgColor,
       borderRight: '1px solid ' + fgColor,
-      'zIndex': 9999,
       backgroundColor: bgColor
     })
     return corner
   }
   getHorRuler () {
-    var horRuler = $('<canvas></canvas>')
+    var horRuler = $('<canvas class="hor-ruler"></canvas>')
     horRuler.css({
-      position: 'fixed',
       marginLeft: thick,
       width: width,
-      height: thick - 1,
+      height: thick,
       borderBottom: '1px solid '+ fgColor,
-      'zIndex': 9999,
       backgroundColor: bgColor
-      // userSelect: 'none'
     })
     //为canvas设置样式
     var canvas = horRuler.get(0)
@@ -51,14 +46,12 @@ export default class RulerFactory {
     return horRuler
   }
   getVerRuler () {
-    var verRuler = $('<canvas></canvas>')
+    var verRuler = $('<canvas class="ver-ruler"></canvas>')
     verRuler.css({
-      position: 'fixed',
       marginTop: thick,
-      width: thick - 1,
+      width: thick,
       height: height,
       borderRight: '1px solid ' + fgColor,
-      'z-index': 9999,
       backgroundColor: bgColor
     })
     //为canvas设置样式
