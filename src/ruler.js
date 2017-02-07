@@ -418,8 +418,9 @@ export default class Ruler {
     var start = this.startX
     var ctx = this.horCtx
 
-    //刻度尺背景改用dom的bgcolor实现,这样可以减少ctx.fillStyle状态改变带来的效率损失
-    ctx.clearRect(0, 0, this.width, this.thick)
+    //绘制刻度尺的背景
+    ctx.fillStyle = this.bgColor
+    ctx.fillRect(0, 0, this.width, this.thick)
 
     //先根据iphone宽度绘制阴影
     if (this.shadow) {
@@ -463,7 +464,8 @@ export default class Ruler {
     var ctx = this.verCtx
 
     //绘制刻度尺的背景
-    ctx.clearRect(0, 0, this.thick, this.height)
+    ctx.fillStyle = this.bgColor
+    ctx.fillRect(0, 0, this.thick, this.height)
 
     //先根据iphone高度绘制阴影
     if (this.shadow) {

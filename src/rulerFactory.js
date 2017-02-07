@@ -29,8 +29,7 @@ export default class RulerFactory {
       marginLeft: thick,
       width: width,
       height: thick,
-      borderBottom: '1px solid '+ fgColor,
-      backgroundColor: bgColor
+      borderBottom: '1px solid '+ fgColor
     })
     //为canvas设置样式
     var canvas = horRuler.get(0)
@@ -51,8 +50,7 @@ export default class RulerFactory {
       marginTop: thick,
       width: thick,
       height: height,
-      borderRight: '1px solid ' + fgColor,
-      backgroundColor: bgColor
+      borderRight: '1px solid ' + fgColor
     })
     //为canvas设置样式
     var canvas = verRuler.get(0)

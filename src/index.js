@@ -3,8 +3,9 @@ import Ruler from './ruler'
 
 const defaultOptions = {
   ratio: getPixelRatio(),
-  startX: -240,
-  startY: -100,
+  startX: -245,
+  startY: -45,
+  thick: 24,
   perWidth: 10,
   bgColor: '#F5F5F5',
   fgColor: '#999',
@@ -27,7 +28,7 @@ function getPixelRatio () {
 $.fn.getRuler = function(options = {}) {
   const ops = Object.assign(defaultOptions, options)
   const perWidth = parseFloat(ops.perWidth)
-  const thick = (ops.thick || 30) * ops.ratio
+  const thick = ops.thick * ops.ratio
   const ops2 = Object.assign({}, ops, {
     // 标尺起始坐标
     originX: ops.startX,
