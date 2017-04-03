@@ -1,28 +1,18 @@
-const { $ } = window
+// import $ from 'jquery'
 import Ruler from './ruler'
+
+import { getPixelRatio } from './utils'
 
 const defaultOptions = {
   ratio: getPixelRatio(),
   startX: -245,
   startY: -45,
-  thick: 24,
+  thick: 17,
   perWidth: 10,
-  bgColor: '#F5F5F5',
-  fgColor: '#999',
-  shadowColor: '#CCC',
-  fontColor: '#000'
-}
-
-function getPixelRatio () {
-  var context = document.createElement('canvas').getContext('2d')
-  var backingStore = context.backingStorePixelRatio ||
-    context.webkitBackingStorePixelRatio ||
-    context.mozBackingStorePixelRatio ||
-    context.msBackingStorePixelRatio ||
-    context.oBackingStorePixelRatio ||
-    context.backingStorePixelRatio || 1
-  // console.log("当前设备像素倍数: ", window.devicePixelRatio)
-  return (window.devicePixelRatio || 1) / backingStore
+  bgColor: '#FFF',
+  fgColor: '#E5E5E5',
+  shadowColor: 'rgba(0, 0, 0, 0.04)',
+  fontColor: 'rgba(39, 54, 78, 0.6)'
 }
 
 $.fn.getRuler = function(options = {}) {

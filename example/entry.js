@@ -1,5 +1,9 @@
-const { $ } = window
-import './style.css'
+// import $ from 'jquery'
+// require('imports-loader?$=jquery!./example.js')
+
+console.log(window.$)
+import { getRandomColor } from '../src/utils'
+// import './style.css'
 
 function initRuler(){
   var posX = parseInt($('#posX').val())
@@ -49,16 +53,16 @@ function removeRuler(){
   ruler.destroy()
 }
 function setSelect(){
-  var x = parseInt($("#x").val());
-  var y = parseInt($("#y").val());
-  var width = parseInt($("#width").val());
-  var height = parseInt($("#height").val());
-  var ruler = $('#screens').getRuler();
-  ruler.setSelect(x, y, width, height);
+  var x = parseInt($('#x').val())
+  var y = parseInt($('#y').val())
+  var width = parseInt($('#width').val())
+  var height = parseInt($('#height').val())
+  var ruler = $('#screens').getRuler()
+  ruler.setSelect(x, y, width, height)
 }
 function clearShadow(){
-  var ruler = $('#screens').getRuler();
-    ruler.clearShadow();
+  var ruler = $('#screens').getRuler()
+    ruler.clearShadow()
 }
 
 function bindFunction () {
@@ -71,15 +75,12 @@ function bindFunction () {
 $(() => {
   bindFunction()
   var html = ''
-  for(var i = 0 ; i < 200 ; i ++){
+  for (var i = 0 ; i < 200 ; i ++) {
     var width = (50 + Math.random() * 50) >> 0
     var height = (50 + Math.random() * 50) >> 0
-    // var top = (Math.random() - 0.5) * 10000 >> 0
-    // var left = (Math.random() - 0.5) * 10000 >> 0
     var top = Math.random() * 5000 + 10 >> 0
     var left = Math.random() * 5000 + 10 >> 0
-    var color = '#'+(Math.random()*Math.pow(256, 3)-1>>0).toString(16);
-    // console.log(color)
+    var color = getRandomColor()
     html += `<div class="cube" style="background:${color};left:${left}px;top:${top}px;width:${width}px;height:${height}px"></div>`
     // var div = $('div').width()
   }
@@ -117,5 +118,5 @@ $(() => {
     event.preventDefault();
     console.log('Horizontal', position.horValue)
     console.log('Vertical', position.verValue)
-  });
-});
+  })
+})

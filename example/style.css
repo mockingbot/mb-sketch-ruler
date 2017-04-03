@@ -8,7 +8,8 @@ p{
   left: 250px;
   width:500px;
   height:700px;
-  box-shadow:0 0 0 1px #999;
+  background: #F5F5F5;
+  box-shadow:0 0 0 1px #D9D9D9;
 }
 .mb-ruler {
   z-index: 2

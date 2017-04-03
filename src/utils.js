@@ -1,7 +1,22 @@
-import $ from 'jquery'
+function getPixelRatio () {
+  var context = document.createElement('canvas').getContext('2d')
+  var backingStore = context.backingStorePixelRatio ||
+    context.webkitBackingStorePixelRatio ||
+    context.mozBackingStorePixelRatio ||
+    context.msBackingStorePixelRatio ||
+    context.oBackingStorePixelRatio ||
+    context.backingStorePixelRatio || 1
+  // console.log("当前设备像素倍数: ", window.devicePixelRatio)
+  return (window.devicePixelRatio || 1) / backingStore
+}
+
+function getRandomColor () {
+  return '#'+(Math.random()*Math.pow(256, 3)-1>>0).toString(16)
+}
+
 
 let ratio, thick, width, height, fgColor, bgColor, font
-export default class RulerFactory {
+class RulerFactory {
   constructor (options) {
     ratio = options.ratio
     thick = options.thick
@@ -142,4 +157,10 @@ export default class RulerFactory {
     verCur.append(text)
     return verCur
   }
+}
+
+export {
+  RulerFactory,
+  getPixelRatio,
+  getRandomColor
 }

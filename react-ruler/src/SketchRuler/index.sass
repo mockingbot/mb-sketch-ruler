@@ -1,0 +1,89 @@
+$thick: 24px
+$border-color: blue
+$line-color: red
+
+.mb-ruler
+  position: absolute
+  width: 100%
+  height: 100%
+  z-index: 1
+  pointer-events: none
+  font-size: 12px
+  // *
+  //   box-sizing: content-box
+
+  .corner
+    position: absolute
+    left: 0
+    top: 0
+    width: $thick
+    height: $thick
+    border-right: 1px solid $border-color
+    border-bottom: 1px solid $border-color
+    pointer-events: auto
+    cursor: pointer
+
+  .indicator
+    position: absolute
+    pointer-events: none
+
+  .value
+    position: absolute
+    background: white
+
+  .ruler
+    width: 100%
+    height: 100%
+    pointer-events: auto
+
+  .line
+    position: absolute
+
+    .del
+      display: none
+    &:hover
+      .del
+        display: block
+
+  .h-container, .v-container
+    position: absolute
+    background: lightblue
+
+  .h-container
+    left: $thick
+    top: 0
+    width: calc(100% - #{$thick})
+    height: $thick
+    border-bottom: 1px solid $border-color
+    &.v
+      width: initial
+      top: initial
+      bottom: 0
+      transform-origin: 0 100%
+      transform: rotate(-90deg)
+    .line
+      height: 100vh
+      top: 0
+      border-left: 1px solid $line-color
+    .indicator
+      top: 0
+      border-left: 1px solid $line-color
+      height: 100vw
+
+  .v-container
+    top: $thick
+    left: 0
+    width: $thick
+    height: calc(100% - #{$thick})
+    border-top: 1px solid $border-color
+    border-right: 1px solid $border-color
+    margin-top: -1px
+    .ruler
+    .line
+      width: 100vw
+      left: 0
+      border-top: 1px solid $line-color
+
+    .indicator
+      border-bottom: 1px solid $line-color
+      width: 100vw

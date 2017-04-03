@@ -2,9 +2,9 @@
  * 2016.6.11 iny
  * jquery插件v0.2 直接append canvas
  */
-const { $ } = window
-import RulerFactory from './RulerFactory'
-import './ruler.sass'
+// import $ from 'jquery'
+import { RulerFactory } from './utils'
+// import './ruler.sass'
 
 export default class Ruler {
   constructor (elem, options) {

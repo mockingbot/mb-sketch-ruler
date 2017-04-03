@@ -14,20 +14,20 @@ Sometimes, a div contains so many elements in it that you have to add a scroll b
 1. Include ``jquery`` and ``ruler.js`` in your HTML document
 2. set the container element's style
 
-		#demo{
+		#demo {
 			position:absolute;
 			/* fixed and relative is alse supposed */
-			width: 200px; 
+			width: 200px;
 			height: 200px;
 			/* width and height as you need */
 		}
 
 3. use ruler.js to add rulers on ``div#demo`` like this
-	
+
 		var ruler = $('#demo').getRuler()
-		
+
 	or configure parameters according to need
-		
+
 		var ruler = $('#demo').getRuler({
           startX: -240,  // the start peg of the horizontal ruler
           startY: -100,  // the start peg of the vertical ruler
@@ -45,7 +45,7 @@ Sometimes, a div contains so many elements in it that you have to add a scroll b
 4. update ruler when the container scroll
 
 		$('#demo').css({
-          overflow: 'scroll'  //assign 'scroll' to the 'overflow' attribute 
+          overflow: 'scroll'  //assign 'scroll' to the 'overflow' attribute
         }).on('scroll', function(event) {
           event.preventDefault();
           ruler.update();
@@ -54,7 +54,7 @@ Sometimes, a div contains so many elements in it that you have to add a scroll b
 5. you can alse draw a shadow on the ruler by the method ``setSelect(x, y, width, height)``, in this example, you can click the colorful div like [That](https://mockingbot.github.io/A-sketch-like-ruler-in-javascript/)
 
 6. By the way, the ruler is clickable to draw align line on it, the align line can be deleted when hover on it.Both will trigger a jQuery event, you can listene the event ``setAlignLine`` like this
-		
+
 		$(document.body).on('setAlignLine', function(event, position) {
         	event.preventDefault();
 	        console.log('Horizontal', position.horValue)

@@ -1,11 +1,15 @@
+var path = require('path')
+var ExtractTextPlugin = require("extract-text-webpack-plugin")
+// var debug = process.env.NODE_ENV !== 'production';
+
 module.exports = {
   entry: {
     ruler: './src/index.js',
     example: './example/entry.js'
   },
   output: {
-    path: __dirname,
-    filename: '[name].bundle.js'
+    path: path.join(__dirname, 'dist'),
+    filename: '[name].js'
   },
   module: {
     preLoaders: [
@@ -18,7 +22,9 @@ module.exports = {
     loaders: [
       {
         test: /\.css$/,
-        loader: 'style!css'
+        loader: ExtractTextPlugin.extract({
+          loader: 'css-loader'
+        })
       },
       {
         test: /\.js$/,
@@ -27,10 +33,18 @@ module.exports = {
       },
       {
         test: /\.sass$/,
-        loader: 'style!css!sass'
+        loader: ExtractTextPlugin.extract({
+          loader: 'sass-loader'
+        })
       }
     ]
   },
+  plugins: [
+    new ExtractTextPlugin({
+      filename: 'ruler.css',
+      allChunks: true
+    })
+  ],
   devServer: {
     port: 8080,
     historyApiFallback: {
