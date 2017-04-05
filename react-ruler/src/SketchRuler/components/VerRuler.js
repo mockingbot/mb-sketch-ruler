@@ -5,16 +5,25 @@ export default class VerRuler extends Ruler {
     super()
     this.vertical = true
   }
+  componentDidMount () {
+    super.componentDidMount()
+    const ctx = this.ruler.getContext('2d')
+    ctx.font = `${12 * this.ratio}px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif`
+    ctx.lineWidth = this.ratio
+    ctx.strokeStyle = this.fgColor
+    ctx.textBaseline = 'middle'
+    this.ctx = ctx
+  }
   /* override */
   drawRuler (start, shadow) {
     const {
       ctx, fontColor, shadowColor, bgColor,
-      fontScale, perWidth, scale, height, ratio, thick
+      fontScale, perWidth, scale, width, height, ratio
     } = this
 
     // 1. 画标尺底色
     ctx.fillStyle = bgColor
-    ctx.fillRect(0, 0, thick, height)
+    ctx.fillRect(0, 0, width, height)
 
     // 2. 画阴影
     if (shadow) {
@@ -23,7 +32,7 @@ export default class VerRuler extends Ruler {
       // 阴影高度
       const shadowHeight = shadow.height * ratio * scale
       ctx.fillStyle = shadowColor
-      ctx.fillRect(0, posY, thick, shadowHeight)
+      ctx.fillRect(0, posY, width, shadowHeight)
     }
 
     // 3. 画刻度和文字(因为刻度遮住了阴影)
@@ -35,24 +44,24 @@ export default class VerRuler extends Ruler {
     const startY = start - start % perHeight
     for (let i = startY; i < startY + height / ratio; i += perHeight) {
       var tempY = ((i >> 0) + 0.5) * ratio
-      ctx.moveTo(thick, tempY)
+      ctx.moveTo(width, tempY)
       //绘制长刻度
       if (i % (perHeight * 10) === 0) {
         //这里先保存一下状态
         ctx.save()
         //将原点转移到当前画笔所在点
-        ctx.translate(thick, (i - 2) * ratio)
+        ctx.translate(width, (i - 2) * ratio)
         // 旋转 -90 度
         ctx.rotate(-Math.PI / 2)
         // 画文字
         ctx.scale(fontScale, fontScale)
-        ctx.fillText(i / scale, 2 * ratio, -thick / 3 * 2)
+        ctx.fillText(i / scale, 2 * ratio, -width / 3 * 2)
         // 回复刚刚保存的状态
         ctx.restore()
         ctx.lineTo(0, tempY)
 
       } else { //绘制短刻度
-        ctx.lineTo(thick * 2 / 3, tempY)
+        ctx.lineTo(width * 2 / 3, tempY)
       }
       ctx.stroke()
     }

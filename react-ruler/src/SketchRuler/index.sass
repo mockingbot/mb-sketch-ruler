@@ -9,6 +9,9 @@ $line-color: red
   z-index: 1
   pointer-events: none
   font-size: 12px
+  overflow: hidden
+  span
+    line-height: 1
   // *
   //   box-sizing: content-box
 
@@ -26,10 +29,9 @@ $line-color: red
   .indicator
     position: absolute
     pointer-events: none
-
-  .value
-    position: absolute
-    background: white
+    .value
+      position: absolute
+      background: white
 
   .ruler
     width: 100%
@@ -38,12 +40,22 @@ $line-color: red
 
   .line
     position: absolute
+    pointer-events: auto
+    .action
+      position: absolute
+      display: flex
+      justify-content: center
+      align-items: center
 
+    .value
+      pointer-events: none
+      transform: scale(0.83)
     .del
-      display: none
-    &:hover
-      .del
-        display: block
+      cursor: pointer
+      padding: 3px 5px
+      visibility: hidden
+    &:hover .del
+      visibility: visible
 
   .h-container, .v-container
     position: absolute
@@ -55,20 +67,25 @@ $line-color: red
     width: calc(100% - #{$thick})
     height: $thick
     border-bottom: 1px solid $border-color
-    &.v
-      width: initial
-      top: initial
-      bottom: 0
-      transform-origin: 0 100%
-      transform: rotate(-90deg)
     .line
       height: 100vh
       top: 0
+      padding-left: 5px
       border-left: 1px solid $line-color
+      cursor: ew-resize
+      .action
+        top: $thick
+        transform: translateX(-24px)
+        .value
+          margin-left: 4px
+
     .indicator
       top: 0
       border-left: 1px solid $line-color
       height: 100vw
+      .value
+        margin-left: 2px
+        margin-top: 4px
 
   .v-container
     top: $thick
@@ -78,12 +95,24 @@ $line-color: red
     border-top: 1px solid $border-color
     border-right: 1px solid $border-color
     margin-top: -1px
-    .ruler
     .line
       width: 100vw
       left: 0
+      padding-top: 5px
       border-top: 1px solid $line-color
+      cursor: ns-resize
+      .action
+        left: $thick
+        transform: translateY(-24px)
+        flex-direction: column
+        .value
+          margin-top: 4px
 
     .indicator
       border-bottom: 1px solid $line-color
       width: 100vw
+      .value
+        margin-left: 2px
+        margin-top: -5px
+        transform-origin: 0 0
+        transform: rotate(-90deg)

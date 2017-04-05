@@ -12,9 +12,7 @@ export default class SketchRuler extends Component {
   getChildContext () {
     const { props } = this
     return {
-      thick: props.thick,
       perWidth: props.perWidth,
-      font: props.font,
       scale: props.scale,
       fontScale: 0.83, // 10 / 12
       ratio: getPixelRatio(),
@@ -25,11 +23,6 @@ export default class SketchRuler extends Component {
       onLineChange: this.onLineChange
     }
   }
-  // componentDidMount () {
-  //   this.forceUpdate()
-  // }
-  // componentDidUpdate () {
-  // }
   handleCornerClick = (e) => {
     e.preventDefault()
     alert('click on corner')
@@ -64,18 +57,16 @@ SketchRuler.propTypes = {
 }
 SketchRuler.defaultProps = {
   bgColor: 'white',
-  fgColor: '#D9D9D9',
-  font: '12px rgba(39, 54, 78, 0.6) -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif',
+  fgColor: 'blue',
   shadowColor: 'rgba(0, 0, 0, 0.06)',
   horLineValue: [100, 200],
   verLineValue: [100, 200],
   startX: 0,
   startY: 0,
-  thick: 24,
   perWidth: 10,
   scale: 1,
   ratio: getPixelRatio(),
-  fontColor: '#000',
+  fontColor: 'red',
   lineColor: 'red',
   shadow: {
     x: 200,

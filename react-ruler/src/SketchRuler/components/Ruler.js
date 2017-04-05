@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { contextTypes } from '../utils'
 import Line from '../Line'
 
@@ -13,12 +13,11 @@ export default class Ruler extends Component {
   }
   componentDidMount () {
     Object.assign(this, this.context)
-    this.ctx = this.ruler.getContext('2d')
     const { width, height } = this.ruler.getBoundingClientRect()
-    this.width = width
-    this.height = height
-    this.ruler.width = width * this.ratio
-    this.ruler.height = height * this.ratio
+    this.width = width * this.ratio
+    this.height = height * this.ratio
+    this.ruler.width = this.width
+    this.ruler.height = this.height
   }
   componentWillReceiveProps ({ start, select }) {
     this.drawRuler(start, select)
@@ -58,10 +57,11 @@ export default class Ruler extends Component {
     lines.push(value)
     onLineChange(lines, vertical)
   }
-  handleRemove = (val) => {
+  handleRemove = (index) => {
     // TODO 这里是否可以用map出的index来删除啊 感觉更省事一点
     const { onLineChange } = this.context
     const { lines } = this.props
+    lines.splice(index, 1)
     onLineChange(lines, this.vertical)
   }
   render () {
@@ -82,7 +82,8 @@ export default class Ruler extends Component {
         <div className="lines">
           { lines.map((v, i) => {
             return (
-              <Line key={i} value={v}
+              <Line key={i}
+                index={i} value={v}
                 start={start} vertical={vertical}
                 onRemove={this.handleRemove} />
               )

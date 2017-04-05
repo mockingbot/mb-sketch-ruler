@@ -12,6 +12,10 @@ export default class Line extends PureComponent {
       return { left: val }
     }
   }
+  handleRemove = () => {
+    const { index, onRemove } = this.props
+    onRemove(index)
+  }
   render () {
     // TODO 拖拽
     // TODO 点击删除
@@ -19,8 +23,10 @@ export default class Line extends PureComponent {
     const style = this.getStyle()
     return (
       <div className="line" style={style}>
-        <span className="value">{value}</span>
-        <span className="del"></span>
+        <div className="action">
+          <span className="del" onClick={this.handleRemove}>&times;</span>
+          <span className="value">{value}</span>
+        </div>
       </div>
     )
   }
