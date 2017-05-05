@@ -12,17 +12,33 @@ export default class Line extends PureComponent {
       return { left: val }
     }
   }
+  handleDown = (e) => {
+    const { value, vertical } = this.props
+    this.startValue = value
+    this.startOffset = vertical ? e.clientY : e.clientX
+    document.addEventListener('mousemove', this.handleMove)
+    document.addEventListener('mouseup', this.handleUp)
+  }
+  handleMove = (e) => {
+    const { vertical, index, onChange } = this.props
+    const offset = vertical ? e.clientY : e.clientX
+    const newValue = this.startValue + offset - this.startOffset
+    onChange(newValue, index)
+  }
+  handleUp = () => {
+    document.removeEventListener('mousemove', this.handleMove)
+    document.removeEventListener('mouseup', this.handleUp)
+  }
+
   handleRemove = () => {
     const { index, onRemove } = this.props
     onRemove(index)
   }
   render () {
-    // TODO 拖拽
-    // TODO 点击删除
     const { value } = this.props
     const style = this.getStyle()
     return (
-      <div className="line" style={style}>
+      <div className="line" style={style} onMouseDown={this.handleDown}>
         <div className="action">
           <span className="del" onClick={this.handleRemove}>&times;</span>
           <span className="value">{value}</span>

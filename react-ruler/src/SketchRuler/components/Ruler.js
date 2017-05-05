@@ -57,8 +57,20 @@ export default class Ruler extends Component {
     lines.push(value)
     onLineChange(lines, vertical)
   }
+  handleChange = (value, index) => {
+    const { onLineChange } = this.context
+    // 左右或上下超出时, 删除该条对齐线
+    const offset = value - this.props.start
+    const maxOffset = this.vertical ? this.height : this.width
+    if (offset < 0 || offset > maxOffset) {
+      this.handleRemove(index)
+    } else {
+      const { lines } = this.props
+      lines[index] = value
+      onLineChange(lines, this.vertical)
+    }
+  }
   handleRemove = (index) => {
-    // TODO 这里是否可以用map出的index来删除啊 感觉更省事一点
     const { onLineChange } = this.context
     const { lines } = this.props
     lines.splice(index, 1)
@@ -82,9 +94,13 @@ export default class Ruler extends Component {
         <div className="lines">
           { lines.map((v, i) => {
             return (
-              <Line key={i}
-                index={i} value={v}
-                start={start} vertical={vertical}
+              <Line
+                key={i}
+                index={i}
+                value={v}
+                start={start}
+                vertical={vertical}
+                onChange={this.handleChange}
                 onRemove={this.handleRemove} />
               )
           }) }
