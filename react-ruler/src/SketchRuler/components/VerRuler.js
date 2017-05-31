@@ -5,21 +5,13 @@ export default class VerRuler extends Ruler {
     super()
     this.vertical = true
   }
-  componentDidMount () {
-    super.componentDidMount()
-    const ctx = this.ruler.getContext('2d')
-    ctx.font = `${12 * this.ratio}px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif`
-    ctx.lineWidth = this.ratio
-    ctx.strokeStyle = this.fgColor
-    ctx.textBaseline = 'middle'
-    this.ctx = ctx
-  }
   /* override */
   drawRuler (start, shadow) {
     const {
       ctx, fontColor, shadowColor, bgColor,
-      fontScale, perWidth, scale, width, height, ratio
+      fontScale, width, height, ratio
     } = this
+    const { perWidth, scale } = this.context
 
     // 1. 画标尺底色
     ctx.fillStyle = bgColor

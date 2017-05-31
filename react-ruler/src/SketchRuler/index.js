@@ -37,28 +37,35 @@ export default class SketchRuler extends Component {
   }
 
   render () {
-    const { horLineArr, verLineArr, shadow, startX, startY } = this.props
+    const { bgColor, horLineArr, verLineArr, shadow, startX, startY, onCornerClick } = this.props
     const { x, y, width, height } = shadow
     return (
       <div className="mb-ruler" ref="ruler">
         <HorRuler start={startX} lines={horLineArr} select={{ x, width }} />
         <VerRuler start={startY} lines={verLineArr} select={{ y, height }} />
-        <a className="corner" onClick={this.handleCornerClick} />
+        <a className="corner" style={{ backgroundColor: bgColor }} onClick={onCornerClick} />
       </div>
     )
   }
 }
 SketchRuler.childContextTypes = contextTypes
-
 SketchRuler.propTypes = {
-  dispatch: PropTypes.func,
-  groupedItems: PropTypes.object,
+  bgColor: PropTypes.string,
+  startX: PropTypes.number,
+  startY: PropTypes.number,
   shadow: PropTypes.object,
+  horLineArr: PropTypes.array,
+  verLineArr: PropTypes.array,
+  handleLine: PropTypes.func,
+  onCornerClick: PropTypes.func,
 }
 SketchRuler.defaultProps = {
-  bgColor: 'white',
-  fgColor: 'blue',
-  shadowColor: 'rgba(0, 0, 0, 0.06)',
+  thick: 20,
+  bgColor: '#F5F5F7',
+  fgColor: '#DADADC',
+  fontColor: '#8B8C90',
+  lineColor: '#FF0000',
+  shadowColor: '#E8E8EA',
   horLineValue: [100, 200],
   verLineValue: [100, 200],
   startX: 0,
@@ -66,8 +73,6 @@ SketchRuler.defaultProps = {
   perWidth: 10,
   scale: 1,
   ratio: getPixelRatio(),
-  fontColor: 'red',
-  lineColor: 'red',
   shadow: {
     x: 200,
     y: 100,

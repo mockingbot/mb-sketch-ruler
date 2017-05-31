@@ -1,8 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { contextTypes } from '../utils'
-import Line from '../Line'
-
-// TODO 两个ruler都写完后, 抽象公用逻辑到父类
+import Line from './Line'
 
 export default class Ruler extends Component {
   constructor () {
@@ -13,14 +11,36 @@ export default class Ruler extends Component {
   }
   componentDidMount () {
     Object.assign(this, this.context)
+    this.handleResize(false)
+    window.addEventListener('resize', this.handleResize)
+  }
+  componentDidUpdate () {
+    const { start, select } = this.props
+    this.drawRuler(start, select)
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize)
+  }
+  handleResize = (render=true) => {
     const { width, height } = this.ruler.getBoundingClientRect()
+    // 实际宽高
+    this.domWidth = width
+    this.domHeight = height
+    // 比例宽高
     this.width = width * this.ratio
     this.height = height * this.ratio
     this.ruler.width = this.width
     this.ruler.height = this.height
-  }
-  componentWillReceiveProps ({ start, select }) {
-    this.drawRuler(start, select)
+
+    const ctx = this.ruler.getContext('2d')
+    ctx.font = `${12 * this.ratio}px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif`
+    ctx.lineWidth = this.ratio
+    ctx.strokeStyle = this.fgColor
+    ctx.textBaseline = 'middle'
+    this.ctx = ctx
+
+    const { start, select } = this.props
+    render && this.drawRuler(start, select)
   }
   checkLock () {
     if (this.lock) return true
@@ -50,18 +70,20 @@ export default class Ruler extends Component {
     this.setState({ showIndicator: false })
   }
   handleAdd = (e) => {
+    const { scale } = this.context
     const { vertical, onLineChange } = this
     const { start, lines } = this.props
     const { offsetX, offsetY } = e.nativeEvent
     const value = start + (vertical ? offsetY : offsetX)
-    lines.push(value)
+    lines.push(value / scale >> 0)
     onLineChange(lines, vertical)
   }
   handleChange = (value, index) => {
     const { onLineChange } = this.context
     // 左右或上下超出时, 删除该条对齐线
     const offset = value - this.props.start
-    const maxOffset = this.vertical ? this.height : this.width
+    const maxOffset = this.vertical ? this.domHeight : this.domWidth
+    console.log(offset, maxOffset)
     if (offset < 0 || offset > maxOffset) {
       this.handleRemove(index)
     } else {
@@ -77,11 +99,14 @@ export default class Ruler extends Component {
     onLineChange(lines, this.vertical)
   }
   render () {
+    const { scale } = this.context
     const { vertical } = this
     const { showIndicator, value } = this.state
     const { start, lines } = this.props
     const className = vertical ? 'v-container' : 'h-container'
     const indicatorStyle = vertical ? { top: value } : { left: value }
+    const indicatorValue = (start + value) / scale >> 0
+
     return (
       <div className={className}>
         <canvas className="ruler"
@@ -92,26 +117,34 @@ export default class Ruler extends Component {
           onMouseLeave={this.handleLeave}
         />
         <div className="lines">
-          { lines.map((v, i) => {
-            return (
+          {
+            lines.map((v, i) =>
               <Line
                 key={i}
                 index={i}
-                value={v}
+                value={v >> 0}
+                scale={scale}
                 start={start}
                 vertical={vertical}
                 onChange={this.handleChange}
-                onRemove={this.handleRemove} />
-              )
-          }) }
+                onRemove={this.handleRemove}
+              />
+            )
+          }
         </div>
-        { showIndicator ? (
+        {
+          showIndicator &&
           <div className="indicator" style={indicatorStyle}>
-            <span className="value">{start + value}</span>
+            <span className="value">{indicatorValue}</span>
           </div>
-        ) : null }
+        }
       </div>
     )
   }
 }
 Ruler.contextTypes = contextTypes
+Ruler.propTypes = {
+  start: PropTypes.number,
+  select: PropTypes.object,
+  lines: PropTypes.array,
+}
