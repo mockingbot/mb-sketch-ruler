@@ -124,7 +124,7 @@ export default class Ruler extends Component {
                 index={i}
                 value={v >> 0}
                 scale={scale}
-                start={start}
+                offset={-start}
                 vertical={vertical}
                 onChange={this.handleChange}
                 onRemove={this.handleRemove}

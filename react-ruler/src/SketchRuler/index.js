@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import HorRuler from './components/HorRuler'
 import VerRuler from './components/VerRuler'
-// import HorRuler from './HorRuler'
-// import VerRuler from './VerRuler'
 
 import { getPixelRatio, contextTypes } from './utils'
 
@@ -13,7 +11,7 @@ export default class SketchRuler extends Component {
     const { props } = this
     return {
       perWidth: props.perWidth,
-      scale: props.scale,
+      scale: props.perWidth / 10,
       fontScale: 0.83, // 10 / 12
       ratio: getPixelRatio(),
       bgColor: props.bgColor,
@@ -39,6 +37,7 @@ export default class SketchRuler extends Component {
   render () {
     const { bgColor, horLineArr, verLineArr, shadow, startX, startY, onCornerClick } = this.props
     const { x, y, width, height } = shadow
+
     return (
       <div className="mb-ruler" ref="ruler">
         <HorRuler start={startX} lines={horLineArr} select={{ x, width }} />
@@ -71,7 +70,6 @@ SketchRuler.defaultProps = {
   startX: 0,
   startY: 0,
   perWidth: 10,
-  scale: 1,
   ratio: getPixelRatio(),
   shadow: {
     x: 200,

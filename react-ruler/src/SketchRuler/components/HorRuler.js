@@ -13,8 +13,6 @@ export default class HorRuler extends Ruler {
     ctx.fillStyle = bgColor
     ctx.fillRect(0, 0, width, height)
 
-    console.log(shadow)
-
     // 2. 画阴影
     if (shadow) {
       // 阴影起点坐标
@@ -23,10 +21,8 @@ export default class HorRuler extends Ruler {
       const shadowWidth = shadow.width * ratio * scale
       ctx.fillStyle = shadowColor
       ctx.fillRect(posX, 0, shadowWidth, height)
-      console.log(posX)
     }
 
-    console.log(-start * ratio)
     // 3. 画刻度和文字(因为刻度遮住了阴影)
     ctx.translate(-start * ratio, 0) // 移动画布原点,方便绘制
     ctx.beginPath() // 一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制

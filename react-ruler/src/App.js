@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import SketchRuler from './SketchRuler'
-import './App.css'
 
-const ox = -245
-const oy = -105
+const thick = 20
 
 export default class App extends Component {
   state = {
-    startX: ox,
-    startY: oy,
+    startX: 0,
+    startY: 0,
     lines: {
       h: [100, 200],
       v: [100, 200]
@@ -16,19 +14,24 @@ export default class App extends Component {
   }
   componentDidMount () {
     const el = this.refs.app
-    const screens = document.querySelector('#screens')
-    const rect = screens.getBoundingClientRect()
-    el.scrollLeft = rect.width / 2
-    el.scrollTop = rect.height / 2
+    el.scrollLeft = this.refs.container.getBoundingClientRect().width / 2 - 300 // 300 = #screens.width / 2
+
+    this.handleUpdate()
+
     el.addEventListener('scroll', () => {
-      const app = this.refs.app
-      const startX = ox + app.scrollLeft - rect.width / 2
-      const startY = oy + app.scrollTop - rect.height / 2
-      // console.log(startX, startY)
-      this.setState({ startX, startY })
+      this.handleUpdate()
     })
     // console.log(el.getBoundingClientRect())
     // this.refs.app.scrollLeft
+  }
+  handleUpdate = () => {
+    const screensRect = document.querySelector('#screens').getBoundingClientRect()
+    const canvasRect = document.querySelector('#canvas').getBoundingClientRect()
+
+    this.setState({
+      startX: screensRect.left + thick - canvasRect.left,
+      startY: screensRect.top + thick - canvasRect.top
+    })
   }
   handleLine = (lines) => {
     this.setState({ lines })
@@ -36,17 +39,31 @@ export default class App extends Component {
   render() {
     const { startX, startY, lines } = this.state
     const { h, v } = lines
+
+    const scale = 1.5
+    const shadow = {
+      x: 0,
+      y: 0,
+      width: 160,
+      height: 200,
+    }
+
     return (
       <div className="wrapper">
         <SketchRuler
+          thick={thick}
+          perWidth={scale * 10}
           startX={startX}
           startY={startY}
+          shadow={shadow}
           horLineArr={h}
           verLineArr={v}
           handleLine={this.handleLine}
         />
-        <div ref="app" className="App">
-          <div id="screens"></div>
+        <div ref="app" id="screens">
+          <div ref="container" className="screen-container">
+            <div id="canvas" style={{ transform: `scale(${scale})` }} />
+          </div>
         </div>
       </div>
     )

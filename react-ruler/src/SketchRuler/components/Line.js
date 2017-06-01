@@ -3,8 +3,9 @@ import React, { PureComponent } from 'react'
 export default class Line extends PureComponent {
   getStyle () {
     // TODO 超出最大值也需要隐藏
-    const { start, vertical, value } = this.props
-    const val = value - start
+    const { vertical, offset, scale, value } = this.props
+    const val = offset + value * scale
+
     if (val < 0) return { display: 'none' }
     if (vertical) {
       return { top: val }
@@ -20,9 +21,9 @@ export default class Line extends PureComponent {
     document.addEventListener('mouseup', this.handleUp)
   }
   handleMove = (e) => {
-    const { vertical, index, onChange } = this.props
+    const { vertical, index, scale, onChange } = this.props
     const offset = vertical ? e.clientY : e.clientX
-    const newValue = this.startValue + offset - this.startOffset
+    const newValue = this.startValue + (offset - this.startOffset) / scale
     onChange(newValue, index)
   }
   handleUp = () => {
