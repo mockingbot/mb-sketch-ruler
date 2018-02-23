@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import HorRuler from './components/HorRuler'
 import VerRuler from './components/VerRuler'
 
@@ -21,10 +22,6 @@ export default class SketchRuler extends Component {
       onLineChange: this.onLineChange
     }
   }
-  handleCornerClick = (e) => {
-    e.preventDefault()
-    alert('click on corner')
-  }
   onLineChange = (arr, vertical) => {
     const { horLineArr, verLineArr, handleLine } = this.props
     const newLines = {
@@ -35,20 +32,26 @@ export default class SketchRuler extends Component {
   }
 
   render () {
-    const { bgColor, horLineArr, verLineArr, shadow, startX, startY, onCornerClick } = this.props
-    const { x, y, width, height } = shadow
+    const {
+      thick, width, height, bgColor, horLineArr,
+      verLineArr, shadow, startX, startY, cornerActive, onCornerClick
+    } = this.props
+    const { x, y, width: w, height: h } = shadow
 
     return (
-      <div className="mb-ruler" ref="ruler">
-        <HorRuler start={startX} lines={horLineArr} select={{ x, width }} />
-        <VerRuler start={startY} lines={verLineArr} select={{ y, height }} />
-        <a className="corner" style={{ backgroundColor: bgColor }} onClick={onCornerClick} />
+      <div id="mb-ruler" className="mb-ruler">
+        <HorRuler width={width} height={thick} start={startX} lines={horLineArr} select={{ x, width: w }} />
+        <VerRuler width={thick} height={height} start={startY} lines={verLineArr} select={{ y, height: h }} />
+        <a className={`corner${cornerActive ? ' active' : ''}`} style={{ backgroundColor: bgColor }} onClick={onCornerClick} />
       </div>
     )
   }
 }
 SketchRuler.childContextTypes = contextTypes
 SketchRuler.propTypes = {
+  thick: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
   bgColor: PropTypes.string,
   startX: PropTypes.number,
   startY: PropTypes.number,
@@ -56,15 +59,15 @@ SketchRuler.propTypes = {
   horLineArr: PropTypes.array,
   verLineArr: PropTypes.array,
   handleLine: PropTypes.func,
+  cornerActive: PropTypes.bool,
   onCornerClick: PropTypes.func,
 }
 SketchRuler.defaultProps = {
   thick: 20,
-  bgColor: '#F5F5F7',
-  fgColor: '#DADADC',
-  fontColor: '#8B8C90',
-  lineColor: '#FF0000',
-  shadowColor: '#E8E8EA',
+  bgColor: '#F9FAFB', // 背景颜色
+  fgColor: '#DEDEE4', // 刻度颜色
+  fontColor: '#8D9EA7', // 字体颜色
+  shadowColor: '#F2F2F3', // 阴影颜色
   horLineValue: [100, 200],
   verLineValue: [100, 200],
   startX: 0,

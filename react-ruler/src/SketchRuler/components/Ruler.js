@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { contextTypes } from '../utils'
 import Line from './Line'
 
@@ -11,18 +12,25 @@ export default class Ruler extends Component {
   }
   componentDidMount () {
     Object.assign(this, this.context)
-    this.handleResize(false)
+    this.handleResize()
     window.addEventListener('resize', this.handleResize)
+  }
+  componentWillReceiveProps (nextProps) {
+    const widthChange = this.props.width !== nextProps.width
+    const heightChange = this.props.height !== nextProps.height
+    this.shouldResize = widthChange || heightChange
   }
   componentDidUpdate () {
     const { start, select } = this.props
+    this.shouldResize && this.handleResize(false)
     this.drawRuler(start, select)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize)
   }
-  handleResize = (render=true) => {
-    const { width, height } = this.ruler.getBoundingClientRect()
+  handleResize = (redraw=true) => {
+    const { width, height } = this.props
+
     // 实际宽高
     this.domWidth = width
     this.domHeight = height
@@ -40,7 +48,7 @@ export default class Ruler extends Component {
     this.ctx = ctx
 
     const { start, select } = this.props
-    render && this.drawRuler(start, select)
+    this.drawRuler(start, select)
   }
   checkLock () {
     if (this.lock) return true
@@ -83,7 +91,7 @@ export default class Ruler extends Component {
     // 左右或上下超出时, 删除该条对齐线
     const offset = value - this.props.start
     const maxOffset = this.vertical ? this.domHeight : this.domWidth
-    console.log(offset, maxOffset)
+
     if (offset < 0 || offset > maxOffset) {
       this.handleRemove(index)
     } else {
@@ -144,6 +152,8 @@ export default class Ruler extends Component {
 }
 Ruler.contextTypes = contextTypes
 Ruler.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number,
   start: PropTypes.number,
   select: PropTypes.object,
   lines: PropTypes.array,

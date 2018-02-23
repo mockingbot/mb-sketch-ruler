@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 
 export default class Line extends PureComponent {
@@ -23,7 +24,7 @@ export default class Line extends PureComponent {
   handleMove = (e) => {
     const { vertical, index, scale, onChange } = this.props
     const offset = vertical ? e.clientY : e.clientX
-    const newValue = this.startValue + (offset - this.startOffset) / scale
+    const newValue = Math.round(this.startValue + (offset - this.startOffset) / scale)
     onChange(newValue, index)
   }
   handleUp = () => {
@@ -47,4 +48,13 @@ export default class Line extends PureComponent {
       </div>
     )
   }
+}
+Line.propTypes = {
+  index: PropTypes.number,
+  vertical: PropTypes.bool,
+  offset: PropTypes.number,
+  scale: PropTypes.number,
+  value: PropTypes.number,
+  onChange: PropTypes.func,
+  onRemove: PropTypes.func
 }

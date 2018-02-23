@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import SketchRuler from './SketchRuler'
 
-const thick = 20
+const thick = 16
 
 export default class App extends Component {
   state = {
@@ -13,18 +13,13 @@ export default class App extends Component {
     }
   }
   componentDidMount () {
-    const el = this.refs.app
-    el.scrollLeft = this.refs.container.getBoundingClientRect().width / 2 - 300 // 300 = #screens.width / 2
-
-    this.handleUpdate()
-
-    el.addEventListener('scroll', () => {
-      this.handleUpdate()
-    })
-    // console.log(el.getBoundingClientRect())
-    // this.refs.app.scrollLeft
+    // 滚动居中
+    this.$app.scrollLeft = this.$container.getBoundingClientRect().width / 2 - 300 // 300 = #screens.width / 2
   }
-  handleUpdate = () => {
+  setAppRef = ref => this.$app = ref
+  setContainerRef = ref => this.$container = ref
+
+  handleScroll = () => {
     const screensRect = document.querySelector('#screens').getBoundingClientRect()
     const canvasRect = document.querySelector('#canvas').getBoundingClientRect()
 
@@ -41,6 +36,7 @@ export default class App extends Component {
     const { h, v } = lines
 
     const scale = 1.5
+    const perWidth = scale * 10
     const shadow = {
       x: 0,
       y: 0,
@@ -52,16 +48,20 @@ export default class App extends Component {
       <div className="wrapper">
         <SketchRuler
           thick={thick}
-          perWidth={scale * 10}
+          width={581}
+          height={480}
           startX={startX}
           startY={startY}
           shadow={shadow}
+          perWidth={perWidth}
           horLineArr={h}
           verLineArr={v}
           handleLine={this.handleLine}
+          cornerActive={true}
+          onCornerClick={this.handleCornerClick}
         />
-        <div ref="app" id="screens">
-          <div ref="container" className="screen-container">
+        <div ref={this.setAppRef} id="screens" onScroll={this.handleScroll}>
+          <div ref={this.setContainerRef} className="screen-container">
             <div id="canvas" style={{ transform: `scale(${scale})` }} />
           </div>
         </div>

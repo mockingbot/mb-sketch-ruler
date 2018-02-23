@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.1.1"
   },
   "devDependencies": {
     "node-sass": "^4.5.2",
-    "npm-run-all": "^4.0.2",
-    "react-scripts": "0.9.5"
+    "npm-run-all": "^4.0.2"
   },
   "scripts": {
     "build-css": "node-sass src/ -o src/",
