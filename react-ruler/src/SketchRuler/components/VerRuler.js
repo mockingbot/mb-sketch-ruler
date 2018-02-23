@@ -47,7 +47,8 @@ export default class VerRuler extends Ruler {
         ctx.rotate(-Math.PI / 2)
         // 画文字
         ctx.scale(fontScale, fontScale)
-        ctx.fillText(i / scale, 2 * ratio, -width / 3 * 2)
+        // 刻度值为整数
+        ctx.fillText(Math.round(i / scale), 2 * ratio, -width / 3 * 2)
         // 回复刚刚保存的状态
         ctx.restore()
         ctx.lineTo(0, tempY)
@@ -55,8 +56,8 @@ export default class VerRuler extends Ruler {
       } else { //绘制短刻度
         ctx.lineTo(width * 2 / 3, tempY)
       }
-      ctx.stroke()
     }
+    ctx.stroke()
     ctx.closePath()
     ctx.translate(0, start * ratio)
   }

@@ -37,14 +37,15 @@ export default class HorRuler extends Ruler {
         ctx.save()
         ctx.translate((i + 2) * ratio, 0)
         ctx.scale(fontScale, fontScale)
-        ctx.fillText(i / scale, 2 * ratio, height / 2)
+        // 刻度值为整数
+        ctx.fillText(Math.round(i / scale), 2 * ratio, height / 2)
         ctx.restore()
         ctx.lineTo(tempX, 0)
       } else { //绘制短刻度
         ctx.lineTo(tempX, height * 2 / 3)
       }
-      ctx.stroke()
     }
+    ctx.stroke()
     ctx.closePath()
     ctx.translate(start * ratio, 0)
   }
