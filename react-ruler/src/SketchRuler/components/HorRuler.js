@@ -1,8 +1,9 @@
+import { throttle, RULER_THROTTLE } from '../utils'
 import Ruler from './Ruler'
 
 export default class HorRuler extends Ruler {
   /* override */
-  drawRuler (start, shadow) {
+  drawRuler = throttle((start, shadow) => {
     const {
       ctx, fontColor, shadowColor, bgColor,
       fontScale, width, height, ratio
@@ -12,6 +13,8 @@ export default class HorRuler extends Ruler {
     // 1. 画标尺底色
     ctx.fillStyle = bgColor
     ctx.fillRect(0, 0, width, height)
+
+    // 每两个长刻度之间的距离的px不能低于50(如果低于50, 则合并大格)
 
     // 2. 画阴影
     if (shadow) {
@@ -29,10 +32,12 @@ export default class HorRuler extends Ruler {
     ctx.fillStyle = fontColor
 
     const startX = start - start % perWidth
+
+    console.log(startX, startX + width / ratio, perWidth)
     for (let i = startX; i < startX + width / ratio; i += perWidth) {
       var tempX = ((i >> 0) + 0.5) * ratio
       ctx.moveTo(tempX, height)
-      //绘制长刻度
+      // 绘制长刻度
       if (i % (perWidth * 10) === 0) {
         ctx.save()
         ctx.translate((i + 2) * ratio, 0)
@@ -48,5 +53,5 @@ export default class HorRuler extends Ruler {
     ctx.stroke()
     ctx.closePath()
     ctx.translate(start * ratio, 0)
-  }
+  }, RULER_THROTTLE)
 }

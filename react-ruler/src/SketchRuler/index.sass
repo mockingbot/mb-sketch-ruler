@@ -1,12 +1,13 @@
-$thick: 17px
+$thick: 16px // MB.config.rulerWidth
 $border-color: #DADADC
-$line-color: red
+$line-color: #EB5648
+$core-color: #EB5648
 
 .mb-ruler
   position: absolute
-  width: 100%
+  width: 100% // scrollbar width
   height: 100%
-  z-index: 1
+  z-index: 3 // 需要比resizer高
   pointer-events: none
   font-size: 12px
   overflow: hidden
@@ -25,6 +26,9 @@ $line-color: red
     border-bottom: 1px solid $border-color
     pointer-events: auto
     cursor: pointer
+    transition: all 0.2s ease-in-out
+    &.active
+      background-color: rgba($core-color, 0.6) !important
 
   .indicator
     position: absolute
@@ -40,7 +44,6 @@ $line-color: red
 
   .line
     position: absolute
-    pointer-events: auto
     .action
       position: absolute
       display: flex
@@ -59,7 +62,10 @@ $line-color: red
 
   .h-container, .v-container
     position: absolute
-    background: lightblue
+    .lines
+      pointer-events: none
+    &:hover .lines
+      pointer-events: auto
 
   .h-container
     left: $thick
@@ -92,9 +98,7 @@ $line-color: red
     left: 0
     width: $thick
     height: calc(100% - #{$thick})
-    border-top: 1px solid $border-color
     border-right: 1px solid $border-color
-    margin-top: -1px
     .line
       width: 100vw
       left: 0

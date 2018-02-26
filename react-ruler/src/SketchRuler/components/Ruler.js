@@ -13,7 +13,6 @@ export default class Ruler extends Component {
   componentDidMount () {
     Object.assign(this, this.context)
     this.handleResize()
-    window.addEventListener('resize', this.handleResize)
   }
   componentWillReceiveProps (nextProps) {
     const widthChange = this.props.width !== nextProps.width
@@ -22,13 +21,17 @@ export default class Ruler extends Component {
   }
   componentDidUpdate () {
     const { start, select } = this.props
-    this.shouldResize && this.handleResize(false)
+    this.shouldResize && this.handleResize()
     this.drawRuler(start, select)
   }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize)
+  drawRuler () {
+    throw new Error('请务必重载drawRuler方法')
   }
-  handleResize = (redraw=true) => {
+  setCanvasRef = (ref) => {
+    this.$canvas = ref
+    this.canvasContext = ref && ref.getContext('2d')
+  }
+  handleResize = () => {
     const { width, height } = this.props
 
     // 实际宽高
@@ -37,10 +40,10 @@ export default class Ruler extends Component {
     // 比例宽高
     this.width = width * this.ratio
     this.height = height * this.ratio
-    this.ruler.width = this.width
-    this.ruler.height = this.height
+    this.$canvas.width = this.width
+    this.$canvas.height = this.height
 
-    const ctx = this.ruler.getContext('2d')
+    const ctx = this.$canvas.getContext('2d')
     ctx.font = `${12 * this.ratio}px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif`
     ctx.lineWidth = this.ratio
     ctx.strokeStyle = this.fgColor
@@ -49,16 +52,6 @@ export default class Ruler extends Component {
 
     const { start, select } = this.props
     this.drawRuler(start, select)
-  }
-  checkLock () {
-    if (this.lock) return true
-    this.lock = true
-    setTimeout(() => {
-      this.lock = false
-    }, 17)
-  }
-  drawRuler () {
-    console.error('请务必重载drawRuler方法')
   }
   handleEnter = (e) => {
     const { offsetX } = e.nativeEvent
@@ -69,7 +62,6 @@ export default class Ruler extends Component {
   }
   handleMove = (e) => {
     if (!this.state.showIndicator) return
-    if (this.checkLock()) return
     const { offsetX, offsetY } = e.nativeEvent
     const value = this.vertical ? offsetY : offsetX
     this.setState({ value })
@@ -118,7 +110,7 @@ export default class Ruler extends Component {
     return (
       <div className={className}>
         <canvas className="ruler"
-          ref={ref => this.ruler = ref}
+          ref={this.setCanvasRef}
           onClick={this.handleAdd}
           onMouseEnter={this.handleEnter}
           onMouseMove={this.handleMove}

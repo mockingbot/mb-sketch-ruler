@@ -1,3 +1,4 @@
+import { throttle, RULER_THROTTLE } from '../utils'
 import Ruler from './Ruler'
 
 export default class VerRuler extends Ruler {
@@ -6,7 +7,7 @@ export default class VerRuler extends Ruler {
     this.vertical = true
   }
   /* override */
-  drawRuler (start, shadow) {
+  drawRuler = throttle((start, shadow) => {
     const {
       ctx, fontColor, shadowColor, bgColor,
       fontScale, width, height, ratio
@@ -60,5 +61,5 @@ export default class VerRuler extends Ruler {
     ctx.stroke()
     ctx.closePath()
     ctx.translate(0, start * ratio)
-  }
+  }, RULER_THROTTLE)
 }
