@@ -1,53 +1,62 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import HorRuler from './components/HorRuler'
-import VerRuler from './components/VerRuler'
+import RulerWrapper from './components/RulerWrapper'
 
-import { getPixelRatio, contextTypes } from './utils'
+import { getPixelRatio } from './utils'
 
 import './index.css'
 
+const fontScale = 0.83
+
 export default class SketchRuler extends Component {
-  getChildContext () {
-    const { props } = this
-    return {
-      perWidth: props.perWidth,
-      scale: props.perWidth / 10,
-      fontScale: 0.83, // 10 / 12
-      ratio: getPixelRatio(),
-      bgColor: props.bgColor,
-      fgColor: props.fgColor,
-      fontColor: props.fontColor,
-      shadowColor: props.shadowColor,
-      onLineChange: this.onLineChange
+  constructor (props) {
+    super(props)
+    const { fontColor, shadowColor, bgColor, fgColor, ratio } = props
+    this.canvasConfigs = {
+      bgColor,
+      fgColor,
+      fontColor,
+      shadowColor,
+      ratio,
+      fontScale,
     }
   }
-  onLineChange = (arr, vertical) => {
+  handleLineChange = (arr, vertical) => {
     const { horLineArr, verLineArr, handleLine } = this.props
-    const newLines = {
-      h: vertical ? horLineArr: arr,
-      v: vertical ? arr : verLineArr
-    }
+    const newLines = vertical
+      ? { h: horLineArr, v: arr }
+      : { h: arr, v: verLineArr}
     handleLine(newLines)
   }
 
   render () {
     const {
-      thick, width, height, bgColor, horLineArr,
-      verLineArr, shadow, startX, startY, cornerActive, onCornerClick
+      width, height, perWidth, bgColor,
+      thick, shadow, startX, startY, cornerActive,
+      horLineArr, verLineArr, onCornerClick
     } = this.props
+
+    const scale = perWidth / 10
     const { x, y, width: w, height: h } = shadow
+
+    const commonProps = {
+      scale,
+      perWidth,
+      canvasConfigs: this.canvasConfigs,
+      onLineChange: this.handleLineChange
+    }
 
     return (
       <div id="mb-ruler" className="mb-ruler">
-        <HorRuler width={width} height={thick} start={startX} lines={horLineArr} select={{ x, width: w }} />
-        <VerRuler width={thick} height={height} start={startY} lines={verLineArr} select={{ y, height: h }} />
+        {/* 水平方向 */}
+        <RulerWrapper width={width} height={thick} start={startX} lines={horLineArr} selectStart={x} selectLength={w} {...commonProps} />
+        {/* 竖直方向 */}
+        <RulerWrapper width={thick} height={height} start={startY} lines={verLineArr} selectStart={y} selectLength={h} vertical {...commonProps} />
         <a className={`corner${cornerActive ? ' active' : ''}`} style={{ backgroundColor: bgColor }} onClick={onCornerClick} />
       </div>
     )
   }
 }
-SketchRuler.childContextTypes = contextTypes
 SketchRuler.propTypes = {
   thick: PropTypes.number,
   width: PropTypes.number,
