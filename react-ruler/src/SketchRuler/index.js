@@ -4,8 +4,6 @@ import RulerWrapper from './RulerWrapper'
 
 import './index.css'
 
-const fontScale = 0.83
-
 export default class SketchRuler extends PureComponent {
   constructor (props) {
     super(props)
@@ -15,8 +13,7 @@ export default class SketchRuler extends PureComponent {
       fgColor,
       fontColor,
       shadowColor,
-      ratio,
-      fontScale,
+      ratio
     }
   }
   handleLineChange = (arr, vertical) => {

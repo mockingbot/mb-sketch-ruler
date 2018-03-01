@@ -42,7 +42,7 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
   ctx.fillStyle = fontColor
 
   for (let value = startValue, count = 0 ; value < endValue ; value += gridSize, count ++) {
-    const x = offsetX + count * gridPixel + 0.5 * ratio // prevent canvas 1px line blurry
+    const x = offsetX + count * gridPixel + 0.5 // prevent canvas 1px line blurry
     ctx.moveTo(x, height)
     if (value % gridSize_10 === 0) {
       ctx.save()
@@ -97,7 +97,7 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
   ctx.fillStyle = fontColor
 
   for (let value = startValue, count = 0; value < endValue ; value += gridSize, count ++) {
-    const y = offsetY + count * gridPixel
+    const y = offsetY + count * gridPixel + 0.5
     ctx.moveTo(width, y)
     if (value % gridSize_10 === 0) {
       ctx.save() // 这里先保存一下状态

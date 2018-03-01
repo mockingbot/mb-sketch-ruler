@@ -8,11 +8,12 @@ export default class RulerWrapper extends PureComponent {
   constructor () {
     super()
     this.state = {
+      isDraggingLine: false,
       showIndicator: false,
       value: 0
     }
   }
-  handleIndicatorShow = (value) => this.setState({ showIndicator: true, value })
+  handleIndicatorShow = (value) => !this.state.isDraggingLine && this.setState({ showIndicator: true, value })
   handleIndicatorMove = (value) => this.state.showIndicator && this.setState({ value })
   handleIndicatorHide = () => this.setState({ showIndicator: false })
   handleNewLine = (value) => {
@@ -20,24 +21,27 @@ export default class RulerWrapper extends PureComponent {
     lines.push(value)
     onLineChange(lines, vertical)
   }
+
+  handleLineDown = () => this.setState({ isDraggingLine: true })
+  handleLineRelease = () => this.setState({ isDraggingLine: false })
   handleLineChange = (value, index) => {
     // 左右或上下超出时, 删除该条对齐线
-    const { start, scale, width, height } = this.props
+    const { vertical, start, scale, width, height } = this.props
     const offset = value - start
-    const maxOffset = (this.vertical ? height : width) / scale
+    const maxOffset = (vertical ? height : width) / scale
 
     if (offset < 0 || offset > maxOffset) {
       this.handleLineRemove(index)
     } else {
       const { lines, onLineChange } = this.props
       lines[index] = value
-      onLineChange(lines, this.vertical)
+      onLineChange(lines, vertical)
     }
   }
   handleLineRemove = (index) => {
-    const { lines, onLineChange } = this.props
+    const { vertical, lines, onLineChange } = this.props
     lines.splice(index, 1)
-    onLineChange(lines, this.vertical)
+    onLineChange(lines, vertical)
   }
   render () {
     const { vertical, scale, width, height, start, selectStart, selectLength, lines, canvasConfigs } = this.props
@@ -75,6 +79,8 @@ export default class RulerWrapper extends PureComponent {
                 vertical={vertical}
                 onChange={this.handleLineChange}
                 onRemove={this.handleLineRemove}
+                onMouseDown={this.handleLineDown}
+                onRelease={this.handleLineRelease}
               />
             )
           }

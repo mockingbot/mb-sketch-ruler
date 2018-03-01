@@ -62,14 +62,13 @@ export default class App extends PureComponent {
       x: 0,
       y: 0,
       width: rectWidth,
-      height: rectHeight,
+      height: rectHeight
     }
 
     return (
       <div className="wrapper">
         <div className="scale-value">{`scale: ${scale}`}</div>
         <SketchRuler
-          ratio={1}
           thick={thick}
           scale={scale}
           width={582}

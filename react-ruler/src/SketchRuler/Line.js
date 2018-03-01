@@ -3,21 +3,22 @@ import React, { PureComponent } from 'react'
 
 export default class Line extends PureComponent {
   handleDown = (e) => {
-    const { value, vertical } = this.props
-    this.startValue = value
-    this.startOffset = vertical ? e.clientY : e.clientX
-    document.addEventListener('mousemove', this.handleMove)
-    document.addEventListener('mouseup', this.handleUp)
-  }
-  handleMove = (e) => {
-    const { vertical, index, scale, onChange } = this.props
-    const offset = vertical ? e.clientY : e.clientX
-    const newValue = Math.round(this.startValue + (offset - this.startOffset) / scale)
-    onChange(newValue, index)
-  }
-  handleUp = () => {
-    document.removeEventListener('mousemove', this.handleMove)
-    document.removeEventListener('mouseup', this.handleUp)
+    const { vertical, index, value, scale, onChange, onMouseDown, onRelease } = this.props
+    const startValue = value
+    const startD = vertical ? e.clientY : e.clientX
+    onMouseDown()
+    const onMove = (e) => {
+      const currentD = vertical ? e.clientY : e.clientX
+      const newValue = Math.round(startValue + (currentD - startD) / scale)
+      onChange(newValue, index)
+    }
+    const onEnd = () => {
+      onRelease()
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onEnd)
+    }
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onEnd)
   }
   handleRemove = () => {
     const { index, onRemove } = this.props
