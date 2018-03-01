@@ -3,6 +3,8 @@ import React, { PureComponent } from 'react'
 
 import { drawHorizontalRuler, drawVerticalRuler } from './utils'
 
+const getValueByOffset = (offset, start, scale) => Math.round(start + offset / scale)
+
 export default class CanvasRuler extends PureComponent {
   componentDidMount () {
     this.updateCanvasContext()
@@ -30,11 +32,10 @@ export default class CanvasRuler extends PureComponent {
     ctx.lineWidth = ratio
     ctx.strokeStyle = fgColor
     ctx.textBaseline = 'middle'
-    // this.ctx = ctx
   }
   drawRuler () {
-    const { start, perWidth, width, height, selectStart, selectLength, canvasConfigs } = this.props
-    const options = { width, height, perWidth, canvasConfigs }
+    const { start, scale, width, height, selectStart, selectLength, canvasConfigs } = this.props
+    const options = { scale, width, height, canvasConfigs }
     if (this.props.vertical) {
       drawVerticalRuler(this.canvasContext, start, { y: selectStart, height: selectLength }, options)
     } else {
@@ -45,34 +46,28 @@ export default class CanvasRuler extends PureComponent {
     this.$canvas = ref
     this.canvasContext = ref && ref.getContext('2d')
   }
-  handleAdd = (e) => {
-    const { vertical, scale, start, lines, onAddLine } = this.props
-    const { offsetX, offsetY } = e.nativeEvent
-    const value = start + (vertical ? offsetY : offsetX)
-    lines.push(value / scale >> 0)
-    onAddLine(lines, vertical)
+  handleClick = (e) => {
+    const { vertical, scale, start, onAddLine } = this.props
+    const offset = vertical ? e.nativeEvent.offsetY : e.nativeEvent.offsetX
+    onAddLine(getValueByOffset(offset, start, scale))
   }
   handleEnter = (e) => {
-    const { offsetX } = e.nativeEvent
-    this.setState({
-      showIndicator: true,
-      value: offsetX
-    })
+    const { vertical, scale, start, onIndicatorShow } = this.props
+    const offset = vertical ? e.nativeEvent.offsetY : e.nativeEvent.offsetX
+    onIndicatorShow(getValueByOffset(offset, start, scale))
   }
   handleMove = (e) => {
-    if (!this.state.showIndicator) return
-    const { offsetX, offsetY } = e.nativeEvent
-    const value = this.vertical ? offsetY : offsetX
-    this.setState({ value })
+    const { vertical, scale, start, onIndicatorMove } = this.props
+    const offset = vertical ? e.nativeEvent.offsetY : e.nativeEvent.offsetX
+    onIndicatorMove(getValueByOffset(offset, start, scale))
   }
-  handleLeave = () => {
-    this.setState({ showIndicator: false })
-  }
+  handleLeave = () => this.props.onIndicatorHide()
+
   render () {
     return (
       <canvas className="ruler"
         ref={this.setCanvasRef}
-        onClick={this.handleAdd}
+        onClick={this.handleClick}
         onMouseEnter={this.handleEnter}
         onMouseMove={this.handleMove}
         onMouseLeave={this.handleLeave}

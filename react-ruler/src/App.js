@@ -5,7 +5,7 @@ const thick = 16
 
 export default class App extends PureComponent {
   state = {
-    scale: 0.41, //658813476562495, //1,
+    scale: 2, //658813476562495, //1,
     startX: 0,
     startY: 0,
     lines: {
@@ -50,8 +50,6 @@ export default class App extends PureComponent {
     const { scale, startX, startY, lines } = this.state
     const { h, v } = lines
 
-    const perWidth = scale * 10
-
     const rectWidth = 160
     const rectHeight = 200
 
@@ -71,13 +69,14 @@ export default class App extends PureComponent {
       <div className="wrapper">
         <div className="scale-value">{`scale: ${scale}`}</div>
         <SketchRuler
+          ratio={1}
           thick={thick}
+          scale={scale}
           width={582}
           height={482}
           startX={startX}
           startY={startY}
           shadow={shadow}
-          perWidth={perWidth}
           horLineArr={h}
           verLineArr={v}
           handleLine={this.handleLine}

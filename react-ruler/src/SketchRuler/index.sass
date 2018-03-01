@@ -27,6 +27,7 @@ $core-color: #EB5648
     pointer-events: auto
     cursor: pointer
     transition: all 0.2s ease-in-out
+    box-sizing: content-box
     &.active
       background-color: rgba($core-color, 0.6) !important
 
@@ -71,7 +72,7 @@ $core-color: #EB5648
     left: $thick
     top: 0
     width: calc(100% - #{$thick})
-    height: $thick
+    height: $thick + 1px
     border-bottom: 1px solid $border-color
     .line
       height: 100vh
@@ -96,7 +97,7 @@ $core-color: #EB5648
   .v-container
     top: $thick
     left: 0
-    width: $thick
+    width: $thick + 1px
     height: calc(100% - #{$thick})
     border-right: 1px solid $border-color
     .line

@@ -2,18 +2,6 @@ import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 
 export default class Line extends PureComponent {
-  getStyle () {
-    // TODO 超出最大值也需要隐藏
-    const { vertical, offset, scale, value } = this.props
-    const val = offset + value * scale
-
-    if (val < 0) return { display: 'none' }
-    if (vertical) {
-      return { top: val }
-    } else {
-      return { left: val }
-    }
-  }
   handleDown = (e) => {
     const { value, vertical } = this.props
     this.startValue = value
@@ -31,16 +19,19 @@ export default class Line extends PureComponent {
     document.removeEventListener('mousemove', this.handleMove)
     document.removeEventListener('mouseup', this.handleUp)
   }
-
   handleRemove = () => {
     const { index, onRemove } = this.props
     onRemove(index)
   }
+
   render () {
-    const { value } = this.props
-    const style = this.getStyle()
+    const { vertical, start, scale, value } = this.props
+    const offset = (value - start) * scale
+    if (offset < 0) return null
+    const lineStyle = vertical ? { top: offset } : { left: offset }
+
     return (
-      <div className="line" style={style} onMouseDown={this.handleDown}>
+      <div className="line" style={lineStyle} onMouseDown={this.handleDown}>
         <div className="action">
           <span className="del" onClick={this.handleRemove}>&times;</span>
           <span className="value">{value}</span>

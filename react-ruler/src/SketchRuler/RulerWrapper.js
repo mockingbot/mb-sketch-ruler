@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 import CanvasRuler from './CanvasRuler'
 import Line from './Line'
 
-export default class RulerWrapper extends Component {
+export default class RulerWrapper extends PureComponent {
   constructor () {
     super()
     this.state = {
@@ -13,20 +13,18 @@ export default class RulerWrapper extends Component {
     }
   }
   handleIndicatorShow = (value) => this.setState({ showIndicator: true, value })
-  handleIndicatorMove = (value) => this.setState({ value })
+  handleIndicatorMove = (value) => this.state.showIndicator && this.setState({ value })
   handleIndicatorHide = () => this.setState({ showIndicator: false })
-  handleNewLine = (e) => {
-    const { vertical, scale, start, lines, onLineChange } = this.props
-    const { offsetX, offsetY } = e.nativeEvent
-    const value = start + (vertical ? offsetY : offsetX)
-    lines.push(value / scale >> 0)
+  handleNewLine = (value) => {
+    const { vertical, lines, onLineChange } = this.props
+    lines.push(value)
     onLineChange(lines, vertical)
   }
   handleLineChange = (value, index) => {
     // 左右或上下超出时, 删除该条对齐线
-    const { start, width, height } = this.props
+    const { start, scale, width, height } = this.props
     const offset = value - start
-    const maxOffset = this.vertical ? height : width
+    const maxOffset = (this.vertical ? height : width) / scale
 
     if (offset < 0 || offset > maxOffset) {
       this.handleLineRemove(index)
@@ -42,11 +40,12 @@ export default class RulerWrapper extends Component {
     onLineChange(lines, this.vertical)
   }
   render () {
-    const { vertical, scale, width, height, start, selectStart, selectLength, lines, perWidth, canvasConfigs } = this.props
+    const { vertical, scale, width, height, start, selectStart, selectLength, lines, canvasConfigs } = this.props
     const { showIndicator, value } = this.state
     const className = vertical ? 'v-container' : 'h-container'
-    const indicatorStyle = vertical ? { top: value } : { left: value }
-    const indicatorValue = (start + value) / scale >> 0
+
+    const indicatorOffset = (value - start) * scale
+    const indicatorStyle = vertical ? { top: indicatorOffset } : { left: indicatorOffset }
 
     return (
       <div className={className}>
@@ -58,7 +57,6 @@ export default class RulerWrapper extends Component {
           start={start}
           selectStart={selectStart}
           selectLength={selectLength}
-          perWidth={perWidth}
           canvasConfigs={canvasConfigs}
           onAddLine={this.handleNewLine}
           onIndicatorShow={this.handleIndicatorShow}
@@ -73,7 +71,7 @@ export default class RulerWrapper extends Component {
                 index={i}
                 value={v >> 0}
                 scale={scale}
-                offset={-start}
+                start={start}
                 vertical={vertical}
                 onChange={this.handleLineChange}
                 onRemove={this.handleLineRemove}
@@ -84,7 +82,7 @@ export default class RulerWrapper extends Component {
         {
           showIndicator &&
           <div className="indicator" style={indicatorStyle}>
-            <span className="value">{indicatorValue}</span>
+            <span className="value">{value}</span>
           </div>
         }
       </div>

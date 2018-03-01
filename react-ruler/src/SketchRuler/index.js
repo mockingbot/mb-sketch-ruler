@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import RulerWrapper from './components/RulerWrapper'
-
-import { getPixelRatio } from './utils'
+import React, { PureComponent } from 'react'
+import RulerWrapper from './RulerWrapper'
 
 import './index.css'
 
 const fontScale = 0.83
 
-export default class SketchRuler extends Component {
+export default class SketchRuler extends PureComponent {
   constructor (props) {
     super(props)
     const { fontColor, shadowColor, bgColor, fgColor, ratio } = props
@@ -24,24 +22,22 @@ export default class SketchRuler extends Component {
   handleLineChange = (arr, vertical) => {
     const { horLineArr, verLineArr, handleLine } = this.props
     const newLines = vertical
-      ? { h: horLineArr, v: arr }
-      : { h: arr, v: verLineArr}
+      ? { h: horLineArr, v: [...arr] }
+      : { h: [...arr], v: verLineArr}
     handleLine(newLines)
   }
 
   render () {
     const {
-      width, height, perWidth, bgColor,
+      width, height, scale, bgColor,
       thick, shadow, startX, startY, cornerActive,
       horLineArr, verLineArr, onCornerClick
     } = this.props
 
-    const scale = perWidth / 10
     const { x, y, width: w, height: h } = shadow
 
     const commonProps = {
       scale,
-      perWidth,
       canvasConfigs: this.canvasConfigs,
       onLineChange: this.handleLineChange
     }
@@ -58,6 +54,7 @@ export default class SketchRuler extends Component {
   }
 }
 SketchRuler.propTypes = {
+  ratio: PropTypes.number,
   thick: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
@@ -79,10 +76,10 @@ SketchRuler.defaultProps = {
   shadowColor: '#F2F2F3', // 阴影颜色
   horLineValue: [100, 200],
   verLineValue: [100, 200],
+  scale: 1,
   startX: 0,
   startY: 0,
-  perWidth: 10,
-  ratio: getPixelRatio(),
+  ratio: window.devicePixelRatio || 1,
   shadow: {
     x: 200,
     y: 100,
