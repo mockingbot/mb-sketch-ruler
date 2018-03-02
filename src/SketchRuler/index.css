@@ -1,0 +1,106 @@
+.mb-ruler {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  font-size: 12px;
+  overflow: hidden; }
+  .mb-ruler span {
+    line-height: 1; }
+  .mb-ruler .corner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-right: 1px solid #DADADC;
+    border-bottom: 1px solid #DADADC;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-sizing: content-box; }
+    .mb-ruler .corner.active {
+      background-color: rgba(235, 86, 72, 0.6) !important; }
+  .mb-ruler .indicator {
+    position: absolute;
+    pointer-events: none; }
+    .mb-ruler .indicator .value {
+      position: absolute;
+      background: white; }
+  .mb-ruler .ruler {
+    width: 100%;
+    height: 100%;
+    pointer-events: auto; }
+  .mb-ruler .line {
+    position: absolute; }
+    .mb-ruler .line .action {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center; }
+    .mb-ruler .line .value {
+      pointer-events: none;
+      transform: scale(0.83); }
+    .mb-ruler .line .del {
+      cursor: pointer;
+      padding: 3px 5px;
+      visibility: hidden; }
+    .mb-ruler .line:hover .del {
+      visibility: visible; }
+  .mb-ruler .h-container, .mb-ruler .v-container {
+    position: absolute; }
+    .mb-ruler .h-container .lines, .mb-ruler .v-container .lines {
+      pointer-events: none; }
+    .mb-ruler .h-container:hover .lines, .mb-ruler .v-container:hover .lines {
+      pointer-events: auto; }
+  .mb-ruler .h-container {
+    left: 16px;
+    top: 0;
+    width: calc(100% - 16px);
+    height: 17px;
+    border-bottom: 1px solid #DADADC; }
+    .mb-ruler .h-container .line {
+      height: 100vh;
+      top: 0;
+      padding-left: 5px;
+      border-left: 1px solid #EB5648;
+      cursor: ew-resize; }
+      .mb-ruler .h-container .line .action {
+        top: 16px;
+        transform: translateX(-24px); }
+        .mb-ruler .h-container .line .action .value {
+          margin-left: 4px; }
+    .mb-ruler .h-container .indicator {
+      top: 0;
+      border-left: 1px solid #EB5648;
+      height: 100vw; }
+      .mb-ruler .h-container .indicator .value {
+        margin-left: 2px;
+        margin-top: 4px; }
+  .mb-ruler .v-container {
+    top: 16px;
+    left: 0;
+    width: 17px;
+    height: calc(100% - 16px);
+    border-right: 1px solid #DADADC; }
+    .mb-ruler .v-container .line {
+      width: 100vw;
+      left: 0;
+      padding-top: 5px;
+      border-top: 1px solid #EB5648;
+      cursor: ns-resize; }
+      .mb-ruler .v-container .line .action {
+        left: 16px;
+        transform: translateY(-24px);
+        flex-direction: column; }
+        .mb-ruler .v-container .line .action .value {
+          margin-top: 4px; }
+    .mb-ruler .v-container .indicator {
+      border-bottom: 1px solid #EB5648;
+      width: 100vw; }
+      .mb-ruler .v-container .indicator .value {
+        margin-left: 2px;
+        margin-top: -5px;
+        transform-origin: 0 0;
+        transform: rotate(-90deg); }

@@ -1,3 +1,6 @@
+# TO BE UPDATED !!!
+## The following doc is stale now because of the refactoring by react.js, will be updated later. Just see `src/index.js`.
+
 #A sketch like ruler in javascript [中文介绍](https://github.com/mockingbot/A-sketch-like-ruler-in-javascript/blob/master/README_CN.MD)
 
 ###Introduction
