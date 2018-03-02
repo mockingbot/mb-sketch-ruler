@@ -96,8 +96,14 @@ export default class RulerWrapper extends PureComponent {
   }
 }
 RulerWrapper.propTypes = {
+  vertical: PropTypes.bool,
+  scale: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
   start: PropTypes.number,
   lines: PropTypes.array,
+  selectStart: PropTypes.number,
+  selectLength: PropTypes.number,
+  canvasConfigs: PropTypes.object,
+  onLineChange: PropTypes.func
 }

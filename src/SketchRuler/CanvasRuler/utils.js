@@ -115,7 +115,7 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
 
   ctx.stroke()
   ctx.closePath()
-  // 恢复ctx matrix
 
+  // 恢复ctx matrix
   ctx.setTransform(1, 0, 0, 1, 0, 0)
 }

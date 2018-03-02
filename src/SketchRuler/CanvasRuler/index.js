@@ -76,5 +76,16 @@ export default class CanvasRuler extends PureComponent {
   }
 }
 CanvasRuler.propTypes = {
-  dispatch: PropTypes.func
+  vertical: PropTypes.bool,
+  start: PropTypes.number,
+  scale: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  canvasConfigs: PropTypes.object,
+  selectStart: PropTypes.number,
+  selectLength: PropTypes.number,
+  onAddLine: PropTypes.func,
+  onIndicatorShow: PropTypes.func,
+  onIndicatorMove: PropTypes.func,
+  onIndicatorHide: PropTypes.func
 }

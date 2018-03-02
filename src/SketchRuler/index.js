@@ -20,7 +20,7 @@ export default class SketchRuler extends PureComponent {
     const { horLineArr, verLineArr, handleLine } = this.props
     const newLines = vertical
       ? { h: horLineArr, v: [...arr] }
-      : { h: [...arr], v: verLineArr}
+      : { h: [...arr], v: verLineArr }
     handleLine(newLines)
   }
 
@@ -51,11 +51,15 @@ export default class SketchRuler extends PureComponent {
   }
 }
 SketchRuler.propTypes = {
+  scale: PropTypes.number,
   ratio: PropTypes.number,
   thick: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
   bgColor: PropTypes.string,
+  fgColor: PropTypes.string,
+  fontColor: PropTypes.string,
+  shadowColor: PropTypes.string,
   startX: PropTypes.number,
   startY: PropTypes.number,
   shadow: PropTypes.object,

@@ -43,10 +43,13 @@ export default class Line extends PureComponent {
 }
 Line.propTypes = {
   index: PropTypes.number,
+  start: PropTypes.number,
   vertical: PropTypes.bool,
   offset: PropTypes.number,
   scale: PropTypes.number,
   value: PropTypes.number,
   onChange: PropTypes.func,
-  onRemove: PropTypes.func
+  onRemove: PropTypes.func,
+  onMouseDown: PropTypes.func,
+  onRelease: PropTypes.func
 }
