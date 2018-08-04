@@ -2,18 +2,21 @@ import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import RulerWrapper from './RulerWrapper'
 
-import './index.css'
+import { StyledRuler } from './styles'
 
 export default class SketchRuler extends PureComponent {
   constructor (props) {
     super(props)
-    const { fontColor, shadowColor, bgColor, fgColor, ratio } = props
+    const { ratio, palette } = props
     this.canvasConfigs = {
-      bgColor,
-      fgColor,
-      fontColor,
-      shadowColor,
-      ratio
+      ratio,
+      bgColor: palette.bgColor,
+      fgColor: palette.fgColor,
+      fontColor: palette.fontColor,
+      shadowColor: palette.shadowColor,
+      lineColor: palette.lineColor,
+      borderColor: palette.borderColor,
+      cornerActiveColor: palette.cornerActiveColor
     }
   }
   handleLineChange = (arr, vertical) => {
@@ -40,13 +43,13 @@ export default class SketchRuler extends PureComponent {
     }
 
     return (
-      <div id="mb-ruler" className="mb-ruler">
+      <StyledRuler id="mb-ruler" className="mb-ruler" thick={thick} {...this.canvasConfigs}>
         {/* 水平方向 */}
         <RulerWrapper width={width} height={thick} start={startX} lines={horLineArr} selectStart={x} selectLength={w} {...commonProps} />
         {/* 竖直方向 */}
         <RulerWrapper width={thick} height={height} start={startY} lines={verLineArr} selectStart={y} selectLength={h} vertical {...commonProps} />
         <a className={`corner${cornerActive ? ' active' : ''}`} style={{ backgroundColor: bgColor }} onClick={onCornerClick} />
-      </div>
+      </StyledRuler>
     )
   }
 }
@@ -56,10 +59,6 @@ SketchRuler.propTypes = {
   thick: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
-  bgColor: PropTypes.string,
-  fgColor: PropTypes.string,
-  fontColor: PropTypes.string,
-  shadowColor: PropTypes.string,
   startX: PropTypes.number,
   startY: PropTypes.number,
   shadow: PropTypes.object,
@@ -68,13 +67,18 @@ SketchRuler.propTypes = {
   handleLine: PropTypes.func,
   cornerActive: PropTypes.bool,
   onCornerClick: PropTypes.func,
+  palette: PropTypes.shape({
+    bgColor: PropTypes.string,
+    fgColor: PropTypes.string,
+    fontColor: PropTypes.string,
+    shadowColor: PropTypes.string,
+    lineColor: PropTypes.string,
+    borderColor: PropTypes.string,
+    cornerActiveColor: PropTypes.string
+  })
 }
 SketchRuler.defaultProps = {
-  thick: 20,
-  bgColor: '#F9FAFB', // 背景颜色
-  fgColor: '#DEDEE4', // 刻度颜色
-  fontColor: '#8D9EA7', // 字体颜色
-  shadowColor: '#F2F2F3', // 阴影颜色
+  thick: 16,
   horLineValue: [100, 200],
   verLineValue: [100, 200],
   scale: 1,
@@ -86,5 +90,14 @@ SketchRuler.defaultProps = {
     y: 100,
     width: 200,
     height: 400
+  },
+  palette: {
+    bgColor: '#F9FAFB', // ruler bg color
+    fgColor: '#DEDEE4', // ruler mark color
+    fontColor: '#8D9EA7', // ruler font color
+    shadowColor: '#F2F2F3', // ruler shadow color
+    lineColor: '#EB5648',
+    borderColor: '#DADADC',
+    cornerActiveColor: '#EB5648'
   }
 }
