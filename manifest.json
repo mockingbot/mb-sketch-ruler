@@ -1,6 +1,6 @@
 {
-  "short_name": "react-ruler",
-  "name": "react-ruler",
+  "short_name": "mb-sketch-ruler",
+  "name": "mb-sketch-ruler",
   "start_url": "./index.html",
   "display": "standalone",
   "theme_color": "#000000",
