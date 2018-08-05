@@ -25,8 +25,7 @@ export const StyledRuler = styled.div`
     transition: all 0.2s ease-in-out;
     box-sizing: content-box;
     &.active {
-      background-color: rgba(${props => props.coreColor}) !important;
-      opacity: 0.6;
+      background-color: ${props => props.cornerActiveColor} !important;
     }
   }
 

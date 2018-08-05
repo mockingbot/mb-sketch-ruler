@@ -1,0 +1,21 @@
+{
+  "name": "mb-sketch-ruler-example",
+  "homepage": "https://mockingbot.github.io/mb-sketch-ruler",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "mb-sketch-ruler": "link:..",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-scripts": "^1.1.4",
+    "styled-components": "^3.2.6"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

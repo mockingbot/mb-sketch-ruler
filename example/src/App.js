@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import SketchRuler from './SketchRuler'
+import ReactRuler from 'mb-sketch-ruler'
 
 const thick = 16
 
@@ -68,7 +68,7 @@ export default class App extends PureComponent {
     return (
       <div className="wrapper">
         <div className="scale-value">{`scale: ${scale}`}</div>
-        <SketchRuler
+        <ReactRuler
           thick={thick}
           scale={scale}
           width={582}
