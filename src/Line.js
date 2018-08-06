@@ -2,18 +2,24 @@ import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 
 export default class Line extends PureComponent {
+  constructor (props) {
+    super(props)
+    this.state = {
+      value: props.value
+    }
+  }
   handleDown = (e) => {
-    const { vertical, index, value, scale, onChange, onMouseDown, onRelease } = this.props
-    const startValue = value
+    const { vertical, index, scale, onMouseDown, onRelease } = this.props
+    const { value: startValue } = this.state
     const startD = vertical ? e.clientY : e.clientX
     onMouseDown()
     const onMove = (e) => {
       const currentD = vertical ? e.clientY : e.clientX
       const newValue = Math.round(startValue + (currentD - startD) / scale)
-      onChange(newValue, index)
+      this.setState({ value: newValue })
     }
     const onEnd = () => {
-      onRelease()
+      onRelease(this.state.value, index)
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseup', onEnd)
     }
@@ -26,7 +32,8 @@ export default class Line extends PureComponent {
   }
 
   render () {
-    const { vertical, start, scale, value } = this.props
+    const { vertical, start, scale } = this.props
+    const { value } = this.state
     const offset = (value - start) * scale
     if (offset < 0) return null
     const lineStyle = vertical ? { top: offset } : { left: offset }
@@ -45,10 +52,8 @@ Line.propTypes = {
   index: PropTypes.number,
   start: PropTypes.number,
   vertical: PropTypes.bool,
-  offset: PropTypes.number,
   scale: PropTypes.number,
   value: PropTypes.number,
-  onChange: PropTypes.func,
   onRemove: PropTypes.func,
   onMouseDown: PropTypes.func,
   onRelease: PropTypes.func
