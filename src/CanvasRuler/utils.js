@@ -12,7 +12,7 @@ const FONT_SCALE = 0.83 // 10 / 12
 
 export const drawHorizontalRuler = (ctx, start, shadow, options) => {
   const { scale, width, height, canvasConfigs } = options
-  const { bgColor, fontColor, shadowColor, ratio } = canvasConfigs
+  const { bgColor, fontColor, shadowColor, ratio, lfgColor, sfgColor } = canvasConfigs
 
   // 缩放ctx, 以简化计算
   ctx.scale(ratio, ratio)
@@ -40,23 +40,37 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
   // 3. 画刻度和文字(因为刻度遮住了阴影)
   ctx.beginPath() // 一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制
   ctx.fillStyle = fontColor
+  ctx.font = 'Helvetica Neue'
 
+  // 长间隔和短间隔需要两次绘制，才可以完成不同颜色的设置；分开放到两个for循环是为了节省性能，因为如果放到一个for循环的话，每次循环都会重新绘制操作dom
+  // 绘制长间隔和文字
   for (let value = startValue, count = 0 ; value < endValue ; value += gridSize, count ++) {
     const x = offsetX + count * gridPixel + 0.5 // prevent canvas 1px line blurry
-    ctx.moveTo(x, height)
+    ctx.moveTo(x, 0)
     if (value % gridSize_10 === 0) {
       ctx.save()
       ctx.translate(x, height * 0.4)
       ctx.scale(FONT_SCALE / ratio, FONT_SCALE / ratio)
-      ctx.fillText(value, 4 * ratio, 0)
+      ctx.fillText(value, 4 * ratio, 6 * ratio)
       ctx.restore()
-      ctx.lineTo(x, 0)
-    } else {
-      ctx.lineTo(x, height * 2 / 3)
+      ctx.strokeStyle = lfgColor
+      ctx.lineTo(x, height * 1 / 2)
+      ctx.stroke()
     }
   }
+  ctx.closePath()
 
-  ctx.stroke()
+  // 绘制短间隔
+  ctx.beginPath()
+  for (let value = startValue, count = 0 ; value < endValue ; value += gridSize, count ++) {
+    const x = offsetX + count * gridPixel + 0.5 // prevent canvas 1px line blurry
+    ctx.moveTo(x, 0)
+    if (value % gridSize_10 !== 0) {
+      ctx.strokeStyle = sfgColor
+      ctx.lineTo(x, height * 1 / 4)
+      ctx.stroke()
+    }
+  }
   ctx.closePath()
 
   // 恢复ctx matrix
@@ -65,7 +79,7 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
 
 export const drawVerticalRuler = (ctx, start, shadow, options) => {
   const { scale, width, height, canvasConfigs } = options
-  const { bgColor, fontColor, shadowColor, ratio } = canvasConfigs
+  const { bgColor, fontColor, shadowColor, ratio, lfgColor, sfgColor } = canvasConfigs
 
   // 缩放ctx, 以简化计算
   ctx.scale(ratio, ratio)
@@ -95,25 +109,36 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
   // 3. 画刻度和文字(因为刻度遮住了阴影)
   ctx.beginPath() // 一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制
   ctx.fillStyle = fontColor
+  ctx.font = 'Helvetica Neue'
 
   for (let value = startValue, count = 0; value < endValue ; value += gridSize, count ++) {
     const y = offsetY + count * gridPixel + 0.5
-    ctx.moveTo(width, y)
+    ctx.moveTo(0, y)
     if (value % gridSize_10 === 0) {
       ctx.save() // 这里先保存一下状态
       ctx.translate(width * 0.4, y) // 将原点转移到当前画笔所在点
       ctx.rotate(-Math.PI / 2) // 旋转 -90 度
       ctx.scale(FONT_SCALE / ratio, FONT_SCALE / ratio) // 缩放至10px
-      ctx.fillText(value, 4 * ratio, 0) // 画文字
+      ctx.fillText(value, 4 * ratio, 6 * ratio) // 绘制文字
       // 回复刚刚保存的状态
       ctx.restore()
-      ctx.lineTo(0, y)
-    } else {
-      ctx.lineTo(width * 2 / 3, y)
+      ctx.strokeStyle = lfgColor // 设置长间隔的颜色
+      ctx.lineTo(width * 1 / 2, y)
+      ctx.stroke() // 绘制
     }
   }
+  ctx.closePath() // 长间隔和文字绘制关闭
 
-  ctx.stroke()
+  ctx.beginPath() // 开始绘制短间隔
+  for (let value = startValue, count = 0; value < endValue ; value += gridSize, count ++) {
+    const y = offsetY + count * gridPixel + 0.5
+    ctx.moveTo(0, y)
+    if (value % gridSize_10 !== 0) {
+      ctx.strokeStyle = sfgColor
+      ctx.lineTo(width * 1 / 4, y)
+      ctx.stroke()
+    }
+  }
   ctx.closePath()
 
   // 恢复ctx matrix
