@@ -51,13 +51,13 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
       ctx.save()
       ctx.translate(x, height * 0.4)
       ctx.scale(FONT_SCALE / ratio, FONT_SCALE / ratio)
-      ctx.fillText(value, 4 * ratio, 6 * ratio)
+      ctx.fillText(value, 4 * ratio, 7 * ratio)
       ctx.restore()
       ctx.strokeStyle = lfgColor
-      ctx.lineTo(x, height * 1 / 2)
-      ctx.stroke()
+      ctx.lineTo(x, height * 9 / 16)
     }
   }
+  ctx.stroke()
   ctx.closePath()
 
   // 绘制短间隔
@@ -68,9 +68,9 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
     if (value % gridSize_10 !== 0) {
       ctx.strokeStyle = sfgColor
       ctx.lineTo(x, height * 1 / 4)
-      ctx.stroke()
     }
   }
+  ctx.stroke()
   ctx.closePath()
 
   // 恢复ctx matrix
@@ -119,14 +119,14 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
       ctx.translate(width * 0.4, y) // 将原点转移到当前画笔所在点
       ctx.rotate(-Math.PI / 2) // 旋转 -90 度
       ctx.scale(FONT_SCALE / ratio, FONT_SCALE / ratio) // 缩放至10px
-      ctx.fillText(value, 4 * ratio, 6 * ratio) // 绘制文字
+      ctx.fillText(value, 4 * ratio, 7 * ratio) // 绘制文字
       // 回复刚刚保存的状态
       ctx.restore()
       ctx.strokeStyle = lfgColor // 设置长间隔的颜色
-      ctx.lineTo(width * 1 / 2, y)
-      ctx.stroke() // 绘制
+      ctx.lineTo(width * 9 / 16, y)
     }
   }
+  ctx.stroke() // 绘制
   ctx.closePath() // 长间隔和文字绘制关闭
 
   ctx.beginPath() // 开始绘制短间隔
@@ -136,9 +136,9 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
     if (value % gridSize_10 !== 0) {
       ctx.strokeStyle = sfgColor
       ctx.lineTo(width * 1 / 4, y)
-      ctx.stroke()
     }
   }
+  ctx.stroke()
   ctx.closePath()
 
   // 恢复ctx matrix
