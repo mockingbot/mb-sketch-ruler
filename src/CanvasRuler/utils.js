@@ -12,7 +12,7 @@ const FONT_SCALE = 0.83 // 10 / 12
 
 export const drawHorizontalRuler = (ctx, start, shadow, options) => {
   const { scale, width, height, canvasConfigs } = options
-  const { bgColor, fontColor, shadowColor, ratio, lfgColor, sfgColor } = canvasConfigs
+  const { bgColor, fontColor, shadowColor, ratio, longfgColor, shortfgColor } = canvasConfigs
 
   // 缩放ctx, 以简化计算
   ctx.scale(ratio, ratio)
@@ -53,7 +53,7 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
       ctx.scale(FONT_SCALE / ratio, FONT_SCALE / ratio)
       ctx.fillText(value, 4 * ratio, 7 * ratio)
       ctx.restore()
-      ctx.strokeStyle = lfgColor
+      ctx.strokeStyle = longfgColor
       ctx.lineTo(x, height * 9 / 16)
     }
   }
@@ -66,7 +66,7 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
     const x = offsetX + count * gridPixel + 0.5 // prevent canvas 1px line blurry
     ctx.moveTo(x, 0)
     if (value % gridSize_10 !== 0) {
-      ctx.strokeStyle = sfgColor
+      ctx.strokeStyle = shortfgColor
       ctx.lineTo(x, height * 1 / 4)
     }
   }
@@ -79,7 +79,7 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
 
 export const drawVerticalRuler = (ctx, start, shadow, options) => {
   const { scale, width, height, canvasConfigs } = options
-  const { bgColor, fontColor, shadowColor, ratio, lfgColor, sfgColor } = canvasConfigs
+  const { bgColor, fontColor, shadowColor, ratio, longfgColor, shortfgColor } = canvasConfigs
 
   // 缩放ctx, 以简化计算
   ctx.scale(ratio, ratio)
@@ -122,7 +122,7 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
       ctx.fillText(value, 4 * ratio, 7 * ratio) // 绘制文字
       // 回复刚刚保存的状态
       ctx.restore()
-      ctx.strokeStyle = lfgColor // 设置长间隔的颜色
+      ctx.strokeStyle = longfgColor // 设置长间隔的颜色
       ctx.lineTo(width * 9 / 16, y)
     }
   }
@@ -134,7 +134,7 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
     const y = offsetY + count * gridPixel + 0.5
     ctx.moveTo(0, y)
     if (value % gridSize_10 !== 0) {
-      ctx.strokeStyle = sfgColor
+      ctx.strokeStyle = shortfgColor
       ctx.lineTo(width * 1 / 4, y)
     }
   }

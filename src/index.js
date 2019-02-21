@@ -11,8 +11,8 @@ export default class SketchRuler extends PureComponent {
     this.canvasConfigs = {
       ratio,
       bgColor: palette.bgColor,
-      lfgColor: palette.lfgColor,
-      sfgColor: palette.sfgColor,
+      longfgColor: palette.longfgColor,
+      shortfgColor: palette.shortfgColor,
       fontColor: palette.fontColor,
       shadowColor: palette.shadowColor,
       lineColor: palette.lineColor,
@@ -71,8 +71,8 @@ SketchRuler.propTypes = {
   onCornerClick: PropTypes.func,
   palette: PropTypes.shape({
     bgColor: PropTypes.string,
-    lfgColor: PropTypes.string,
-    sfgColor: PropTypes.string,
+    longfgColor: PropTypes.string,
+    shortfgColor: PropTypes.string,
     fontColor: PropTypes.string,
     shadowColor: PropTypes.string,
     lineColor: PropTypes.string,
@@ -96,8 +96,8 @@ SketchRuler.defaultProps = {
   },
   palette: {
     bgColor: '#F5F5F5', // ruler bg color
-    lfgColor: '#8D9EA7', // ruler longer mark color
-    sfgColor: '#C8CDD0', // ruler shorter mark color
+    longfgColor: '#BABBBC', // ruler longer mark color
+    shortfgColor: '#C8CDD0', // ruler shorter mark color
     fontColor: '#7D8694', // ruler font color
     shadowColor: '#E8E8E8', // ruler shadow color
     lineColor: '#EB5648',
