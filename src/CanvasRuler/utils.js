@@ -26,7 +26,7 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
     const shadowX = (shadow.x - start) * scale // 阴影起点坐标
     const shadowWidth = shadow.width * scale // 阴影宽度
     ctx.fillStyle = shadowColor
-    ctx.fillRect(shadowX, 0, shadowWidth, height)
+    ctx.fillRect(shadowX, 0, shadowWidth, height * 3 / 8)
   }
 
   const gridSize = getGridSize(scale) // 每小格表示的宽度
@@ -96,7 +96,7 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
     // 阴影高度
     const shadowHeight = shadow.height * scale
     ctx.fillStyle = shadowColor
-    ctx.fillRect(0, posY, width, shadowHeight)
+    ctx.fillRect(0, posY, width * 3 / 8, shadowHeight)
   }
 
   const gridSize = getGridSize(scale) // 每小格表示的宽度
