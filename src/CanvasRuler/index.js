@@ -28,7 +28,7 @@ export default class CanvasRuler extends PureComponent {
     this.$canvas.height = height * ratio
 
     const ctx = this.$canvas.getContext('2d')
-    ctx.font = `${12 * ratio}px -apple-system, ".SFNSText-Regular", "SF UI Text", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif`
+    ctx.font = `${12 * ratio}px -apple-system, "Helvetica Neue", ".SFNSText-Regular", "SF UI Text", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Zen Hei", sans-serif`
     ctx.lineWidth = 1
     ctx.textBaseline = 'middle'
   }
