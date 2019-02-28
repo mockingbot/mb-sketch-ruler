@@ -95,7 +95,7 @@ SketchRuler.defaultProps = {
     height: 400
   },
   palette: {
-    bgColor: '#F5F5F5', // ruler bg color
+    bgColor: 'rgba(225,225,225, 0)', // ruler bg color
     longfgColor: '#BABBBC', // ruler longer mark color
     shortfgColor: '#C8CDD0', // ruler shorter mark color
     fontColor: '#7D8694', // ruler font color
