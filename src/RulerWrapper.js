@@ -43,6 +43,12 @@ export default class RulerWrapper extends PureComponent {
     lines.splice(index, 1)
     onLineChange(lines, vertical)
   }
+
+  handleRightMenuRemove = (flag, left, top) => {
+    const { rightmenuchange } = this.props
+    rightmenuchange(flag, left, top)
+  }
+
   render () {
     const { vertical, scale, width, height, start, selectStart, selectLength, lines, canvasConfigs } = this.props
     const { showIndicator, value } = this.state
@@ -66,6 +72,7 @@ export default class RulerWrapper extends PureComponent {
           onIndicatorShow={this.handleIndicatorShow}
           onIndicatorMove={this.handleIndicatorMove}
           onIndicatorHide={this.handleIndicatorHide}
+          onhandleRightMenu={this.handleRightMenuRemove}
         />
         <div className="lines">
           {
@@ -104,5 +111,6 @@ RulerWrapper.propTypes = {
   selectStart: PropTypes.number,
   selectLength: PropTypes.number,
   canvasConfigs: PropTypes.object,
-  onLineChange: PropTypes.func
+  onLineChange: PropTypes.func,
+  rightmenuchange: PropTypes.func
 }

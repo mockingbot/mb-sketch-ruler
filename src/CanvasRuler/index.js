@@ -19,6 +19,9 @@ export default class CanvasRuler extends PureComponent {
     }
     this.drawRuler()
   }
+  componentWillUnmount () {
+    document.removeEventListener('contextmenu', (e) => { e.preventDefault() })
+  }
   updateCanvasContext () {
     const { width, height, canvasConfigs } = this.props
     const { ratio } = canvasConfigs
@@ -62,6 +65,17 @@ export default class CanvasRuler extends PureComponent {
   }
   handleLeave = () => this.props.onIndicatorHide()
 
+  handleRightMenu = (e) => {
+    // 取消默认菜单事件
+    document.addEventListener('contextmenu', (e) => { e.preventDefault() })
+    if (e.button === 2) {
+      const { onhandleRightMenu, vertical } = this.props
+      const clickLeft = e.clientX
+      const clickTop = e.clientY
+      onhandleRightMenu(vertical, clickLeft, clickTop)
+    }
+  }
+
   render () {
     return (
       <canvas className="ruler"
@@ -70,6 +84,7 @@ export default class CanvasRuler extends PureComponent {
         onMouseEnter={this.handleEnter}
         onMouseMove={this.handleMove}
         onMouseLeave={this.handleLeave}
+        onMouseDown={this.handleRightMenu}
       />
     )
   }
@@ -86,5 +101,6 @@ CanvasRuler.propTypes = {
   onAddLine: PropTypes.func,
   onIndicatorShow: PropTypes.func,
   onIndicatorMove: PropTypes.func,
-  onIndicatorHide: PropTypes.func
+  onIndicatorHide: PropTypes.func,
+  onhandleRightMenu: PropTypes.func
 }

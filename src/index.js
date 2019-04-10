@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import RulerWrapper from './RulerWrapper'
 
-import { StyledRuler } from './styles'
+import { StyledRuler, StyleMenu } from './styles'
 
 export default class SketchRuler extends PureComponent {
   constructor (props) {
@@ -19,20 +19,149 @@ export default class SketchRuler extends PureComponent {
       borderColor: palette.borderColor,
       cornerActiveColor: palette.cornerActiveColor
     }
+    this.state = {
+      showMenu: false,
+      leftPosition: '0px',
+      topPosition: '0px',
+      vertical: undefined,
+      showRuler: true,
+      showReferLine: true,
+      newLines: {
+        h: props.horLineArr,
+        v: props.verLineArr
+      },
+      newLinesCopy: {
+        h: props.horLineArr,
+        v: props.verLineArr
+      }
+    }
   }
+  componentDidMount () {
+    document.addEventListener('click', () => this.handleMenu(false), true)
+  }
+  componentWillUnmount () {
+    document.removeEventListener('click', () => this.handleMenu(false), true)
+  }
+  handleMenu = (flag) => {
+    setTimeout(() => {
+      this.setState({
+        showMenu: flag
+      })
+    }, 100)
+  }
+
   handleLineChange = (arr, vertical) => {
-    const { horLineArr, verLineArr, handleLine } = this.props
-    const newLines = vertical
-      ? { h: horLineArr, v: [...arr] }
-      : { h: [...arr], v: verLineArr }
-    handleLine(newLines)
+    const { newLines, newLinesCopy } = this.state
+    const { handleLine } = this.props
+    // 只要画line，showReferLine变为true，否则会重复push newLines
+    this.setState({
+      showReferLine: true
+    })
+    const lines = vertical
+      ? { h: newLines.h, v: !this.state.showReferLine ? [...arr, ...newLines.v] : [...arr] }
+      : { h: !this.state.showReferLine ? [...arr, ...newLines.h] : [...arr], v: newLines.v }
+    this.setState({
+      newLines: lines,
+      newLinesCopy: lines
+    })
+    console.log(lines, newLinesCopy, arr)
+    handleLine(lines)
+  }
+
+  // 设置右键菜单位置
+  rightmenuchange = (vertical, left, top) => {
+    this.setState({
+      leftPosition: left + 'px',
+      topPosition: top + 'px',
+      vertical
+    })
+    this.handleMenu(true)
+  }
+
+  // 显示/影藏标尺
+  handleShowRuler = () => {
+    const { showRuler } = this.state
+    this.setState({
+      showRuler: !showRuler
+    })
+  }
+
+  // 显示/影藏参考线
+  handleShowReferLine = () => {
+    const { showReferLine, newLines } = this.state
+    const { handleLine } = this.props
+    this.setState({
+      showReferLine: !showReferLine
+    })
+    !showReferLine
+      ? this.setState({
+        newLinesCopy: { ...newLines }
+      }) : this.setState({
+        newLinesCopy: { h: [], v: [] }
+      })
+    const lines = this.state.newLinesCopy
+    handleLine(lines)
+  }
+
+  // 删除横向、竖向参考线
+  handleShowSpecificRuler = () => {
+    const { vertical, newLines } = this.state
+    const { handleLine } = this.props
+    this.setState({
+      vertical: vertical
+    })
+    vertical
+      ? this.setState({
+        newLinesCopy: { h: newLines.h, v: [] },
+        newLines: { h: newLines.h, v: [] }
+      }) : this.setState({
+        newLinesCopy: { h: [], v: newLines.v },
+        newLines: { h: [], v: newLines.v }
+      })
+
+    handleLine(this.state.newLinesCopy)
+  }
+
+  // 右键菜单render
+  renderMenu = () => {
+    const {
+      leftPosition,
+      topPosition,
+      vertical,
+      showRuler,
+      showReferLine,
+      newLinesCopy
+    } = this.state
+
+    console.log(newLinesCopy)
+    const isGrayRefer = (showReferLine && !newLinesCopy.v.length && !newLinesCopy.h.length) || !showRuler
+    const isGraySpecific = vertical ? !newLinesCopy.v.length || !showRuler : !showRuler || !newLinesCopy.h.length
+
+    console.log(isGrayRefer)
+    return (
+      <StyleMenu className="menu-wrap"
+        style={{ left: leftPosition, top: topPosition }}
+        showRuler={showRuler}
+        showReferLine={showReferLine}
+      >
+        <a className="menu-content"
+          onClick={this.handleShowRuler}>显示标尺</a>
+
+        <a className="menu-content"
+          style={{ color: isGrayRefer ? 'rgb(65,80,88, .4)' : '' }}
+          onClick={!isGrayRefer ? this.handleShowReferLine : null}>显示参考线</a>
+
+        <a className="menu-content"
+          style={{ color: isGraySpecific ? 'rgb(65,80,88, .4)' : '' }}
+          onClick={!isGraySpecific ? this.handleShowSpecificRuler : null}>删除所有{vertical ? '横向' : '纵向'}参考线</a>
+      </StyleMenu>
+    )
   }
 
   render () {
     const {
       width, height, scale,
-      thick, shadow, startX, startY, cornerActive,
-      horLineArr, verLineArr, onCornerClick,
+      thick, shadow, startX, startY, cornerActive, onCornerClick,
       palette: { bgColor }
     } = this.props
 
@@ -41,17 +170,23 @@ export default class SketchRuler extends PureComponent {
     const commonProps = {
       scale,
       canvasConfigs: this.canvasConfigs,
-      onLineChange: this.handleLineChange
+      onLineChange: this.handleLineChange,
+      rightmenuchange: this.rightmenuchange
     }
 
+    const { showMenu, showRuler, newLinesCopy } = this.state
+
     return (
-      <StyledRuler id="mb-ruler" className="mb-ruler" thick={thick} {...this.canvasConfigs}>
-        {/* 水平方向 */}
-        <RulerWrapper width={width} height={thick} start={startX} lines={horLineArr} selectStart={x} selectLength={w} {...commonProps} />
-        {/* 竖直方向 */}
-        <RulerWrapper width={thick} height={height} start={startY} lines={verLineArr} selectStart={y} selectLength={h} vertical {...commonProps} />
-        <a className={`corner${cornerActive ? ' active' : ''}`} style={{ backgroundColor: bgColor }} onClick={onCornerClick} />
-      </StyledRuler>
+      <div>
+        {showMenu && this.renderMenu()}
+        <StyledRuler id="mb-ruler" className="mb-ruler" thick={thick} {...this.canvasConfigs} style={{ opacity: showRuler ? 1 : 0 }}>
+          {/* 水平方向 */}
+          <RulerWrapper width={width} height={thick} start={startX} lines={newLinesCopy.h} selectStart={x} selectLength={w} {...commonProps} />
+          {/* 竖直方向 */}
+          <RulerWrapper width={thick} height={height} start={startY} lines={newLinesCopy.v} selectStart={y} selectLength={h} vertical {...commonProps} />
+          <a className={`corner${cornerActive ? ' active' : ''}`} style={{ backgroundColor: bgColor }} onClick={onCornerClick} />
+        </StyledRuler>
+      </div>
     )
   }
 }

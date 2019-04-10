@@ -1,4 +1,50 @@
 import styled from 'styled-components'
+import getSVG from '../public/icon/get.svg'
+
+export const StyleMenu = styled.div`
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: rgba(39, 54, 78, 0.08) 0px 2px 10px 0px, rgba(39, 54, 78, 0.1) 4px 12px 40px 0px;
+  padding: 10px;
+  background: rgb(255, 255, 255);
+  border-radius: 4px;
+  z-index: 4;
+
+  .menu-content {
+    font-size: 12px;
+    color: rgb(65, 80, 88);
+    line-height: 26px;
+    display: inline-block;
+    width: 100%;
+    padding: 5px;
+  }
+
+  .menu-content:nth-child(1):before {
+    opacity: ${props => props.showRuler ? 1 : 0};
+  }
+
+  .menu-content:nth-child(2):before {
+    opacity: ${props => props.showReferLine ? 1 : 0};
+  }
+
+  .menu-content:before {
+    content: '';
+    display: inline-block;
+    width: 15px;
+    height: 12px;
+    background-image: url(${getSVG});
+    background-size: 100%;
+    margin-right: 5px;
+    opacity: 0;
+  }
+
+  .menu-content:hover {
+    background: rgba(0, 0, 0, 0.04) !important;
+    cursor: pointer !important;
+  }
+`
 
 export const StyledRuler = styled.div`
   position: absolute;
