@@ -70,12 +70,16 @@ export default class SketchRuler extends PureComponent {
 
   // 设置右键菜单位置
   rightmenuchange = (vertical, left, top) => {
+    const { showMenu } = this.state
+    console.log(left, top, showMenu)
+    const realLeft = (!left && !showMenu) ? '-9999px' : `${left}px`
+    const realTop = (!top && !showMenu) ? '-9999px' : `${top}px`
     this.setState({
-      leftPosition: left + 'px',
-      topPosition: top + 'px',
+      leftPosition: realLeft,
+      topPosition: realTop,
       vertical
     })
-    this.handleMenu(true)
+    this.state.showRuler && this.handleMenu(true)
   }
 
   // 显示/影藏标尺
@@ -130,28 +134,34 @@ export default class SketchRuler extends PureComponent {
       vertical,
       showRuler,
       showReferLine,
-      newLinesCopy
+      newLinesCopy,
+      showMenu
     } = this.state
 
-    console.log(newLinesCopy)
-    const isGrayRefer = (showReferLine && !newLinesCopy.v.length && !newLinesCopy.h.length) || !showRuler
+    const isGrayRefer = !showRuler
     const isGraySpecific = vertical ? !newLinesCopy.v.length || !showRuler : !showRuler || !newLinesCopy.h.length
+
+    const className = `menu-wrap ${!showMenu ? 'hide-menu' : ''}`
+    const classNameContent = `menu-content ${!showMenu ? 'hide-content' : ''}`
 
     console.log(isGrayRefer)
     return (
-      <StyleMenu className="menu-wrap"
+      <StyleMenu className={className}
         style={{ left: leftPosition, top: topPosition }}
         showRuler={showRuler}
         showReferLine={showReferLine}
+        isGraySpecific={isGraySpecific}
       >
-        <a className="menu-content"
+        <a className={classNameContent}
           onClick={this.handleShowRuler}>显示标尺</a>
 
-        <a className="menu-content"
+        <a className={classNameContent}
           style={{ color: isGrayRefer ? 'rgb(65,80,88, .4)' : '' }}
           onClick={!isGrayRefer ? this.handleShowReferLine : null}>显示参考线</a>
 
-        <a className="menu-content"
+        <div className="divider" />
+
+        <a className={`${classNameContent} no-icon`}
           style={{ color: isGraySpecific ? 'rgb(65,80,88, .4)' : '' }}
           onClick={!isGraySpecific ? this.handleShowSpecificRuler : null}>删除所有{vertical ? '横向' : '纵向'}参考线</a>
       </StyleMenu>
@@ -174,11 +184,11 @@ export default class SketchRuler extends PureComponent {
       rightmenuchange: this.rightmenuchange
     }
 
-    const { showMenu, showRuler, newLinesCopy } = this.state
+    const { showRuler, newLinesCopy } = this.state
 
     return (
       <div>
-        {showMenu && this.renderMenu()}
+        {this.renderMenu()}
         <StyledRuler id="mb-ruler" className="mb-ruler" thick={thick} {...this.canvasConfigs} style={{ opacity: showRuler ? 1 : 0 }}>
           {/* 水平方向 */}
           <RulerWrapper width={width} height={thick} start={startX} lines={newLinesCopy.h} selectStart={x} selectLength={w} {...commonProps} />
