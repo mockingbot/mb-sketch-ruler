@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
+import { createPortal } from 'react-dom'
 import RulerWrapper from './RulerWrapper'
 
 import { StyledRuler, StyleMenu } from './styles'
@@ -35,11 +36,14 @@ export default class SketchRuler extends PureComponent {
         v: props.verLineArr
       }
     }
+    this.el = document.createElement('div')
   }
   componentDidMount () {
+    document.body.appendChild(this.el)
     document.addEventListener('click', () => this.handleMenu(false), true)
   }
   componentWillUnmount () {
+    document.body.removeChild(this.el)
     document.removeEventListener('click', () => this.handleMenu(false), true)
   }
   handleMenu = (flag) => {
@@ -51,7 +55,7 @@ export default class SketchRuler extends PureComponent {
   }
 
   handleLineChange = (arr, vertical) => {
-    const { newLines, newLinesCopy } = this.state
+    const { newLines } = this.state
     const { handleLine } = this.props
     // 只要画line，showReferLine变为true，否则会重复push newLines
     this.setState({
@@ -64,14 +68,12 @@ export default class SketchRuler extends PureComponent {
       newLines: lines,
       newLinesCopy: lines
     })
-    console.log(lines, newLinesCopy, arr)
     handleLine(lines)
   }
 
   // 设置右键菜单位置
   rightmenuchange = (vertical, left, top) => {
     const { showMenu } = this.state
-    console.log(left, top, showMenu)
     const realLeft = (!left && !showMenu) ? '-9999px' : `${left}px`
     const realTop = (!top && !showMenu) ? '-9999px' : `${top}px`
     this.setState({
@@ -144,27 +146,29 @@ export default class SketchRuler extends PureComponent {
     const className = `menu-wrap ${!showMenu ? 'hide-menu' : ''}`
     const classNameContent = `menu-content ${!showMenu ? 'hide-content' : ''}`
 
-    console.log(isGrayRefer)
     return (
-      <StyleMenu className={className}
-        style={{ left: leftPosition, top: topPosition }}
-        showRuler={showRuler}
-        showReferLine={showReferLine}
-        isGraySpecific={isGraySpecific}
-      >
-        <a className={classNameContent}
-          onClick={this.handleShowRuler}>显示标尺</a>
+      createPortal(
+        <StyleMenu className={className}
+          style={{ left: leftPosition, top: topPosition }}
+          showRuler={showRuler}
+          showReferLine={showReferLine}
+          isGraySpecific={isGraySpecific}
+        >
+          <a className={classNameContent}
+            onClick={this.handleShowRuler}>显示标尺</a>
 
-        <a className={classNameContent}
-          style={{ color: isGrayRefer ? 'rgb(65,80,88, .4)' : '' }}
-          onClick={!isGrayRefer ? this.handleShowReferLine : null}>显示参考线</a>
+          <a className={classNameContent}
+            style={{ color: isGrayRefer ? 'rgb(65,80,88, .4)' : '' }}
+            onClick={!isGrayRefer ? this.handleShowReferLine : null}>显示参考线</a>
 
-        <div className="divider" />
+          <div className="divider" />
 
-        <a className={`${classNameContent} no-icon`}
-          style={{ color: isGraySpecific ? 'rgb(65,80,88, .4)' : '' }}
-          onClick={!isGraySpecific ? this.handleShowSpecificRuler : null}>删除所有{vertical ? '横向' : '纵向'}参考线</a>
-      </StyleMenu>
+          <a className={`${classNameContent} no-icon`}
+            style={{ color: isGraySpecific ? 'rgb(65,80,88, .4)' : '' }}
+            onClick={!isGraySpecific ? this.handleShowSpecificRuler : null}>删除所有{vertical ? '横向' : '纵向'}参考线</a>
+        </StyleMenu>
+        , this.el
+      )
     )
   }
 
