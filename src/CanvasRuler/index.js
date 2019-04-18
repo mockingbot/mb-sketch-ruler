@@ -65,9 +65,12 @@ export default class CanvasRuler extends PureComponent {
   }
   handleLeave = () => this.props.onIndicatorHide()
 
+  // 取消默认菜单事件
+  preventDefault (e) {
+    e.preventDefault()
+  }
+
   handleRightMenu = (e) => {
-    // 取消默认菜单事件
-    document.addEventListener('contextmenu', (e) => { e.preventDefault() })
     if (e.button === 2) {
       const { onhandleRightMenu, vertical } = this.props
       const clickLeft = e.clientX
@@ -85,6 +88,7 @@ export default class CanvasRuler extends PureComponent {
         onMouseMove={this.handleMove}
         onMouseLeave={this.handleLeave}
         onMouseDown={this.handleRightMenu}
+        onContextMenu={this.preventDefault}
       />
     )
   }

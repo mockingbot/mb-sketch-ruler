@@ -44,7 +44,12 @@ export default class App extends PureComponent {
     }
   }
   handleLine = (lines) => {
+    console.log('lines', lines)
     this.setState({ lines })
+  }
+  // 暴露是否显示标尺
+  handleShowRuler = (isShowRuler) => {
+    console.log('isShowRuler', isShowRuler)
   }
   render () {
     const { scale, startX, startY, lines } = this.state
@@ -81,6 +86,7 @@ export default class App extends PureComponent {
           handleLine={this.handleLine}
           cornerActive={true}
           onCornerClick={this.handleCornerClick}
+          onhandleShowRuler={this.handleShowRuler}
         />
         <div ref={this.setAppRef} id="screens" onScroll={this.handleScroll} onWheel={this.handleWheel}>
           <div ref={this.setContainerRef} className="screen-container">

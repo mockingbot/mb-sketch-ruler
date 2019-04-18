@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
-import { createPortal } from 'react-dom'
+// import { createPortal } from 'react-dom'
 import RulerWrapper from './RulerWrapper'
 
-import { StyledRuler, StyleMenu } from './styles'
+import { StyledRuler } from './styles'
 
 export default class SketchRuler extends PureComponent {
   constructor (props) {
@@ -24,28 +24,30 @@ export default class SketchRuler extends PureComponent {
       showMenu: false,
       leftPosition: '0px',
       topPosition: '0px',
-      vertical: undefined,
-      showRuler: true,
-      showReferLine: true,
-      newLines: {
-        h: props.horLineArr,
-        v: props.verLineArr
-      },
-      newLinesCopy: {
-        h: props.horLineArr,
-        v: props.verLineArr
-      }
+      // vertical: undefined,
+      // showRuler: true,
+      // showReferLine: true,
+      // newLines: {
+      //   h: props.horLineArr,
+      //   v: props.verLineArr
+      // },
+      // newLinesCopy: {
+      //   h: props.horLineArr,
+      //   v: props.verLineArr
+      // }
     }
     this.el = document.createElement('div')
   }
   componentDidMount () {
     document.body.appendChild(this.el)
-    document.addEventListener('click', () => this.handleMenu(false), true)
+    document.addEventListener('click', this.closeMenu, true)
   }
   componentWillUnmount () {
     document.body.removeChild(this.el)
-    document.removeEventListener('click', () => this.handleMenu(false), true)
+    document.removeEventListener('click', this.closeMenu, true)
   }
+  closeMenu = () => this.handleMenu(false)
+
   handleMenu = (flag) => {
     setTimeout(() => {
       this.setState({
@@ -72,105 +74,95 @@ export default class SketchRuler extends PureComponent {
   }
 
   // 设置右键菜单位置
-  rightmenuchange = (vertical, left, top) => {
-    const { showMenu } = this.state
-    const realLeft = (!left && !showMenu) ? '-9999px' : `${left}px`
-    const realTop = (!top && !showMenu) ? '-9999px' : `${top}px`
-    this.setState({
-      leftPosition: realLeft,
-      topPosition: realTop,
-      vertical
-    })
-    this.state.showRuler && this.handleMenu(true)
+  // rightmenuchange = (vertical, left, top) => {
+  //   const { showMenu } = this.state
+  //   const realLeft = (!left && !showMenu) ? '-9999px' : `${left}px`
+  //   const realTop = (!top && !showMenu) ? '-9999px' : `${top}px`
+  //   this.setState({
+  //     showMenu: true,
+  //     vertical,
+  //     leftPosition: realLeft,
+  //     topPosition: realTop
+  //   })
+    // this.handleMenu(true)
+    // this.state.showRuler && this.handleMenu(true)
   }
 
-  // 显示/影藏标尺
-  handleShowRuler = () => {
-    const { showRuler } = this.state
-    this.setState({
-      showRuler: !showRuler
-    })
-  }
+  // // 显示/影藏标尺
+  // handleShowRuler = () => {
+  //   const { showRuler, newLinesCopy } = this.state
+  //   const { onhandleShowRuler, handleLine } = this.props
+  //   this.setState({
+  //     showRuler: !showRuler
+  //   })
+  //   handleLine(newLinesCopy)
+  //   onhandleShowRuler(!showRuler)
+  // }
 
-  // 显示/影藏参考线
-  handleShowReferLine = () => {
-    const { showReferLine, newLines } = this.state
-    const { handleLine } = this.props
-    this.setState({
-      showReferLine: !showReferLine
-    })
-    !showReferLine
-      ? this.setState({
-        newLinesCopy: { ...newLines }
-      }) : this.setState({
-        newLinesCopy: { h: [], v: [] }
-      })
-    const lines = this.state.newLinesCopy
-    handleLine(lines)
-  }
+  // // 显示/影藏参考线
+  // handleShowReferLine = () => {
+  //   const { showReferLine, newLines } = this.state
+  //   const { handleLine } = this.props
+  //   this.setState({
+  //     showReferLine: !showReferLine
+  //   })
+  //   const lines = !showReferLine
+  //     ? { ...newLines }
+  //     : { h: [], v: [] }
+  //   this.setState({
+  //     newLinesCopy: lines
+  //   })
+
+  //   handleLine(lines)
+  // }
 
   // 删除横向、竖向参考线
-  handleShowSpecificRuler = () => {
-    const { vertical, newLines } = this.state
-    const { handleLine } = this.props
-    this.setState({
-      vertical: vertical
-    })
-    vertical
-      ? this.setState({
-        newLinesCopy: { h: newLines.h, v: [] },
-        newLines: { h: newLines.h, v: [] }
-      }) : this.setState({
-        newLinesCopy: { h: [], v: newLines.v },
-        newLines: { h: [], v: newLines.v }
-      })
+  // handleShowSpecificRuler = () => {
+  //   const { handleLine, horLineArr, verLineArr } = this.props
+  //   const { vertical, newLines } = this.state
 
-    handleLine(this.state.newLinesCopy)
-  }
+  //   // this.setState({
+  //   //   vertical: vertical
+  //   // })
+  //   const lines = vertical
+  //     ? { h: horLineArr, v: [] }
+  //     : { h: [], v: verLineArr }
+  //   // this.setState({
+  //   //   newLines: lines,
+  //   //   newLinesCopy: lines
+  //   // })
+  //   handleLine(lines)
+  // }
 
   // 右键菜单render
-  renderMenu = () => {
-    const {
-      leftPosition,
-      topPosition,
-      vertical,
-      showRuler,
-      showReferLine,
-      newLinesCopy,
-      showMenu
-    } = this.state
+  // renderMenu = () => {
+  //   const { showRuler, showReferLine } = this.props
+  //   const {
+  //     showMenu,
+  //     // vertical,
+  //     leftPosition,
+  //     topPosition,
+  //     // vertical,
+  //     // showRuler,
+  //     // showReferLine,
+  //     // newLinesCopy,
+  //   } = this.state
 
-    const isGrayRefer = !showRuler
-    const isGraySpecific = vertical ? !newLinesCopy.v.length || !showRuler : !showRuler || !newLinesCopy.h.length
+  //   const isGrayRefer = !showRuler
+  //   const isGraySpecific = vertical ? !newLinesCopy.v.length || !showRuler : !showRuler || !newLinesCopy.h.length
 
-    const className = `menu-wrap ${!showMenu ? 'hide-menu' : ''}`
-    const classNameContent = `menu-content ${!showMenu ? 'hide-content' : ''}`
+  //   const className = `menu-wrap ${!showMenu ? 'hide-menu' : ''}`
+  //   const classNameContent = `menu-content ${!showMenu ? 'hide-content' : ''}`
 
-    return (
-      createPortal(
-        <StyleMenu className={className}
-          style={{ left: leftPosition, top: topPosition }}
-          showRuler={showRuler}
-          showReferLine={showReferLine}
-          isGraySpecific={isGraySpecific}
-        >
-          <a className={classNameContent}
-            onClick={this.handleShowRuler}>显示标尺</a>
+  //   if (showMenu === false) return null
 
-          <a className={classNameContent}
-            style={{ color: isGrayRefer ? 'rgb(65,80,88, .4)' : '' }}
-            onClick={!isGrayRefer ? this.handleShowReferLine : null}>显示参考线</a>
-
-          <div className="divider" />
-
-          <a className={`${classNameContent} no-icon`}
-            style={{ color: isGraySpecific ? 'rgb(65,80,88, .4)' : '' }}
-            onClick={!isGraySpecific ? this.handleShowSpecificRuler : null}>删除所有{vertical ? '横向' : '纵向'}参考线</a>
-        </StyleMenu>
-        , this.el
-      )
-    )
-  }
+  //   return (
+  //     createPortal(
+  //       <RulerContextMenu />
+  //       , this.el
+  //     )
+  //   )
+  // }
 
   render () {
     const {
@@ -192,7 +184,7 @@ export default class SketchRuler extends PureComponent {
 
     return (
       <div>
-        {this.renderMenu()}
+        {/* {this.renderMenu()} */}
         <StyledRuler id="mb-ruler" className="mb-ruler" thick={thick} {...this.canvasConfigs} style={{ opacity: showRuler ? 1 : 0 }}>
           {/* 水平方向 */}
           <RulerWrapper width={width} height={thick} start={startX} lines={newLinesCopy.h} selectStart={x} selectLength={w} {...commonProps} />
@@ -227,7 +219,8 @@ SketchRuler.propTypes = {
     lineColor: PropTypes.string,
     borderColor: PropTypes.string,
     cornerActiveColor: PropTypes.string
-  })
+  }),
+  onhandleShowRuler: PropTypes.func
 }
 SketchRuler.defaultProps = {
   thick: 16,
