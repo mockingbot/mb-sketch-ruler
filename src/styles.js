@@ -1,5 +1,74 @@
 import styled from 'styled-components'
 
+export const StyleMenu = styled.div`
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 0 2px 10px 0 rgba(39,54,78,0.08), 0 12px 40px 0 rgba(39,54,78,0.10);
+  background: rgb(255, 255, 255);
+  border-radius: 2px;
+  z-index: 4;
+  padding: 6px 0;
+  transition: opacity 0.2s ease-in-out;
+  transform-origin: 0 0;
+  animation: open-contextmenu 0.2s;
+  animation-fill-mode: forwards;
+  z-index: 999;
+  &.hide-menu {
+    animation: close-contextmenu 0.2s;
+    animation-fill-mode: forwards;
+    z-index: -9999;
+  }
+  @keyframes open-contextmenu {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes close-contextmenu {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+  .divider {
+    margin: 4px 12px;
+    border-top: 1px solid #DBDBDB;
+    min-width: ${props => props.lang === 'ch' ? '82%' : '87%'};
+  }
+  .menu-content {
+    font-size: 12px;
+    font-family: PingFangSC;
+    color: #415058;
+    display: inline-block;
+    width: 100%;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    cursor: pointer;
+  }
+  .menu-content:hover {
+    background: #F2F2F2;
+    cursor: pointer;
+    color: #298DF8;
+
+    svg path {
+      fill: #298DF8;
+    }
+  }
+`
+
 export const StyledRuler = styled.div`
   position: absolute;
   width: 100%; /* scrollbar width */
@@ -8,6 +77,7 @@ export const StyledRuler = styled.div`
   pointer-events: none;
   font-size: 12px;
   overflow: hidden;
+  opacity: ${props => props.isShowRuler ? 1 : 0};
   span {
     line-height: 1;
   }
@@ -88,7 +158,7 @@ export const StyledRuler = styled.div`
       top: 0;
       padding-left: 5px;
       border-left: 1px solid ${props => props.lineColor};
-      cursor: ew-resize;
+      cursor: ${props => props.isShowReferLine ? 'ew-resize' : 'none'};
       .action {
         top: ${props => props.thick + 'px'};
         transform: translateX(-24px);
@@ -120,7 +190,7 @@ export const StyledRuler = styled.div`
       left: 0;
       padding-top: 5px;
       border-top: 1px solid ${props => props.lineColor};
-      cursor: ns-resize;
+      cursor: ${props => props.isShowReferLine ? 'ns-resize' : 'none'};
       .action {
         left: ${props => props.thick + 'px'};
         transform: translateY(-24px);
