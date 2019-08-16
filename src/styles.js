@@ -82,7 +82,6 @@ export const StyledRuler = styled.div`
     top: 0;
     width: calc(100% - ${props => props.thick + 'px'});
     height: ${props => `${props.thick + 1}px`};
-    border-bottom: 1px solid ${props => props.borderColor};
 
     .line {
       height: 100vh;
@@ -115,7 +114,6 @@ export const StyledRuler = styled.div`
     left: 0;
     width: ${props => `${props.thick + 1}px`};
     height: calc(100% - ${props => props.thick + 'px'});
-    border-right: 1px solid ${props => props.borderColor};
 
     .line {
       width: 100vw;

@@ -23,8 +23,8 @@ export default class RulerWrapper extends PureComponent {
   }
 
   handleLineDown = () => this.setState({ isDraggingLine: true })
-  handleLineRelease = () => this.setState({ isDraggingLine: false })
-  handleLineChange = (value, index) => {
+  handleLineRelease = (value, index) => {
+    this.setState({ isDraggingLine: false })
     // 左右或上下超出时, 删除该条对齐线
     const { vertical, start, scale, width, height } = this.props
     const offset = value - start
@@ -71,13 +71,12 @@ export default class RulerWrapper extends PureComponent {
           {
             lines.map((v, i) =>
               <Line
-                key={i}
+                key={v + i}
                 index={i}
                 value={v >> 0}
                 scale={scale}
                 start={start}
                 vertical={vertical}
-                onChange={this.handleLineChange}
                 onRemove={this.handleLineRemove}
                 onMouseDown={this.handleLineDown}
                 onRelease={this.handleLineRelease}
