@@ -1,4 +1,28 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+
+const openMenu = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`
+
+const closeMenu = keyframes`
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+`
 
 export const StyleMenu = styled.div`
   position: fixed;
@@ -12,33 +36,13 @@ export const StyleMenu = styled.div`
   padding: 6px 0;
   transition: opacity 0.2s ease-in-out;
   transform-origin: 0 0;
-  animation: open-contextmenu 0.2s;
+  animation: ${openMenu} 0.2s;
   animation-fill-mode: forwards;
   z-index: 999;
   &.hide-menu {
-    animation: close-contextmenu 0.2s;
+    animation: ${closeMenu} 0.1s;
     animation-fill-mode: forwards;
     z-index: -9999;
-  }
-  @keyframes open-contextmenu {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @keyframes close-contextmenu {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.8);
-    }
   }
   .divider {
     margin: 4px 12px;
@@ -77,7 +81,6 @@ export const StyledRuler = styled.div`
   pointer-events: none;
   font-size: 12px;
   overflow: hidden;
-  opacity: ${props => props.isShowRuler ? 1 : 0};
   span {
     line-height: 1;
   }

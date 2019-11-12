@@ -39,7 +39,6 @@ class Example extends PureComponent {
 
         // 右键菜单props
         isOpenMenuFeature={true}
-        isShowRuler={isShowRuler}
         handleShowRuler={this.handleShowRuler}
         isShowReferLine={isShowReferLine}
         handleShowReferLine={this.handleShowReferLine}

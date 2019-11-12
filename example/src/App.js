@@ -89,28 +89,30 @@ export default class App extends PureComponent {
         <button className="button-ch" onClick={this.handleChangeCh}>中</button>
         <button className="button-en" onClick={this.handleChangeEn}>英</button>
         <div className="scale-value">{`scale: ${scale}`}</div>
-        <ReactRuler
-          lang={lang}
-          thick={thick}
-          scale={scale}
-          width={582}
-          height={482}
-          startX={startX}
-          startY={startY}
-          shadow={shadow}
-          horLineArr={h}
-          verLineArr={v}
-          handleLine={this.handleLine}
-          cornerActive={true}
-          onCornerClick={this.handleCornerClick}
+        {
+          isShowRuler &&
+          <ReactRuler
+            lang={lang}
+            thick={thick}
+            scale={scale}
+            width={582}
+            height={482}
+            startX={startX}
+            startY={startY}
+            shadow={shadow}
+            horLineArr={h}
+            verLineArr={v}
+            handleLine={this.handleLine}
+            cornerActive={true}
+            onCornerClick={this.handleCornerClick}
 
-          // 右键菜单props
-          isOpenMenuFeature={true}
-          isShowRuler={isShowRuler}
-          handleShowRuler={this.handleShowRuler}
-          isShowReferLine={isShowReferLine}
-          handleShowReferLine={this.handleShowReferLine}
-        />
+            // 右键菜单props
+            isOpenMenuFeature={true}
+            handleShowRuler={this.handleShowRuler}
+            isShowReferLine={isShowReferLine}
+            handleShowReferLine={this.handleShowReferLine}
+          />
+        }
         <div ref={this.setAppRef} id="screens" onScroll={this.handleScroll} onWheel={this.handleWheel}>
           <div ref={this.setContainerRef} className="screen-container">
             <div id="canvas" style={canvasStyle} />

@@ -15,10 +15,10 @@ export default class RulerContextMenu extends PureComponent {
   componentDidMount () {
     document.body.appendChild(this.el)
     document.addEventListener('click', this.closeMenu)
-    document.addEventListener('mousedown', this.closeMenuMouse, true)
+    document.addEventListener('mousedown', this.closeMenuMouse)
   }
   componentWillUnmount () {
-    document.removeEventListener('mousedown', this.closeMenuMouse, true)
+    document.removeEventListener('mousedown', this.closeMenuMouse)
     document.removeEventListener('click', this.closeMenu)
     document.body.removeChild(this.el)
   }
@@ -49,33 +49,31 @@ export default class RulerContextMenu extends PureComponent {
       ? { h: horLineArr, v: [] }
       : { h: [], v: verLineArr }
     handleLine(newLines)
+    this.closeMenu()
   }
   render () {
-    const { isShowRuler, isShowMenu, isShowReferLine, vertical, verLineArr, horLineArr, lang } = this.props
+    const { isShowReferLine, vertical, verLineArr, horLineArr, lang } = this.props
     const { left, top } = this.props.menuPosition
-    const className = `menu-wrap ${!isShowMenu ? 'hide-menu' : ''}`
-    const classNameContent = `menu-content ${!isShowMenu ? 'hide-content' : ''}`
     const isGraySpecific = (vertical ? !verLineArr.length : !horLineArr.length)
 
     return (
       createPortal(
         <StyleMenu
-          className={className}
           style={{ left: left, top: top }}
-          showRuler={isShowRuler}
           showReferLine={isShowReferLine}
           isGraySpecific={isGraySpecific}
           lang={lang}
+          id="contextMenu"
         >
           <a
-            className={classNameContent}
+            className="menu-content"
             onClick={this.onhandleShowRuler}
           >
             { i18nObj[lang].show_ruler }
-            { isShowRuler && SELECT_SVG }
+            { SELECT_SVG }
           </a>
           <a
-            className={classNameContent}
+            className="menu-content"
             onClick={this.onhandleShowReferLine}
           >
             { i18nObj[lang].show_refer_line }
@@ -83,7 +81,7 @@ export default class RulerContextMenu extends PureComponent {
           </a>
           <div className="divider" />
           <a
-            className={classNameContent}
+            className="menu-content"
             style={{ color: isGraySpecific ? 'rgb(65,80,88, .4)' : '' }}
             onClick={this.onhandleShowSpecificRuler}
           >
@@ -91,8 +89,7 @@ export default class RulerContextMenu extends PureComponent {
             { vertical ? i18nObj[lang].horizontal : i18nObj[lang].vertical }
             { i18nObj[lang].refer_line }
           </a>
-        </StyleMenu>
-        , this.el
+        </StyleMenu>, this.el
       )
     )
   }
@@ -101,8 +98,6 @@ export default class RulerContextMenu extends PureComponent {
 RulerContextMenu.propTypes = {
   vertical: PropTypes.bool,
   menuPosition: PropTypes.object,
-  isShowMenu: PropTypes.bool,
-  isShowRuler: PropTypes.bool,
   handleShowRuler: PropTypes.func,
   isShowReferLine: PropTypes.bool,
   handleShowReferLine: PropTypes.func,

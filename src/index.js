@@ -48,9 +48,7 @@ export default class SketchRuler extends PureComponent {
     })
   }
   onhandlecloseMenu = () => {
-    this.setState({
-      isShowMenu: false
-    })
+    this.setState({ isShowMenu: false })
   }
   // 取消默认菜单事件
   preventDefault (e) {
@@ -61,8 +59,7 @@ export default class SketchRuler extends PureComponent {
       width, height, scale, handleLine,
       thick, shadow, startX, startY, cornerActive,
       horLineArr, verLineArr, onCornerClick,
-      palette: { bgColor }, lang, isOpenMenuFeature,
-      isShowRuler, handleShowRuler,
+      palette: { bgColor }, lang, isOpenMenuFeature, handleShowRuler,
       isShowReferLine, handleShowReferLine
     } = this.props
 
@@ -72,7 +69,6 @@ export default class SketchRuler extends PureComponent {
 
     const commonProps = {
       scale,
-      isShowRuler,
       canvasConfigs: this.canvasConfigs,
       onLineChange: this.handleLineChange,
       onShowRightMenu: this.onShowRightMenu,
@@ -86,7 +82,7 @@ export default class SketchRuler extends PureComponent {
     }
 
     return (
-      <StyledRuler id="mb-ruler" className="mb-ruler" isShowReferLine={isShowReferLine} isShowRuler={isShowRuler} thick={thick} {...this.canvasConfigs}
+      <StyledRuler id="mb-ruler" className="mb-ruler" isShowReferLine={isShowReferLine} thick={thick} {...this.canvasConfigs}
         onContextMenu={this.preventDefault}>
         {/* 水平方向 */}
         <RulerWrapper width={width} height={thick} start={startX} lines={horLineArr} selectStart={x} selectLength={w} {...commonProps} />
@@ -95,17 +91,16 @@ export default class SketchRuler extends PureComponent {
         <a className={`corner${cornerActive ? ' active' : ''}`} style={{ backgroundColor: bgColor }} onClick={onCornerClick} />
         { isOpenMenuFeature && isShowMenu &&
           <RulerContextMenu
+            key={String(menuPosition.left) + String(menuPosition.top)}
             lang={lang}
             vertical={vertical}
             handleLine={handleLine}
             horLineArr={horLineArr}
             verLineArr={verLineArr}
             menuPosition={menuPosition}
-            isShowRuler={isShowRuler}
             handleShowRuler={handleShowRuler}
             isShowReferLine={isShowReferLine}
             handleShowReferLine={handleShowReferLine}
-            isShowMenu={isShowMenu}
             oncloseMenu={this.onhandlecloseMenu}
           />
         }
@@ -129,7 +124,6 @@ SketchRuler.propTypes = {
   onCornerClick: PropTypes.func,
   lang: PropTypes.string,
   isOpenMenuFeature: PropTypes.bool,
-  isShowRuler: PropTypes.bool,
   handleShowRuler: PropTypes.func,
   isShowReferLine: PropTypes.bool,
   handleShowReferLine: PropTypes.func,
@@ -146,7 +140,6 @@ SketchRuler.propTypes = {
 }
 SketchRuler.defaultProps = {
   isOpenMenuFeature: false,
-  isShowRuler: true,
   isShowReferLine: true,
   handleShowRuler: () => {},
   handleShowReferLine: () => {},
