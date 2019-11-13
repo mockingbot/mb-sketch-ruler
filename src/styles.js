@@ -5,19 +5,16 @@ const openMenu = keyframes`
     opacity: 0;
     transform: scale(0.8);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
   }
 `
-
 const closeMenu = keyframes`
   from {
     opacity: 1;
     transform: scale(1);
   }
-
   to {
     opacity: 0;
     transform: scale(0.8);
@@ -30,7 +27,7 @@ export const StyleMenu = styled.div`
   flex-direction: column;
   align-items: flex-start;
   box-shadow: 0 2px 10px 0 rgba(39,54,78,0.08), 0 12px 40px 0 rgba(39,54,78,0.10);
-  background: rgb(255, 255, 255);
+  background: ${props => props.menuConfigs.bgColor};
   border-radius: 2px;
   z-index: 4;
   padding: 6px 0;
@@ -46,13 +43,14 @@ export const StyleMenu = styled.div`
   }
   .divider {
     margin: 4px 12px;
-    border-top: 1px solid #DBDBDB;
+    border-top: 1px solid ${props => props.menuConfigs.dividerColor};
     min-width: ${props => props.lang === 'ch' ? '82%' : '87%'};
   }
   .menu-content {
     font-size: 12px;
     font-family: PingFangSC;
-    color: #415058;
+    color: ${props => props.menuConfigs.listItem.textColor};
+    background: ${props => props.menuConfigs.listItem.bgColor};
     display: inline-block;
     width: 100%;
     height: 26px;
@@ -61,14 +59,25 @@ export const StyleMenu = styled.div`
     justify-content: space-between;
     padding: 0 12px;
     cursor: pointer;
+    svg > path {
+      fill: ${props => props.menuConfigs.listItem.textColor};
+    }
+    &.disabled {
+      color: ${props => props.menuConfigs.listItem.disabledTextColor};
+      &:hover {
+        cursor: not-allowed;
+        background: none;
+        color: ${props => props.menuConfigs.listItem.disabledTextColor};
+      }
+    }
   }
   .menu-content:hover {
-    background: #F2F2F2;
+    background: ${props => props.menuConfigs.listItem.hoverBgColor};
     cursor: pointer;
-    color: #298DF8;
+    color: ${props => props.menuConfigs.listItem.hoverTextColor};
 
-    svg path {
-      fill: #298DF8;
+    svg > path {
+      fill: ${props => props.menuConfigs.listItem.hoverTextColor};
     }
   }
 `

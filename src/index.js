@@ -9,6 +9,7 @@ export default class SketchRuler extends PureComponent {
   constructor (props) {
     super(props)
     const { ratio, palette } = props
+    const { menu } = palette || {}
     this.canvasConfigs = {
       ratio,
       bgColor: palette.bgColor,
@@ -19,6 +20,11 @@ export default class SketchRuler extends PureComponent {
       lineColor: palette.lineColor,
       borderColor: palette.borderColor,
       cornerActiveColor: palette.cornerActiveColor
+    }
+    this.menuConfigs = {
+      bgColor: menu.bgColor,
+      dividerColor: menu.dividerColor,
+      listItem: menu.listItem
     }
     this.state = {
       isShowMenu: false,
@@ -102,6 +108,7 @@ export default class SketchRuler extends PureComponent {
             isShowReferLine={isShowReferLine}
             handleShowReferLine={handleShowReferLine}
             oncloseMenu={this.onhandlecloseMenu}
+            menuConfigs={this.menuConfigs}
           />
         }
       </StyledRuler>
@@ -135,7 +142,18 @@ SketchRuler.propTypes = {
     shadowColor: PropTypes.string,
     lineColor: PropTypes.string,
     borderColor: PropTypes.string,
-    cornerActiveColor: PropTypes.string
+    cornerActiveColor: PropTypes.string,
+    menu: PropTypes.shape({
+      bgColor: PropTypes.string, // menu菜单
+      dividerColor: PropTypes.string, // 分割线
+      listItem: PropTypes.shape({ // item
+        textColor: PropTypes.string, // 文本
+        hoverTextColor: PropTypes.string,
+        disabledTextColor: PropTypes.string,
+        bgColor: PropTypes.string,
+        hoverBgColor: PropTypes.string
+      })
+    })
   })
 }
 SketchRuler.defaultProps = {
@@ -165,6 +183,17 @@ SketchRuler.defaultProps = {
     shadowColor: '#E8E8E8', // ruler shadow color
     lineColor: '#EB5648',
     borderColor: '#DADADC',
-    cornerActiveColor: 'rgb(235, 86, 72, 0.6)'
+    cornerActiveColor: 'rgb(235, 86, 72, 0.6)',
+    menu: {
+      bgColor: '#fff',
+      dividerColor: '#DBDBDB',
+      listItem: {
+        textColor: '#415058',
+        hoverTextColor: '#298DF8',
+        disabledTextColor: 'rgba(65, 80, 88, 0.4)',
+        bgColor: '#fff',
+        hoverBgColor: '#F2F2F2'
+      }
+    }
   }
 }

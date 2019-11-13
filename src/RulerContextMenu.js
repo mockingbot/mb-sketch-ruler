@@ -52,17 +52,17 @@ export default class RulerContextMenu extends PureComponent {
     this.closeMenu()
   }
   render () {
-    const { isShowReferLine, vertical, verLineArr, horLineArr, lang } = this.props
+    const { isShowReferLine, vertical, verLineArr, horLineArr, lang, menuConfigs } = this.props
     const { left, top } = this.props.menuPosition
-    const isGraySpecific = (vertical ? !verLineArr.length : !horLineArr.length)
+    const isDisabled = (vertical ? !verLineArr.length : !horLineArr.length)
 
     return (
       createPortal(
         <StyleMenu
           style={{ left: left, top: top }}
           showReferLine={isShowReferLine}
-          isGraySpecific={isGraySpecific}
           lang={lang}
+          menuConfigs={menuConfigs}
           id="contextMenu"
         >
           <a
@@ -81,8 +81,7 @@ export default class RulerContextMenu extends PureComponent {
           </a>
           <div className="divider" />
           <a
-            className="menu-content"
-            style={{ color: isGraySpecific ? 'rgb(65,80,88, .4)' : '' }}
+            className={`menu-content${isDisabled ? ' disabled' : ''}`}
             onClick={this.onhandleShowSpecificRuler}
           >
             { i18nObj[lang].remove_all }
@@ -105,5 +104,6 @@ RulerContextMenu.propTypes = {
   verLineArr: PropTypes.array,
   handleLine: PropTypes.func,
   oncloseMenu: PropTypes.func,
-  lang: PropTypes.string
+  lang: PropTypes.string,
+  menuConfigs: PropTypes.object
 }
