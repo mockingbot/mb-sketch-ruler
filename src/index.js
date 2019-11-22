@@ -5,11 +5,23 @@ import RulerContextMenu from './RulerContextMenu'
 
 import { StyledRuler } from './styles'
 
+const DEFAULTMENU = {
+  bgColor: '#fff',
+  dividerColor: '#DBDBDB',
+  listItem: {
+    textColor: '#415058',
+    hoverTextColor: '#298DF8',
+    disabledTextColor: 'rgba(65, 80, 88, 0.4)',
+    bgColor: '#fff',
+    hoverBgColor: '#F2F2F2'
+  }
+}
+
 export default class SketchRuler extends PureComponent {
   constructor (props) {
     super(props)
     const { ratio, palette } = props
-    const { menu } = palette || {}
+    const menu = palette.menu || DEFAULTMENU
     this.canvasConfigs = {
       ratio,
       bgColor: palette.bgColor,
@@ -184,16 +196,6 @@ SketchRuler.defaultProps = {
     lineColor: '#EB5648',
     borderColor: '#DADADC',
     cornerActiveColor: 'rgb(235, 86, 72, 0.6)',
-    menu: {
-      bgColor: '#fff',
-      dividerColor: '#DBDBDB',
-      listItem: {
-        textColor: '#415058',
-        hoverTextColor: '#298DF8',
-        disabledTextColor: 'rgba(65, 80, 88, 0.4)',
-        bgColor: '#fff',
-        hoverBgColor: '#F2F2F2'
-      }
-    }
+    menu: DEFAULTMENU
   }
 }
