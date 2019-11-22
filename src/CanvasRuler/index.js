@@ -62,12 +62,22 @@ export default class CanvasRuler extends PureComponent {
   }
   handleLeave = () => this.props.onIndicatorHide()
 
+  handleRightMenu = (e) => {
+    e.stopPropagation()
+    if (e.button === 2) {
+      const { onhandleShowRightMenu } = this.props
+      const clickLeft = e.clientX
+      const clickTop = e.clientY
+      onhandleShowRightMenu(clickLeft, clickTop)
+    }
+  }
   render () {
     return (
       <canvas className="ruler"
         ref={this.setCanvasRef}
         onClick={this.handleClick}
         onMouseEnter={this.handleEnter}
+        onMouseDown={this.handleRightMenu}
         onMouseMove={this.handleMove}
         onMouseLeave={this.handleLeave}
       />
@@ -86,5 +96,6 @@ CanvasRuler.propTypes = {
   onAddLine: PropTypes.func,
   onIndicatorShow: PropTypes.func,
   onIndicatorMove: PropTypes.func,
-  onIndicatorHide: PropTypes.func
+  onIndicatorHide: PropTypes.func,
+  onhandleShowRightMenu: PropTypes.func
 }

@@ -16,10 +16,19 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
 
   // 缩放ctx, 以简化计算
   ctx.scale(ratio, ratio)
+  ctx.clearRect(0, 0, width, height)
 
   // 1. 画标尺底色
   ctx.fillStyle = bgColor
   ctx.fillRect(0, 0, width, height)
+
+  // 2. 画阴影
+  if (shadow) {
+    const shadowX = (shadow.x - start) * scale // 阴影起点坐标
+    const shadowWidth = shadow.width * scale // 阴影宽度
+    ctx.fillStyle = shadowColor
+    ctx.fillRect(shadowX, 0, shadowWidth, height * 3 / 8)
+  }
 
   const gridSize = getGridSize(scale) // 每小格表示的宽度
   const gridPixel = gridSize * scale
@@ -35,14 +44,7 @@ export const drawHorizontalRuler = (ctx, start, shadow, options) => {
 
   // 3. 画刻度和文字(因为刻度遮住了阴影)
   ctx.beginPath() // 一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制
-  ctx.clearRect(0, 0, width, height)
-  // 2. 画阴影
-  if (shadow) {
-    const shadowX = (shadow.x - start) * scale // 阴影起点坐标
-    const shadowWidth = shadow.width * scale // 阴影宽度
-    ctx.fillStyle = shadowColor
-    ctx.fillRect(shadowX, 0, shadowWidth, height * 3 / 8)
-  }
+
   ctx.fillStyle = fontColor
   ctx.strokeStyle = longfgColor
 
@@ -84,10 +86,21 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
 
   // 缩放ctx, 以简化计算
   ctx.scale(ratio, ratio)
+  ctx.clearRect(0, 0, width, height)
 
   // 1. 画标尺底色
   ctx.fillStyle = bgColor
   ctx.fillRect(0, 0, width, height)
+
+  // 2. 画阴影
+  if (shadow) {
+    // 阴影起点坐标
+    const posY = (shadow.y - start) * scale
+    // 阴影高度
+    const shadowHeight = shadow.height * scale
+    ctx.fillStyle = shadowColor
+    ctx.fillRect(0, posY, width * 3 / 8, shadowHeight)
+  }
 
   const gridSize = getGridSize(scale) // 每小格表示的宽度
   const gridPixel = gridSize * scale
@@ -103,16 +116,7 @@ export const drawVerticalRuler = (ctx, start, shadow, options) => {
 
   // 3. 画刻度和文字(因为刻度遮住了阴影)
   ctx.beginPath() // 一定要记得开关路径,因为clearRect并不能清除掉路径,如果不关闭路径下次绘制时会接着上次的绘制
-  ctx.clearRect(0, 0, width, height)
-  // 2. 画阴影
-  if (shadow) {
-    // 阴影起点坐标
-    const posY = (shadow.y - start) * scale
-    // 阴影高度
-    const shadowHeight = shadow.height * scale
-    ctx.fillStyle = shadowColor
-    ctx.fillRect(0, posY, width * 3 / 8, shadowHeight)
-  }
+
   ctx.fillStyle = fontColor
   ctx.strokeStyle = longfgColor // 设置长间隔的颜色
 

@@ -1,4 +1,86 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+
+const openMenu = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`
+const closeMenu = keyframes`
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+`
+
+export const StyleMenu = styled.div`
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 0 2px 10px 0 rgba(39,54,78,0.08), 0 12px 40px 0 rgba(39,54,78,0.10);
+  background: ${props => props.menuConfigs.bgColor};
+  border-radius: 2px;
+  z-index: 4;
+  padding: 6px 0;
+  transition: opacity 0.2s ease-in-out;
+  transform-origin: 0 0;
+  animation: ${openMenu} 0.2s;
+  animation-fill-mode: forwards;
+  z-index: 999;
+  &.hide-menu {
+    animation: ${closeMenu} 0.1s;
+    animation-fill-mode: forwards;
+    z-index: -9999;
+  }
+  .divider {
+    margin: 4px 12px;
+    border-top: 1px solid ${props => props.menuConfigs.dividerColor};
+    min-width: ${props => props.lang === 'ch' ? '82%' : '87%'};
+  }
+  .menu-content {
+    font-size: 12px;
+    font-family: PingFangSC;
+    color: ${props => props.menuConfigs.listItem.textColor};
+    background: ${props => props.menuConfigs.listItem.bgColor};
+    display: inline-block;
+    width: 100%;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    cursor: pointer;
+    svg > path {
+      fill: ${props => props.menuConfigs.listItem.textColor};
+    }
+    &.disabled {
+      color: ${props => props.menuConfigs.listItem.disabledTextColor};
+      &:hover {
+        cursor: not-allowed;
+        background: none;
+        color: ${props => props.menuConfigs.listItem.disabledTextColor};
+      }
+    }
+  }
+  .menu-content:hover {
+    background: ${props => props.menuConfigs.listItem.hoverBgColor};
+    cursor: pointer;
+    color: ${props => props.menuConfigs.listItem.hoverTextColor};
+
+    svg > path {
+      fill: ${props => props.menuConfigs.listItem.hoverTextColor};
+    }
+  }
+`
 
 export const StyledRuler = styled.div`
   position: absolute;
@@ -88,7 +170,7 @@ export const StyledRuler = styled.div`
       top: 0;
       padding-left: 5px;
       border-left: 1px solid ${props => props.lineColor};
-      cursor: ew-resize;
+      cursor: ${props => props.isShowReferLine ? 'ew-resize' : 'none'};
       .action {
         top: ${props => props.thick + 'px'};
         transform: translateX(-24px);
@@ -120,7 +202,7 @@ export const StyledRuler = styled.div`
       left: 0;
       padding-top: 5px;
       border-top: 1px solid ${props => props.lineColor};
-      cursor: ns-resize;
+      cursor: ${props => props.isShowReferLine ? 'ns-resize' : 'none'};
       .action {
         left: ${props => props.thick + 'px'};
         transform: translateY(-24px);

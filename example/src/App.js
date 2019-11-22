@@ -11,7 +11,10 @@ export default class App extends PureComponent {
     lines: {
       h: [100, 200],
       v: [100, 200]
-    }
+    },
+    lang: 'zh-CN', // 中英文
+    isShowRuler: true, // 显示标尺
+    isShowReferLine: true // 显示参考线
   }
   componentDidMount () {
     // 滚动居中
@@ -22,7 +25,6 @@ export default class App extends PureComponent {
       this.handleScroll()
     }
   }
-
   setAppRef = ref => this.$app = ref
   setContainerRef = ref => this.$container = ref
 
@@ -46,8 +48,24 @@ export default class App extends PureComponent {
   handleLine = (lines) => {
     this.setState({ lines })
   }
+  handleChangeEn = () => {
+    this.setState({ lang: 'en' })
+  }
+  handleChangeCh = () => {
+    this.setState({ lang: 'zh-CN' })
+  }
+  // 显示/影藏标尺
+  handleShowRuler = () => {
+    const { isShowRuler } = this.state
+    this.setState({ isShowRuler: !isShowRuler })
+  }
+  // 显示/影藏参考线
+  handleShowReferLine = () => {
+    const { isShowReferLine } = this.state
+    this.setState({ isShowReferLine: !isShowReferLine })
+  }
   render () {
-    const { scale, startX, startY, lines } = this.state
+    const { scale, startX, startY, lines, isShowRuler, isShowReferLine, lang } = this.state
     const { h, v } = lines
 
     const rectWidth = 160
@@ -67,21 +85,34 @@ export default class App extends PureComponent {
 
     return (
       <div className="wrapper">
+        <button className="button" onClick={this.handleShowRuler}>{!isShowRuler ? '显示' : '隐藏'}标尺</button>
+        <button className="button-ch" onClick={this.handleChangeCh}>中</button>
+        <button className="button-en" onClick={this.handleChangeEn}>英</button>
         <div className="scale-value">{`scale: ${scale}`}</div>
-        <ReactRuler
-          thick={thick}
-          scale={scale}
-          width={582}
-          height={482}
-          startX={startX}
-          startY={startY}
-          shadow={shadow}
-          horLineArr={h}
-          verLineArr={v}
-          handleLine={this.handleLine}
-          cornerActive={true}
-          onCornerClick={this.handleCornerClick}
-        />
+        {
+          isShowRuler &&
+          <ReactRuler
+            lang={lang}
+            thick={thick}
+            scale={scale}
+            width={582}
+            height={482}
+            startX={startX}
+            startY={startY}
+            shadow={shadow}
+            horLineArr={h}
+            verLineArr={v}
+            handleLine={this.handleLine}
+            cornerActive={true}
+            onCornerClick={this.handleCornerClick}
+
+            // 右键菜单props
+            isOpenMenuFeature={true}
+            handleShowRuler={this.handleShowRuler}
+            isShowReferLine={isShowReferLine}
+            handleShowReferLine={this.handleShowReferLine}
+          />
+        }
         <div ref={this.setAppRef} id="screens" onScroll={this.handleScroll} onWheel={this.handleWheel}>
           <div ref={this.setContainerRef} className="screen-container">
             <div id="canvas" style={canvasStyle} />

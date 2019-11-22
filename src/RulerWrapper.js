@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
-
 import CanvasRuler from './CanvasRuler'
 import Line from './Line'
 
@@ -17,9 +16,10 @@ export default class RulerWrapper extends PureComponent {
   handleIndicatorMove = (value) => this.state.showIndicator && this.setState({ value })
   handleIndicatorHide = () => this.setState({ showIndicator: false })
   handleNewLine = (value) => {
-    const { vertical, lines, onLineChange } = this.props
+    const { vertical, lines, onLineChange, handleShowReferLine, isShowReferLine } = this.props
     lines.push(value)
     onLineChange(lines, vertical)
+    !isShowReferLine && handleShowReferLine()
   }
 
   handleLineDown = () => this.setState({ isDraggingLine: true })
@@ -43,8 +43,14 @@ export default class RulerWrapper extends PureComponent {
     lines.splice(index, 1)
     onLineChange(lines, vertical)
   }
+  // 展示右键菜单
+  onhandleShowRightMenu = (left, top) => {
+    const { onShowRightMenu, vertical } = this.props
+    onShowRightMenu(left, top, vertical)
+  }
+
   render () {
-    const { vertical, scale, width, height, start, selectStart, selectLength, lines, canvasConfigs } = this.props
+    const { vertical, scale, width, height, start, selectStart, selectLength, lines, canvasConfigs, isShowReferLine } = this.props
     const { showIndicator, value } = this.state
     const className = vertical ? 'v-container' : 'h-container'
 
@@ -52,7 +58,7 @@ export default class RulerWrapper extends PureComponent {
     const indicatorStyle = vertical ? { top: indicatorOffset } : { left: indicatorOffset }
 
     return (
-      <div className={className}>
+      <div className={className} >
         <CanvasRuler
           vertical={vertical}
           scale={scale}
@@ -66,24 +72,28 @@ export default class RulerWrapper extends PureComponent {
           onIndicatorShow={this.handleIndicatorShow}
           onIndicatorMove={this.handleIndicatorMove}
           onIndicatorHide={this.handleIndicatorHide}
+          onhandleShowRightMenu={this.onhandleShowRightMenu}
         />
-        <div className="lines">
-          {
-            lines.map((v, i) =>
-              <Line
-                key={v + i}
-                index={i}
-                value={v >> 0}
-                scale={scale}
-                start={start}
-                vertical={vertical}
-                onRemove={this.handleLineRemove}
-                onMouseDown={this.handleLineDown}
-                onRelease={this.handleLineRelease}
-              />
-            )
-          }
-        </div>
+        {
+          isShowReferLine &&
+          <div className="lines">
+            {
+              lines.map((v, i) =>
+                <Line
+                  key={v + i}
+                  index={i}
+                  value={v >> 0}
+                  scale={scale}
+                  start={start}
+                  vertical={vertical}
+                  onRemove={this.handleLineRemove}
+                  onMouseDown={this.handleLineDown}
+                  onRelease={this.handleLineRelease}
+                />
+              )
+            }
+          </div>
+        }
         {
           showIndicator &&
           <div className="indicator" style={indicatorStyle}>
@@ -104,5 +114,8 @@ RulerWrapper.propTypes = {
   selectStart: PropTypes.number,
   selectLength: PropTypes.number,
   canvasConfigs: PropTypes.object,
-  onLineChange: PropTypes.func
+  onLineChange: PropTypes.func,
+  onShowRightMenu: PropTypes.func,
+  isShowReferLine: PropTypes.bool,
+  handleShowReferLine: PropTypes.func
 }

@@ -36,6 +36,12 @@ class Example extends PureComponent {
         handleLine={this.handleLine}
         cornerActive={true}
         onCornerClick={this.handleCornerClick}
+
+        // 右键菜单props
+        isOpenMenuFeature={true}
+        handleShowRuler={this.handleShowRuler}
+        isShowReferLine={isShowReferLine}
+        handleShowReferLine={this.handleShowReferLine}
       />
     )
   }
