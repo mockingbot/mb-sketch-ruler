@@ -52,4 +52,4 @@ class Example extends PureComponent {
 
 MIT © [MockingBot](https://github.com/mockingbot)
 
-###© 2016 [MockingBot](https://mockingbot.com)
+**© 2016 [MockingBot](https://mockingbot.com)**
